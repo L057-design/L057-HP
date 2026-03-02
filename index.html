@@ -26,6 +26,26 @@ header {
     padding: 100px 20px;
 }
 
+.logo {
+    width: min(520px, 80vw);
+    height: auto;
+    display: block;
+    margin: 0 auto 18px auto;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.6));
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+    
 h1 {
     font-size: 3rem;
     letter-spacing: 5px;
@@ -73,7 +93,10 @@ footer a:hover {
 <body>
 
 <header>
-    <h1>L057</h1>
+    <h1 class="sr-only">L057</h1>
+
+    <img src="logo.png" alt="L057 Logo" class="logo">
+
     <p>Design · Engineering · 3D Printing</p>
     <a href="mailto:l057.design@gmail.com" class="button">Kontakt</a>
 </header>

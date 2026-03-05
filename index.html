@@ -40,8 +40,24 @@ header {
     display: block;
     margin: 0 auto 18px auto;
     filter: drop-shadow(0 10px 30px rgba(0,0,0,0.6));
+    position: relative;
+    z-index: 1;
 }
 
+.logo-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.logo-wrap::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%);
+    filter: blur(18px);
+    z-index: 0;
+}
+    
 .sr-only {
     position: absolute;
     width: 1px;
@@ -107,7 +123,9 @@ footer a:hover {
 <header>
     <h1 class="sr-only">L057</h1>
 
+    <div class="logo-wrap">
     <img src="logo.png" alt="L057 Logo" class="logo">
+</div>
 
     <p>Design · Engineering · 3D Printing</p>
     <a href="mailto:l057.design@gmail.com" class="button">Kontakt</a>

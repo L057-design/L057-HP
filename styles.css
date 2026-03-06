@@ -46,6 +46,7 @@ a {
 .page {
     width: min(calc(100% - 32px), var(--max-width));
     margin: 0 auto;
+    flex: 1;
 }
 
 .sr-only {

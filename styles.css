@@ -189,6 +189,11 @@ p {
         border-color var(--transition),
         transform var(--transition);
 }
+
+.button:visited {
+    color: var(--text);
+    border-color: var(--line-strong);
+}
 .button:hover,
 .button:focus-visible {
     background: #f2f2f2;

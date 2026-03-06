@@ -282,11 +282,15 @@ footer {
 }
 
 .project-card-content {
+    position: relative;
+    margin-top: -70px;
     padding: 18px 18px 20px;
-    background: rgba(13, 13, 13, 0.96);
+
+    background: rgba(13,13,13,0.55);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .project-card h3 {

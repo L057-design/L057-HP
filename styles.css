@@ -216,6 +216,7 @@ footer {
     padding: 22px 0 28px;
     background: rgba(13, 13, 13, 0.55);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .footer-inner {
@@ -262,11 +263,9 @@ footer {
     overflow: hidden;
     text-decoration: none;
     background: transparent;
-
     box-shadow:
         0 10px 30px rgba(0,0,0,0.35),
         inset 0 1px 0 rgba(255,255,255,0.03);
-
     transition: border-color var(--transition), transform var(--transition);
 }
 
@@ -286,7 +285,8 @@ footer {
     transition: transform 400ms ease;
 }
 
-.project-card:hover img {
+.project-card:hover img,
+.project-card:focus-visible img {
     transform: scale(1.05);
 }
 
@@ -294,12 +294,21 @@ footer {
     position: relative;
     margin-top: -70px;
     padding: 18px 18px 20px;
-
-    background: rgba(13,13,13,0.55);
+    background: rgba(13, 13, 13, 0.55);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-
     border-top: 1px solid rgba(255,255,255,0.08);
+    transition:
+        background 220ms ease,
+        backdrop-filter 220ms ease,
+        -webkit-backdrop-filter 220ms ease;
+}
+
+.project-card:hover .project-card-content,
+.project-card:focus-visible .project-card-content {
+    background: rgba(13, 13, 13, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
 }
 
 .project-card h3 {
@@ -349,6 +358,26 @@ footer {
     }
 }
 
+@media (hover: none), (pointer: coarse) {
+    .project-card-content {
+        background: rgba(13, 13, 13, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .project-card:hover .project-card-content,
+    .project-card:focus-visible .project-card-content {
+        background: rgba(13, 13, 13, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .project-card:hover img,
+    .project-card:focus-visible img {
+        transform: none;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
@@ -361,7 +390,9 @@ footer {
     }
 
     .button,
-    .project-card {
+    .project-card,
+    .project-card img,
+    .project-card-content {
         transition: none;
     }
 }

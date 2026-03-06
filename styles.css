@@ -261,7 +261,9 @@ footer {
     border-radius: var(--radius);
     overflow: hidden;
     text-decoration: none;
-    background: transparent;
+    background: rgba(15,15,15,0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: border-color var(--transition), transform var(--transition);
 }
 

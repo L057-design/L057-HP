@@ -168,8 +168,8 @@ p {
 }
 
 .button {
-    min-width: 150px;
-    padding: 13px 22px;
+    min-width: 160px;
+    padding: 13px 24px;
     border: 1px solid var(--line-strong);
     border-radius: 999px;
     text-decoration: none;
@@ -178,13 +178,17 @@ p {
     letter-spacing: 0.08em;
     font-size: 0.84rem;
     text-transform: uppercase;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     transition:
         background var(--transition),
         color var(--transition),
         border-color var(--transition),
         transform var(--transition);
 }
-
 .button:hover,
 .button:focus-visible {
     background: #f2f2f2;

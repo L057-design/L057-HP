@@ -282,9 +282,9 @@ footer {
 
 .project-card-content {
     padding: 18px 18px 20px;
-    background: rgba(13, 13, 13, 0.88);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(13, 13, 13, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 

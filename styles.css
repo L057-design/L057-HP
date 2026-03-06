@@ -214,8 +214,8 @@ footer {
     width: 100%;
     border-top: 1px solid var(--line);
     padding: 22px 0 28px;
-    background: rgba(13, 13, 13, 0.96);
-    backdrop-filter: blur(8px);
+    background: rgba(13, 13, 13, 0.55);
+    backdrop-filter: blur(12px);
 }
 
 .footer-inner {

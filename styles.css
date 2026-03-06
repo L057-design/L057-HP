@@ -293,3 +293,26 @@ footer {
         transition: none;
     }
 }
+.project-card {
+    display: block;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color var(--transition), transform var(--transition);
+}
+
+.project-card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+}
+
+.project-card h2 {
+    margin: 0 0 6px;
+}
+
+.project-card p {
+    margin: 0;
+    color: var(--muted);
+}

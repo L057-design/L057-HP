@@ -306,9 +306,9 @@ footer {
 
 .project-card:hover .project-card-content,
 .project-card:focus-visible .project-card-content {
-    background: rgba(13, 13, 13, 0);
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
+    background: rgba(13, 13, 13, 0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 }
 
 .project-card h3 {

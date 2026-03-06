@@ -292,9 +292,10 @@ footer {
     .button {
         transition: none;
     }
+
 .project-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px;
     margin-bottom: 48px;
 }
@@ -305,33 +306,41 @@ footer {
     border-radius: var(--radius);
     overflow: hidden;
     text-decoration: none;
+    background: transparent;
     transition: border-color var(--transition), transform var(--transition);
 }
 
-.project-card:hover {
+.project-card:hover,
+.project-card:focus-visible {
     border-color: var(--line-strong);
     transform: translateY(-2px);
+    outline: none;
 }
 
 .project-card img {
+    display: block;
     width: 100%;
     height: 220px;
     object-fit: cover;
+    background: #111111;
 }
 
 .project-card h3 {
     margin: 16px 18px 6px;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    color: var(--text);
+    text-decoration: none;
 }
 
 .project-card p {
     margin: 0 18px 18px;
     color: var(--muted);
+    text-decoration: none;
 }
 
 @media (max-width: 640px) {
-
     .project-grid {
         grid-template-columns: 1fr;
     }
-
 }

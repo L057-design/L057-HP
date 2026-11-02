@@ -53,6 +53,55 @@
         return new URLSearchParams(window.location.search).get(name);
     }
 
+    /* ---------- Warenkorb (bleibt im Browser des Kunden gespeichert) ---------- */
+
+    const KORB_SCHLUESSEL = "l057-warenkorb";
+    let korbErsatz = [];
+
+    function korbLesen() {
+        try {
+            const daten = JSON.parse(localStorage.getItem(KORB_SCHLUESSEL) || "[]");
+            return Array.isArray(daten) ? daten : [];
+        } catch (e) {
+            return korbErsatz;
+        }
+    }
+
+    function korbSpeichern(korb) {
+        korbErsatz = korb;
+        try {
+            localStorage.setItem(KORB_SCHLUESSEL, JSON.stringify(korb));
+        } catch (e) { /* ohne Speicher gilt der Korb nur für diese Seite */ }
+        korbAnzeigen();
+    }
+
+    function gleicheAuswahl(a, b) {
+        return JSON.stringify(a || {}) === JSON.stringify(b || {});
+    }
+
+    function korbHinzufuegen(id, varianten, menge) {
+        const korb = korbLesen();
+        const eintrag = korb.find(function (e) { return e.id === id && gleicheAuswahl(e.varianten, varianten); });
+        if (eintrag) eintrag.menge = Math.min(99, eintrag.menge + menge);
+        else korb.push({ id: id, varianten: varianten, menge: menge });
+        korbSpeichern(korb);
+    }
+
+    function korbAnzeigen() {
+        const anzahl = korbLesen().reduce(function (s, e) { return s + (e.menge || 0); }, 0);
+        document.querySelectorAll("[data-korb-anzahl]").forEach(function (n) {
+            n.textContent = anzahl;
+            n.hidden = anzahl === 0;
+        });
+        document.querySelectorAll(".cart-link").forEach(function (n) {
+            n.setAttribute("aria-label", "Warenkorb, " + anzahl + (anzahl === 1 ? " Artikel" : " Artikel"));
+        });
+    }
+
+    window.addEventListener("storage", function (e) {
+        if (e.key === KORB_SCHLUESSEL) korbAnzeigen();
+    });
+
     function bild(src, alt) {
         return el("img", {
             src: src || "images/project-placeholder.jpg",
@@ -260,12 +309,8 @@
                 ]));
             });
 
-            const knopf = el("a", { class: "button button-primary button-block" });
-            const hinweis = el("p", { class: "buy-hint" });
-
-            function auswahlText() {
-                return Object.keys(auswahl).map(function (k) { return k + ": " + auswahl[k]; }).join(", ");
-            }
+            const kaufBereich = el("div", { class: "buy-area" });
+            const hinweis = el("p", { class: "buy-hint", "aria-live": "polite" });
 
             function zahlungslink() {
                 const link = p.zahlungslink;
@@ -273,43 +318,44 @@
                 if (typeof link === "string") return link;
                 /* Pro Variante ein eigener Link: { "M": "https://buy.stripe.com/..." } */
                 const werte = Object.keys(auswahl).map(function (k) { return auswahl[k]; });
-                const schluessel = werte.join(" / ");
-                return link[schluessel] || link[werte[0]] || "";
+                return link[werte.join(" / ")] || link[werte[0]] || "";
             }
 
             function knopfAktualisieren() {
                 const link = zahlungslink();
-                knopf.removeAttribute("target");
-                knopf.removeAttribute("rel");
-                knopf.removeAttribute("aria-disabled");
+                const knoepfe = [];
 
                 if (!p.verfuegbar) {
-                    const betreff = "Benachrichtigung: " + p.name;
-                    knopf.textContent = "Benachrichtigen, wenn verfügbar";
-                    knopf.className = "button button-block";
-                    knopf.href = "mailto:" + shop.email + "?subject=" + encodeURIComponent(betreff);
+                    knoepfe.push(el("a", {
+                        class: "button button-block",
+                        href: "mailto:" + shop.email + "?subject=" + encodeURIComponent("Benachrichtigung: " + p.name),
+                        text: "Benachrichtigen, wenn verfügbar"
+                    }));
                     hinweis.textContent = "Dieses Produkt ist derzeit nicht erhältlich.";
-                } else if (link) {
-                    knopf.textContent = "Jetzt kaufen";
-                    knopf.className = "button button-primary button-block";
-                    knopf.href = link;
-                    knopf.setAttribute("rel", "noopener");
-                    hinweis.textContent = "Sichere Bezahlung, du wirst zur Kasse weitergeleitet.";
                 } else {
-                    const details = auswahlText();
-                    const betreff = "Bestellanfrage: " + p.name + (details ? " (" + details + ")" : "");
-                    const text =
-                        "Hallo,\n\nich möchte folgendes bestellen:\n\n" +
-                        p.name + (details ? "\n" + details : "") + "\nPreis: " + preis(p.preis, shop.waehrung) +
-                        "\nMenge: 1\n\n" +
-                        (digital ? "" : "Lieferadresse:\n\n") +
-                        "Danke!";
-                    knopf.textContent = "Bestellen per E-Mail";
-                    knopf.className = "button button-primary button-block";
-                    knopf.href = "mailto:" + shop.email + "?subject=" + encodeURIComponent(betreff) +
-                        "&body=" + encodeURIComponent(text);
-                    hinweis.textContent = "Du bekommst eine Bestätigung mit Zahlungsinfos per E-Mail.";
+                    knoepfe.push(el("button", {
+                        class: "button button-primary button-block",
+                        type: "button",
+                        text: "In den Warenkorb",
+                        onclick: function () {
+                            korbHinzufuegen(p.id, Object.assign({}, auswahl), 1);
+                            hinweis.replaceChildren(
+                                "✓ Im Warenkorb · ",
+                                el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
+                            );
+                        }
+                    }));
+                    if (link) {
+                        knoepfe.push(el("a", {
+                            class: "button button-block",
+                            href: link,
+                            rel: "noopener",
+                            text: "Direkt kaufen"
+                        }));
+                    }
+                    hinweis.textContent = "";
                 }
+                kaufBereich.replaceChildren.apply(kaufBereich, knoepfe);
             }
             knopfAktualisieren();
 
@@ -339,7 +385,7 @@
                             digital ? null : el("a", { href: "versand.html", text: "Versand & Zahlung" })
                         ]),
                         el("div", {}, felder),
-                        knopf,
+                        kaufBereich,
                         hinweis,
                         el("div", { class: "description" }, absaetze(p.beschreibung)),
                         el("ul", { class: "facts" }, fakten.map(function (f) {
@@ -392,6 +438,198 @@
         }).catch(function () { fehler(ziel, "Projekt konnte nicht geladen werden."); });
     }
 
+    /* ---------- Warenkorb-Seite ---------- */
+
+    function warenkorbSeite() {
+        const ziel = document.getElementById("warenkorb");
+        const formular = {};
+
+        Promise.all([ladeShop(), ladeProdukte()]).then(function (r) {
+            const shop = r[0];
+            const produkte = r[1];
+
+            /* Einträge, die es nicht mehr gibt oder nicht verfügbar sind, entfernen */
+            const bereinigt = korbLesen().filter(function (e) {
+                const p = produkte.find(function (x) { return x.id === e.id; });
+                return p && p.verfuegbar && e.menge > 0;
+            });
+            korbSpeichern(bereinigt);
+
+            function positionen() {
+                return korbLesen().map(function (e) {
+                    return { eintrag: e, produkt: produkte.find(function (x) { return x.id === e.id; }) };
+                }).filter(function (x) { return x.produkt; });
+            }
+
+            function variantenText(v) {
+                return Object.keys(v || {}).map(function (k) { return k + ": " + v[k]; }).join(", ");
+            }
+
+            function menge(index, neu) {
+                const korb = korbLesen();
+                if (neu <= 0) korb.splice(index, 1);
+                else korb[index].menge = Math.min(99, neu);
+                korbSpeichern(korb);
+                zeichnen();
+            }
+
+            function berechnen(liste) {
+                const zwischensumme = liste.reduce(function (s, x) { return s + x.produkt.preis * x.eintrag.menge; }, 0);
+                const physisch = liste.some(function (x) { return x.produkt.typ !== "digital"; });
+                const frei = shop.versandfrei_ab > 0 && zwischensumme >= shop.versandfrei_ab;
+                const versand = physisch && !frei ? (shop.versandpreis || 0) : 0;
+                return { zwischensumme: zwischensumme, versand: versand, physisch: physisch, gesamt: zwischensumme + versand };
+            }
+
+            function bestelltext(liste, summe) {
+                const zeilen = liste.map(function (x) {
+                    const v = variantenText(x.eintrag.varianten);
+                    return "• " + x.eintrag.menge + " × " + x.produkt.name + (v ? " (" + v + ")" : "") +
+                        " – " + preis(x.produkt.preis * x.eintrag.menge, shop.waehrung);
+                });
+                return [
+                    "Hallo,",
+                    "",
+                    "ich möchte folgendes bestellen:",
+                    "",
+                    zeilen.join("\n"),
+                    "",
+                    "Zwischensumme: " + preis(summe.zwischensumme, shop.waehrung),
+                    summe.physisch ? "Versand: " + preis(summe.versand, shop.waehrung) : null,
+                    "Gesamt: " + preis(summe.gesamt, shop.waehrung),
+                    "",
+                    "Name: " + (formular.name || ""),
+                    summe.physisch ? "Lieferadresse:\n" + (formular.adresse || "") : null,
+                    formular.notiz ? "\nAnmerkung:\n" + formular.notiz : null,
+                    "",
+                    "Danke!"
+                ].filter(function (z) { return z !== null; }).join("\n");
+            }
+
+            function eingabe(name, label, mehrzeilig, pflicht) {
+                const id = "feld-" + name;
+                const feld = el(mehrzeilig ? "textarea" : "input", {
+                    class: "input",
+                    id: id,
+                    name: name,
+                    rows: mehrzeilig ? 3 : null,
+                    type: mehrzeilig ? null : "text",
+                    autocomplete: name === "name" ? "name" : (name === "adresse" ? "street-address" : "off"),
+                    required: pflicht,
+                    oninput: function (e) { formular[name] = e.target.value; }
+                });
+                feld.value = formular[name] || "";
+                return el("div", { class: "field" }, [el("label", { for: id, text: label }), feld]);
+            }
+
+            function zeichnen() {
+                const liste = positionen();
+
+                if (!liste.length) {
+                    ziel.replaceChildren(
+                        el("header", { class: "page-head" }, [el("h1", { text: "Warenkorb" })]),
+                        el("p", { class: "empty", text: "Dein Warenkorb ist leer." }),
+                        el("a", { class: "button", href: "shop.html", text: "Zum Shop" })
+                    );
+                    return;
+                }
+
+                const summe = berechnen(liste);
+                const status = el("p", { class: "buy-hint", "aria-live": "polite" });
+
+                const zeilen = liste.map(function (x, i) {
+                    const v = variantenText(x.eintrag.varianten);
+                    return el("li", { class: "cart-item" }, [
+                        el("a", { class: "cart-thumb", href: "produkt.html?id=" + encodeURIComponent(x.produkt.id) }, [
+                            bild(x.produkt.bilder && x.produkt.bilder[0], x.produkt.name)
+                        ]),
+                        el("div", { class: "cart-info" }, [
+                            el("a", { class: "cart-name", href: "produkt.html?id=" + encodeURIComponent(x.produkt.id), text: x.produkt.name }),
+                            v ? el("span", { class: "cart-variant", text: v }) : null,
+                            el("span", { class: "cart-variant", text: preis(x.produkt.preis, shop.waehrung) + " / Stück" }),
+                            el("div", { class: "qty" }, [
+                                el("button", { type: "button", "aria-label": "Eins weniger", text: "−", onclick: function () { menge(i, x.eintrag.menge - 1); } }),
+                                el("span", { "aria-live": "polite", text: String(x.eintrag.menge) }),
+                                el("button", { type: "button", "aria-label": "Eins mehr", text: "+", onclick: function () { menge(i, x.eintrag.menge + 1); } }),
+                                el("button", { type: "button", class: "cart-remove", text: "Entfernen", onclick: function () { menge(i, 0); } })
+                            ])
+                        ]),
+                        el("span", { class: "cart-line-price", text: preis(x.produkt.preis * x.eintrag.menge, shop.waehrung) })
+                    ]);
+                });
+
+                function summenZeile(label, wert, stark) {
+                    return el("li", { class: stark ? "total" : null }, [el("span", { text: label }), el("span", { text: wert })]);
+                }
+
+                const versandText = !summe.physisch ? null :
+                    (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung));
+
+                function absenden() {
+                    if (!formular.name || (summe.physisch && !formular.adresse)) {
+                        status.textContent = summe.physisch
+                            ? "Bitte Name und Lieferadresse ausfüllen."
+                            : "Bitte deinen Namen ausfüllen.";
+                        return;
+                    }
+                    const betreff = "Bestellung über l057.at (" + preis(summe.gesamt, shop.waehrung) + ")";
+                    window.location.href = "mailto:" + shop.email +
+                        "?subject=" + encodeURIComponent(betreff) +
+                        "&body=" + encodeURIComponent(bestelltext(liste, summe));
+                    status.textContent = "Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.";
+                }
+
+                function kopieren() {
+                    const text = "An: " + shop.email + "\n\n" + bestelltext(liste, summe);
+                    const ok = function () { status.textContent = "Bestellung kopiert. Füge sie in eine Mail an " + shop.email + " ein."; };
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(ok, function () {
+                            status.textContent = "Kopieren nicht möglich. Bitte schreib an " + shop.email + ".";
+                        });
+                    } else {
+                        status.textContent = "Kopieren nicht möglich. Bitte schreib an " + shop.email + ".";
+                    }
+                }
+
+                ziel.replaceChildren(
+                    el("header", { class: "page-head" }, [el("h1", { text: "Warenkorb" })]),
+                    el("div", { class: "cart" }, [
+                        el("ul", { class: "cart-list" }, zeilen),
+                        el("aside", { class: "cart-summary" }, [
+                            el("h2", { text: "Bestellung" }),
+                            el("ul", { class: "facts" }, [
+                                summenZeile("Zwischensumme", preis(summe.zwischensumme, shop.waehrung)),
+                                versandText ? summenZeile("Versand", versandText) : null,
+                                summenZeile("Gesamt", preis(summe.gesamt, shop.waehrung), true)
+                            ]),
+                            el("p", { class: "price-note", style: "margin-top:10px" }, [
+                                "Endpreise. ",
+                                summe.physisch ? el("a", { href: "versand.html", text: "Versand & Zahlung" }) : null
+                            ]),
+                            el("form", {
+                                class: "cart-form",
+                                novalidate: true,
+                                onsubmit: function (e) { e.preventDefault(); absenden(); }
+                            }, [
+                                eingabe("name", "Name", false, true),
+                                summe.physisch ? eingabe("adresse", "Lieferadresse", true, true) : null,
+                                eingabe("notiz", "Anmerkung (optional)", true, false),
+                                el("button", { class: "button button-primary button-block", type: "submit", text: "Bestellung per E-Mail senden" }),
+                                el("button", { class: "button button-block", type: "button", style: "margin-top:10px", text: "Bestellung kopieren", onclick: kopieren })
+                            ]),
+                            status,
+                            el("p", { class: "buy-hint" }, [
+                                "Du bekommst eine Bestätigung mit den Zahlungsinfos per E-Mail. Erst damit ist die Bestellung verbindlich."
+                            ])
+                        ])
+                    ])
+                );
+            }
+
+            zeichnen();
+        }).catch(function () { fehler(ziel, "Warenkorb konnte nicht geladen werden."); });
+    }
+
     /* ---------- Start ---------- */
 
     const seiten = {
@@ -399,8 +637,11 @@
         shop: shopSeite,
         produkt: produktSeite,
         projekte: projekteSeite,
-        projekt: projektSeite
+        projekt: projektSeite,
+        warenkorb: warenkorbSeite
     };
+
+    korbAnzeigen();
 
     document.querySelectorAll("[data-jahr]").forEach(function (n) {
         n.textContent = new Date().getFullYear();

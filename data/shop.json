@@ -5,5 +5,8 @@
   "preishinweis_digital": "Endpreis, digitaler Download",
   "lieferzeit": "3–7 Werktage",
   "versandkosten": "ab 5,90 € (Österreich)",
+  "versandpreis": 5.90,
+  "versandfrei_ab": 0,
+  "bestellung": "email",
   "kategorien": ["Art", "Clothing", "Living", "Digital"]
 }

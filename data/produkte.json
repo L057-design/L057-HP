@@ -7,8 +7,7 @@
     "preis": 35.0,
     "kurz": "Handgedruckter Linolschnitt auf Baumwolle",
     "beschreibung": [
-      "Beispieltext: Jedes Shirt wird einzeln von Hand mit dem Deathodils-Linolschnitt bedruckt. Kleine Abweichungen im Druckbild sind gewollt und machen jedes Stück zum Unikat.",
-      "100 % Baumwolle. Auf links waschen, maximal 30 °C."
+      "Beispieltext: Jedes Shirt wird einzeln von Hand mit dem Deathodils-Linolschnitt bedruckt. Kleine Abweichungen im Druckbild sind gewollt und machen jedes Stück zum Unikat."
     ],
     "bilder": [
       "images/project-placeholder.jpg"
@@ -25,7 +24,10 @@
     "hervorgehoben": true,
     "zahlungslink": "",
     "beispiel": true,
-    "etsy": ""
+    "etsy": "",
+    "material": "100 % Baumwolle",
+    "pflege": "Auf links waschen, max. 30 °C, nicht in den Trockner",
+    "hinweise": ""
   },
   {
     "id": "deathodils-print-a4",
@@ -46,7 +48,10 @@
     "hervorgehoben": true,
     "zahlungslink": "",
     "beispiel": true,
-    "etsy": ""
+    "etsy": "",
+    "material": "Säurefreies Papier, Druckfarbe auf Ölbasis",
+    "pflege": "Vor direkter Sonne schützen",
+    "hinweise": ""
   },
   {
     "id": "wandhalter",
@@ -72,7 +77,10 @@
     "hervorgehoben": true,
     "zahlungslink": "",
     "beispiel": true,
-    "etsy": ""
+    "etsy": "",
+    "material": "PETG (3D-gedruckt)",
+    "pflege": "Mit feuchtem Tuch reinigen",
+    "hinweise": "Kein Spielzeug. Enthält Kleinteile (Schrauben), nicht für Kinder unter 3 Jahren. Maximale Belastung: [x] kg."
   },
   {
     "id": "schnittmuster-beispiel",
@@ -92,6 +100,9 @@
     "hervorgehoben": false,
     "zahlungslink": "",
     "beispiel": true,
-    "etsy": ""
+    "etsy": "",
+    "material": "PDF-Datei",
+    "pflege": "",
+    "hinweise": ""
   }
 ]

@@ -372,6 +372,8 @@
             const fakten = [
                 ["Kategorie", p.kategorie],
                 ["Art", digital ? "Digitaler Download" : "Physisches Produkt"],
+                p.material ? ["Material", p.material] : null,
+                p.pflege ? ["Pflege", p.pflege] : null,
                 digital ? null : ["Lieferzeit", shop.lieferzeit],
                 digital ? null : ["Versand", shop.versandkosten]
             ].filter(Boolean);
@@ -399,7 +401,20 @@
                         el("div", { class: "description" }, absaetze(p.beschreibung)),
                         el("ul", { class: "facts" }, fakten.map(function (f) {
                             return el("li", {}, [el("span", { text: f[0] }), el("span", { text: f[1] })]);
-                        }))
+                        })),
+                        p.hinweise ? el("div", { class: "notice" }, [
+                            el("h2", { text: "Sicherheitshinweise" }),
+                            el("p", { text: p.hinweise })
+                        ]) : null,
+                        el("p", { class: "maker" }, [
+                            el("span", { text: "Hersteller: " }), shop.hersteller || ""
+                        ]),
+                        el("p", { class: "maker" }, [
+                            digital
+                                ? "Bei digitalen Inhalten erlischt das Widerrufsrecht, sobald der Download mit deiner Zustimmung beginnt. "
+                                : "14 Tage Widerrufsrecht. ",
+                            el("a", { href: "widerruf.html", text: "Widerrufsbelehrung" })
+                        ])
                     ])
                 ])
             );
@@ -510,6 +525,7 @@
                     "Name: " + (formular.name || ""),
                     summe.physisch ? "Lieferadresse:\n" + (formular.adresse || "") : null,
                     formular.notiz ? "\nAnmerkung:\n" + formular.notiz : null,
+                    formular.agb ? "\nAGB und Widerrufsbelehrung gelesen: ja" : null,
                     "",
                     "Danke!"
                 ].filter(function (z) { return z !== null; }).join("\n");
@@ -581,6 +597,10 @@
                             : "Bitte deinen Namen ausfüllen.";
                         return;
                     }
+                    if (!formular.agb) {
+                        status.textContent = "Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.";
+                        return;
+                    }
                     const betreff = "Bestellung über l057.at (" + preis(summe.gesamt, shop.waehrung) + ")";
                     window.location.href = "mailto:" + shop.email +
                         "?subject=" + encodeURIComponent(betreff) +
@@ -612,7 +632,7 @@
                                 summenZeile("Gesamt", preis(summe.gesamt, shop.waehrung), true)
                             ]),
                             el("p", { class: "price-note", style: "margin-top:10px" }, [
-                                "Endpreise. ",
+                                (shop.steuerhinweis || "") + " ",
                                 summe.physisch ? el("a", { href: "versand.html", text: "Versand & Zahlung" }) : null
                             ]),
                             el("form", {
@@ -623,6 +643,24 @@
                                 eingabe("name", "Name", false, true),
                                 summe.physisch ? eingabe("adresse", "Lieferadresse", true, true) : null,
                                 eingabe("notiz", "Anmerkung (optional)", true, false),
+                                el("label", { class: "check" }, [
+                                    (function () {
+                                        const box = el("input", {
+                                            type: "checkbox",
+                                            name: "agb",
+                                            onchange: function (e) { formular.agb = e.target.checked; }
+                                        });
+                                        box.checked = !!formular.agb;
+                                        return box;
+                                    })(),
+                                    el("span", {}, [
+                                        "Ich habe die ",
+                                        el("a", { href: "agb.html", target: "_blank", text: "AGB" }),
+                                        " und die ",
+                                        el("a", { href: "widerruf.html", target: "_blank", text: "Widerrufsbelehrung" }),
+                                        " gelesen."
+                                    ])
+                                ]),
                                 el("button", { class: "button button-primary button-block", type: "submit", text: "Bestellung per E-Mail senden" }),
                                 el("button", { class: "button button-block", type: "button", style: "margin-top:10px", text: "Bestellung kopieren", onclick: kopieren })
                             ]),
@@ -639,6 +677,70 @@
         }).catch(function () { fehler(ziel, "Warenkorb konnte nicht geladen werden."); });
     }
 
+    /* ---------- Widerrufsfunktion (§ 13a FAGG) ---------- */
+
+    function widerrufSeite() {
+        const form = document.getElementById("widerruf-form");
+        const status = document.getElementById("widerruf-status");
+        if (!form) return;
+
+        function werte() {
+            const d = new FormData(form);
+            return {
+                name: (d.get("name") || "").trim(),
+                email: (d.get("email") || "").trim(),
+                bestellung: (d.get("bestellung") || "").trim(),
+                artikel: (d.get("artikel") || "").trim(),
+                erhalten: (d.get("erhalten") || "").trim()
+            };
+        }
+
+        function text(w) {
+            return [
+                "Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren:",
+                "",
+                w.artikel || "(alle Artikel der Bestellung)",
+                "",
+                "Bestellt am / Bestellung: " + w.bestellung,
+                "Erhalten am: " + (w.erhalten || "-"),
+                "Name: " + w.name,
+                "E-Mail: " + w.email,
+                "Datum der Erklärung: " + new Date().toLocaleDateString("de-AT")
+            ].join("\n");
+        }
+
+        ladeShop().then(function (shop) {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const w = werte();
+                if (!w.name || !w.email || !w.bestellung) {
+                    status.textContent = "Bitte Name, E-Mail und Bestellung (Datum oder Nummer) angeben.";
+                    return;
+                }
+                window.location.href = "mailto:" + shop.email +
+                    "?subject=" + encodeURIComponent("Vertrag widerrufen – " + w.name + " (" + w.bestellung + ")") +
+                    "&body=" + encodeURIComponent(text(w));
+                status.textContent = "Dein Mailprogramm öffnet sich mit der fertigen Widerrufserklärung. " +
+                    "Bitte sende die Mail ab. Du bekommst eine Eingangsbestätigung per E-Mail.";
+            });
+
+            document.getElementById("widerruf-kopieren").addEventListener("click", function () {
+                const w = werte();
+                const fertig = "An: " + shop.email + "\nBetreff: Vertrag widerrufen\n\n" + text(w);
+                const fehlt = function () {
+                    status.textContent = "Kopieren nicht möglich. Bitte schreib an " + shop.email + ".";
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(fertig).then(function () {
+                        status.textContent = "Widerrufserklärung kopiert. Füge sie in eine Mail an " + shop.email + " ein.";
+                    }, fehlt);
+                } else {
+                    fehlt();
+                }
+            });
+        });
+    }
+
     /* ---------- Start ---------- */
 
     const seiten = {
@@ -647,7 +749,8 @@
         produkt: produktSeite,
         projekte: projekteSeite,
         projekt: projektSeite,
-        warenkorb: warenkorbSeite
+        warenkorb: warenkorbSeite,
+        widerruf: widerrufSeite
     };
 
     korbAnzeigen();

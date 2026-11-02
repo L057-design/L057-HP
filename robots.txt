@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /warenkorb.html
+
+Sitemap: https://l057.at/sitemap.xml

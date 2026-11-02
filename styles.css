@@ -852,6 +852,110 @@ p {
     border-color: var(--text);
 }
 
+/* ---------- Über, Hinweise, Rechtliches ---------- */
+
+.about {
+    max-width: var(--content-width);
+}
+
+.about-claim {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+}
+
+.notice {
+    margin-top: 24px;
+    padding: 16px 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+}
+
+.notice h2 {
+    margin: 0 0 6px;
+    font-size: 0.74rem;
+}
+
+.notice p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.maker {
+    margin: 18px 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.maker + .maker {
+    margin-top: 6px;
+}
+
+.maker a {
+    color: var(--muted);
+}
+
+.check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: 4px 0 18px;
+    font-size: 0.86rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.check input {
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    flex: none;
+    accent-color: var(--accent);
+}
+
+.check a {
+    color: var(--text);
+}
+
+.draft-note {
+    padding: 10px 14px;
+    border: 1px dashed var(--line-strong);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.withdraw-form {
+    margin: 8px 0 24px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+}
+
+.button-withdraw {
+    background: var(--accent);
+    color: #0d0d0d;
+    border: 2px solid var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.footer-col a.withdraw-link {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 6px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--text);
+}
+
+.content-section a {
+    color: var(--text);
+}
+
 /* ---------- Fußzeile ---------- */
 
 .site-footer {

@@ -3,9 +3,8 @@
   "waehrung": "EUR",
   "preishinweis": "Endpreis zzgl. Versand",
   "preishinweis_digital": "Endpreis, digitaler Download",
-  "lieferzeit": "3–7 Werktage",
-  "versandkosten": "ab 5,90 € (Österreich)",
-  "versandpreis": 5.9,
+  "lieferzeit": "2–5 Werktage (AT), 5–10 (EU)",
+  "versandkosten": "Österreich 4,90 € · EU 9,90 €",
   "versandfrei_ab": 0,
   "bestellung": "email",
   "kategorien": [
@@ -22,5 +21,23 @@
     "Printables": ""
   },
   "steuerhinweis": "Gemäß § 6 Abs. 1 Z 27 UStG (Kleinunternehmerregelung) wird keine Umsatzsteuer ausgewiesen.",
-  "hersteller": "L057 · Dimitri Wastl, Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Österreich · l057.design@gmail.com"
+  "hersteller": "L057 · Dimitri Wastl, Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Österreich · l057.design@gmail.com",
+  "versandzonen": [
+    {
+      "name": "Österreich",
+      "preis": 4.9
+    },
+    {
+      "name": "EU-Land",
+      "preis": 9.9
+    },
+    {
+      "name": "Anderes Land (auf Anfrage)",
+      "preis": null
+    }
+  ],
+  "zahlungsarten": [
+    "Überweisung",
+    "PayPal"
+  ]
 }

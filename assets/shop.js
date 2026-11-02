@@ -501,8 +501,14 @@
                 const zwischensumme = liste.reduce(function (s, x) { return s + x.produkt.preis * x.eintrag.menge; }, 0);
                 const physisch = liste.some(function (x) { return x.produkt.typ !== "digital"; });
                 const frei = shop.versandfrei_ab > 0 && zwischensumme >= shop.versandfrei_ab;
-                const versand = physisch && !frei ? (shop.versandpreis || 0) : 0;
-                return { zwischensumme: zwischensumme, versand: versand, physisch: physisch, gesamt: zwischensumme + versand };
+                const zonen = shop.versandzonen || [];
+                const zone = zonen[formular.zone || 0] || { name: "", preis: 0 };
+                const anfrage = physisch && !frei && zone.preis === null;
+                const versand = physisch && !frei && !anfrage ? zone.preis : 0;
+                return {
+                    zwischensumme: zwischensumme, versand: versand, physisch: physisch,
+                    anfrage: anfrage, zone: zone.name, gesamt: zwischensumme + versand
+                };
             }
 
             function bestelltext(liste, summe) {
@@ -519,8 +525,10 @@
                     zeilen.join("\n"),
                     "",
                     "Zwischensumme: " + preis(summe.zwischensumme, shop.waehrung),
-                    summe.physisch ? "Versand: " + preis(summe.versand, shop.waehrung) : null,
-                    "Gesamt: " + preis(summe.gesamt, shop.waehrung),
+                    summe.physisch ? "Lieferland: " + summe.zone : null,
+                    summe.physisch ? "Versand: " + (summe.anfrage ? "bitte um Angebot" : preis(summe.versand, shop.waehrung)) : null,
+                    "Gesamt: " + preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? " zzgl. Versand" : ""),
+                    "Zahlung: " + (formular.zahlung || (shop.zahlungsarten || [""])[0]),
                     "",
                     "Name: " + (formular.name || ""),
                     summe.physisch ? "Lieferadresse:\n" + (formular.adresse || "") : null,
@@ -588,7 +596,29 @@
                 }
 
                 const versandText = !summe.physisch ? null :
-                    (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung));
+                    (summe.anfrage ? "auf Anfrage" : (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung)));
+
+                function auswahlFeld(name, label, optionen, onchange) {
+                    const id = "feld-" + name;
+                    const sel = el("select", { class: "select", id: id, onchange: onchange },
+                        optionen.map(function (o, i) { return el("option", { value: String(i), text: o }); }));
+                    return { feld: el("div", { class: "field" }, [el("label", { for: id, text: label }), sel]), select: sel };
+                }
+
+                const landWahl = summe.physisch && (shop.versandzonen || []).length ? auswahlFeld(
+                    "zone", "Lieferland",
+                    shop.versandzonen.map(function (z) {
+                        return z.name + (z.preis === null ? "" : " – " + preis(z.preis, shop.waehrung));
+                    }),
+                    function (e) { formular.zone = Number(e.target.value); zeichnen(); }
+                ) : null;
+                if (landWahl) landWahl.select.value = String(formular.zone || 0);
+
+                const zahlWahl = (shop.zahlungsarten || []).length > 1 ? auswahlFeld(
+                    "zahlung", "Zahlungsart", shop.zahlungsarten,
+                    function (e) { formular.zahlung = shop.zahlungsarten[Number(e.target.value)]; }
+                ) : null;
+                if (zahlWahl) zahlWahl.select.value = String(Math.max(0, shop.zahlungsarten.indexOf(formular.zahlung)));
 
                 function absenden() {
                     if (!formular.name || (summe.physisch && !formular.adresse)) {
@@ -629,7 +659,7 @@
                             el("ul", { class: "facts" }, [
                                 summenZeile("Zwischensumme", preis(summe.zwischensumme, shop.waehrung)),
                                 versandText ? summenZeile("Versand", versandText) : null,
-                                summenZeile("Gesamt", preis(summe.gesamt, shop.waehrung), true)
+                                summenZeile("Gesamt", preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? " + Versand" : ""), true)
                             ]),
                             el("p", { class: "price-note", style: "margin-top:10px" }, [
                                 (shop.steuerhinweis || "") + " ",
@@ -640,8 +670,10 @@
                                 novalidate: true,
                                 onsubmit: function (e) { e.preventDefault(); absenden(); }
                             }, [
+                                landWahl ? landWahl.feld : null,
                                 eingabe("name", "Name", false, true),
                                 summe.physisch ? eingabe("adresse", "Lieferadresse", true, true) : null,
+                                zahlWahl ? zahlWahl.feld : null,
                                 eingabe("notiz", "Anmerkung (optional)", true, false),
                                 el("label", { class: "check" }, [
                                     (function () {

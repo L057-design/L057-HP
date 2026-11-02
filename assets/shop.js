@@ -355,6 +355,15 @@
                     }
                     hinweis.textContent = "";
                 }
+                if (p.etsy) {
+                    knoepfe.push(el("a", {
+                        class: "button button-block",
+                        href: p.etsy,
+                        rel: "noopener",
+                        target: "_blank",
+                        text: "Auf Etsy ansehen"
+                    }));
+                }
                 kaufBereich.replaceChildren.apply(kaufBereich, knoepfe);
             }
             knopfAktualisieren();
@@ -642,6 +651,19 @@
     };
 
     korbAnzeigen();
+
+    /* Social-Media-Links aus data/shop.json (leere Einträge werden ausgeblendet) */
+    ladeShop().then(function (shop) {
+        const links = Object.keys(shop.social || {}).filter(function (k) { return shop.social[k]; });
+        if (!links.length) return;
+        document.querySelectorAll("[data-social]").forEach(function (nav) {
+            const liste = nav.querySelector("ul");
+            liste.replaceChildren.apply(liste, links.map(function (k) {
+                return el("li", {}, [el("a", { href: shop.social[k], rel: "noopener me", target: "_blank", text: k })]);
+            }));
+            nav.hidden = false;
+        });
+    }).catch(function () { /* Fußzeile bleibt ohne Social Links */ });
 
     document.querySelectorAll("[data-jahr]").forEach(function (n) {
         n.textContent = new Date().getFullYear();

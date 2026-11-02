@@ -1,0 +1,41 @@
+[
+  {
+    "id": "deathodils",
+    "titel": "Deathodils",
+    "kategorie": "Clothing",
+    "jahr": "2026",
+    "kurz": "Linoleumcut Print",
+    "text": [
+      "Beispieltext: Vom Entwurf über den Linolschnitt bis zum Druck auf Stoff. Hier steht, wie das Motiv entstanden ist, welche Technik verwendet wurde und was dabei gelernt wurde."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "produkt": "deathodils-shirt",
+    "beispiel": true
+  },
+  {
+    "id": "projekt-art",
+    "titel": "Projekt Art",
+    "kategorie": "Art",
+    "jahr": "2026",
+    "kurz": "Platzhalterbeschreibung",
+    "text": [
+      "Beispieltext für ein Kunstprojekt."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "produkt": "",
+    "beispiel": true
+  },
+  {
+    "id": "projekt-living",
+    "titel": "Projekt Living",
+    "kategorie": "Living",
+    "jahr": "2026",
+    "kurz": "Platzhalterbeschreibung",
+    "text": [
+      "Beispieltext für ein Wohn- oder 3D-Druck-Projekt."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "produkt": "",
+    "beispiel": true
+  }
+]

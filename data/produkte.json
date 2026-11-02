@@ -1,0 +1,76 @@
+[
+  {
+    "id": "deathodils-shirt",
+    "name": "Deathodils Shirt",
+    "kategorie": "Clothing",
+    "typ": "physisch",
+    "preis": 35.00,
+    "kurz": "Handgedruckter Linolschnitt auf Baumwolle",
+    "beschreibung": [
+      "Beispieltext: Jedes Shirt wird einzeln von Hand mit dem Deathodils-Linolschnitt bedruckt. Kleine Abweichungen im Druckbild sind gewollt und machen jedes Stück zum Unikat.",
+      "100 % Baumwolle. Auf links waschen, maximal 30 °C."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "varianten": {
+      "Größe": ["S", "M", "L", "XL"]
+    },
+    "verfuegbar": true,
+    "hervorgehoben": true,
+    "zahlungslink": "",
+    "beispiel": true
+  },
+  {
+    "id": "deathodils-print-a4",
+    "name": "Deathodils Print A4",
+    "kategorie": "Art",
+    "typ": "physisch",
+    "preis": 25.00,
+    "kurz": "Linolschnitt auf Papier, signiert",
+    "beschreibung": [
+      "Beispieltext: Handabzug des Deathodils-Linolschnitts auf säurefreiem Papier, nummeriert und signiert.",
+      "Format A4, ohne Rahmen."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "varianten": {},
+    "verfuegbar": true,
+    "hervorgehoben": true,
+    "zahlungslink": "",
+    "beispiel": true
+  },
+  {
+    "id": "wandhalter",
+    "name": "Wandhalter Modular",
+    "kategorie": "Living",
+    "typ": "physisch",
+    "preis": 19.00,
+    "kurz": "3D-gedruckt, in mehreren Farben",
+    "beschreibung": [
+      "Beispieltext: Minimalistischer Wandhalter aus PETG, konstruiert für Schlüssel, Kopfhörer oder Pflanzen. Inklusive Schrauben und Dübel."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "varianten": {
+      "Farbe": ["Schwarz", "Grau", "Weiß"]
+    },
+    "verfuegbar": true,
+    "hervorgehoben": true,
+    "zahlungslink": "",
+    "beispiel": true
+  },
+  {
+    "id": "schnittmuster-beispiel",
+    "name": "Schnittmuster (PDF)",
+    "kategorie": "Digital",
+    "typ": "digital",
+    "preis": 9.00,
+    "kurz": "Digitaler Download zum Selbstausdrucken",
+    "beschreibung": [
+      "Beispieltext: Schnittmuster als PDF in Originalgröße, mit Testquadrat und Anleitung. Nach dem Kauf erhältst du den Download per E-Mail."
+    ],
+    "bilder": ["images/project-placeholder.jpg"],
+    "varianten": {},
+    "verfuegbar": false,
+    "hervorgehoben": false,
+    "zahlungslink": "",
+    "beispiel": true
+  }
+]

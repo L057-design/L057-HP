@@ -4,95 +4,77 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Projekte – L057</title>
+<meta name="description" content="Projekte von L057 aus Art, Clothing und Living.">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Projekte – L057">
+<meta property="og:description" content="Projekte von L057 aus Art, Clothing und Living.">
+<meta property="og:image" content="https://l057.at/logo-square-512.png">
+<meta property="og:url" content="https://l057.at/projekte.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_AT">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
 <link rel="stylesheet" href="styles.css">
 </head>
+<body data-seite="projekte">
 
-<body>
-
-<main class="page">
-<section class="content-section">
-
-<h1>Projekte</h1>
-
-<h2>Art</h2>
-
-<div class="project-grid">
-
-<a href="projekt-a.html" class="project-card">
-    <img src="images/project-placeholder.gif" alt="Projekt A" loading="lazy">
-    <div class="project-card-content">
-        <h3>Projekt A</h3>
-        <p>Platzhalterbeschreibung.</p>
-    </div>
-</a>
-
-<a href="projekt-c.html" class="project-card">
-    <img src="images/project-placeholder.gif" alt="Projekt C" loading="lazy">
-    <div class="project-card-content">
-        <h3>Projekt C</h3>
-        <p>Platzhalterbeschreibung.</p>
-    </div>
-</a>
-
-</div>
-
-<h2>Clothing</h2>
-
-<div class="project-grid">
-
-<a href="projekt-d.html" class="project-card">
-    <img src="images/project-placeholder.gif" alt="Projekt D" loading="lazy">
-    <div class="project-card-content">
-        <h3>Deathodils</h3>
-        <p>Linoleumcut Print</p>
-    </div>
-</a>
-
-<a href="projekt-e.html" class="project-card">
-    <img src="images/project-placeholder.gif" alt="Projekt E" loading="lazy">
-    <div class="project-card-content">
-        <h3>Projekt E</h3>
-        <p>Platzhalterbeschreibung.</p>
-    </div>
-</a>
-
-</div>
-
-<h2>Living</h2>
-
-<div class="project-grid">
-
-<a href="projekt-e.html" class="project-card">
-    <img src="images/project-placeholder.gif" alt="Projekt E" loading="lazy">
-    <div class="project-card-content">
-        <h3>Projekt E</h3>
-        <p>Platzhalterbeschreibung.</p>
-    </div>
-</a>
-    
-<a href="projekt-f.html" class="project-card">
-    <img src="images/project-placeholder.gif" alt="Projekt F" loading="lazy">
-    <div class="project-card-content">
-        <h3>Projekt F</h3>
-        <p>Platzhalterbeschreibung.</p>
-    </div>
-</a>
-
-</div>
-
-</section>
-</main>
-
-<footer>
-    <div class="footer-inner">
-        <div>© 2026 L057</div>
-        <nav class="footer-nav" aria-label="Footer Navigation">
-            <a href="index.html">Startseite</a>
-            <a href="impressum.html">Impressum</a>
-            <a href="datenschutz.html">Datenschutz</a>
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="brand" aria-label="L057 Startseite">
+            <img src="assets/logo-mark.png" alt="" width="28" height="25">
+            <span>L057</span>
+        </a>
+        <nav class="main-nav" aria-label="Hauptnavigation">
+            <a href="shop.html">Shop</a>
+            <a href="projekte.html" aria-current="page">Projekte</a>
+            <a href="mailto:l057.design@gmail.com">Kontakt</a>
         </nav>
     </div>
+</header>
+
+<main class="page">
+    <header class="page-head">
+        <h1>Projekte</h1>
+        <p>Experimente, Auftragsarbeiten und Entwicklungen aus Design, Konstruktion und Druck.</p>
+    </header>
+    <div class="filters" id="filter" aria-label="Kategorien"></div>
+    <div class="card-grid" id="projekt-liste"></div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <a href="index.html" class="brand"><img src="assets/logo-mark.png" alt="" width="28" height="25"><span>L057</span></a>
+            <p>Design · Engineering · 3D Printing. Handgemacht in Kapfenberg, Österreich.</p>
+        </div>
+        <nav class="footer-col" aria-label="Shop">
+            <h2>Shop</h2>
+            <ul>
+                <li><a href="shop.html">Alle Produkte</a></li>
+                <li><a href="projekte.html">Projekte</a></li>
+                <li><a href="versand.html">Versand &amp; Zahlung</a></li>
+                <li><a href="mailto:l057.design@gmail.com">Kontakt</a></li>
+            </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Rechtliches">
+            <h2>Rechtliches</h2>
+            <ul>
+                <li><a href="impressum.html">Impressum</a></li>
+                <li><a href="datenschutz.html">Datenschutz</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="footer-bottom">© <span data-jahr>2026</span> L057</div>
 </footer>
 
+<script src="assets/shop.js" defer></script>
 </body>
 </html>

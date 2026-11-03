@@ -36,19 +36,121 @@
     "technik": "Linolschnitt auf Büttenpapier",
     "masse": "30 × 40 cm (Blatt)",
     "auflage": 20,
-    "bestand": 12,
     "preis": 120.0,
     "signiert": "Signiert und nummeriert",
     "zertifikat": false,
     "beschreibung": [
-      "Beispieltext: Handabzug von der Linolplatte, jeder Druck einzeln mit dem Löffel abgerieben. Kleine Unterschiede im Farbauftrag machen jedes Blatt einzigartig."
+      "Beispieltext: Handabzug von der Linolplatte, jeder Druck einzeln mit dem Löffel abgerieben. Kleine Unterschiede im Farbauftrag machen jedes Blatt einzigartig.",
+      "Wähle dein Exemplar: Jedes Blatt ist einzeln fotografiert, damit du genau das Stück bekommst, das du siehst."
     ],
     "pflege": "Hinter UV-Schutzglas rahmen, vor direkter Sonne schützen",
     "bilder": [
       "images/project-placeholder.jpg"
     ],
     "hervorgehoben": true,
-    "beispiel": true
+    "beispiel": true,
+    "exemplare": [
+      {
+        "nr": 1,
+        "bild": "images/werke/deathodils-01.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 2,
+        "bild": "images/werke/deathodils-02.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 3,
+        "bild": "images/werke/deathodils-03.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 4,
+        "bild": "images/werke/deathodils-04.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 5,
+        "bild": "images/werke/deathodils-05.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 6,
+        "bild": "images/werke/deathodils-06.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 7,
+        "bild": "images/werke/deathodils-07.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 8,
+        "bild": "images/werke/deathodils-08.jpg",
+        "verkauft": true
+      },
+      {
+        "nr": 9,
+        "bild": "images/werke/deathodils-09.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 10,
+        "bild": "images/werke/deathodils-10.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 11,
+        "bild": "images/werke/deathodils-11.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 12,
+        "bild": "images/werke/deathodils-12.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 13,
+        "bild": "images/werke/deathodils-13.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 14,
+        "bild": "images/werke/deathodils-14.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 15,
+        "bild": "images/werke/deathodils-15.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 16,
+        "bild": "images/werke/deathodils-16.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 17,
+        "bild": "images/werke/deathodils-17.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 18,
+        "bild": "images/werke/deathodils-18.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 19,
+        "bild": "images/werke/deathodils-19.jpg",
+        "verkauft": false
+      },
+      {
+        "nr": 20,
+        "bild": "images/werke/deathodils-20.jpg",
+        "verkauft": false
+      }
+    ]
   },
   {
     "id": "lichtform-i",

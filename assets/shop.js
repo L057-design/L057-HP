@@ -113,7 +113,21 @@
 
     /* ---------- Werke: Unikat, Kleinserie, Bestand ---------- */
 
+    /* Optional bei Kleinserien: "exemplare": [{ "nr": 6, "bild": "...", "verkauft": false }] */
+    function hatExemplare(p) {
+        return Array.isArray(p.exemplare) && p.exemplare.length > 0;
+    }
+
+    function exemplarName(p, nr) {
+        return "#" + String(nr).padStart(2, "0") + " / " + p.auflage;
+    }
+
+    function freieExemplare(p) {
+        return hatExemplare(p) ? p.exemplare.filter(function (x) { return !x.verkauft; }) : [];
+    }
+
     function bestand(p) {
+        if (hatExemplare(p)) return freieExemplare(p).length;
         if (typeof p.bestand === "number") return Math.max(0, p.bestand);
         return p.verfuegbar ? 1 : 0;
     }
@@ -260,33 +274,59 @@
 
     /* ---------- Galerie ---------- */
 
-    function galerie(bilder, alt, badges) {
+    /* Galerie mit Vorschaubildern. Rückgabe: Element mit .zeige(src, markierung)
+       zum Springen auf ein bestimmtes Bild; optionen.beiWechsel(src) meldet Klicks. */
+    function galerie(bilder, alt, badges, optionen) {
+        optionen = optionen || {};
         const liste = bilder && bilder.length ? bilder : ["images/project-placeholder.jpg"];
         const haupt = el("img", { src: liste[0], alt: alt });
+        const markierung = el("span", { class: "exemplar-tag", hidden: true });
         const thumbs = el("div", { class: "thumbs" });
+
+        function aktiv(src) {
+            Array.prototype.forEach.call(thumbs.children, function (t) {
+                t.setAttribute("aria-current", String(t.dataset.src === src));
+            });
+        }
 
         if (liste.length > 1) {
             liste.forEach(function (src, i) {
                 thumbs.appendChild(el("button", {
                     class: "thumb",
                     type: "button",
-                    "aria-label": "Bild " + (i + 1) + " anzeigen",
+                    "data-src": src,
+                    "aria-label": (optionen.beschriftung && optionen.beschriftung[src]) || "Bild " + (i + 1) + " anzeigen",
                     "aria-current": i === 0 ? "true" : "false",
-                    onclick: function (e) {
+                    onclick: function () {
                         haupt.src = src;
-                        Array.prototype.forEach.call(thumbs.children, function (t) {
-                            t.setAttribute("aria-current", "false");
-                        });
-                        e.currentTarget.setAttribute("aria-current", "true");
+                        aktiv(src);
+                        markierung.hidden = true;
+                        if (optionen.beiWechsel) optionen.beiWechsel(src);
                     }
                 }, [el("img", { src: src, alt: "" })]));
             });
         }
 
-        return el("div", {}, [
-            el("div", { class: "gallery-main" }, [haupt].concat(badges || [])),
+        const wrapper = el("div", {}, [
+            el("div", { class: "gallery-main" }, [haupt, markierung].concat(badges || [])),
             liste.length > 1 ? thumbs : null
         ]);
+
+        wrapper.zeige = function (src, text) {
+            if (!src) return;
+            haupt.src = src;
+            aktiv(src);
+            markierung.textContent = text || "";
+            markierung.hidden = !text;
+            const thumb = Array.prototype.find.call(thumbs.children, function (t) { return t.dataset.src === src; });
+            if (thumb && thumb.scrollIntoView) thumb.scrollIntoView({ block: "nearest", inline: "nearest" });
+            const main = wrapper.firstChild;
+            const box = main.getBoundingClientRect();
+            if (box.top < 0 || box.bottom > window.innerHeight) {
+                main.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        };
+        return wrapper;
     }
 
     function absaetze(texte) {
@@ -342,6 +382,46 @@
                 ]));
             });
 
+            /* Exemplar-Auswahl bei nummerierten Kleinserien */
+            let galerieEl = null;
+            const bilderAlle = (p.bilder || []).slice();
+            const bildZuNr = {};
+            const beschriftung = {};
+            if (hatExemplare(p)) {
+                p.exemplare.forEach(function (x) {
+                    if (!x.bild) return;
+                    if (bilderAlle.indexOf(x.bild) === -1) bilderAlle.push(x.bild);
+                    bildZuNr[x.bild] = x;
+                    beschriftung[x.bild] = "Exemplar " + exemplarName(p, x.nr) + " anzeigen";
+                });
+            }
+            let exemplarSelect = null;
+            if (hatExemplare(p) && verfuegbar(p)) {
+                const frei = freieExemplare(p);
+                auswahl.Exemplar = exemplarName(p, frei[0].nr);
+                exemplarSelect = el("select", {
+                    class: "select",
+                    id: "exemplar",
+                    onchange: function (e) {
+                        const x = p.exemplare.find(function (y) { return exemplarName(p, y.nr) === e.target.value; });
+                        auswahl.Exemplar = e.target.value;
+                        hinweis.textContent = "";
+                        if (x && x.bild && galerieEl) galerieEl.zeige(x.bild, exemplarName(p, x.nr));
+                    }
+                }, p.exemplare.map(function (x) {
+                    return el("option", {
+                        value: exemplarName(p, x.nr),
+                        disabled: !!x.verkauft,
+                        text: exemplarName(p, x.nr) + (x.verkauft ? " – verkauft" : "")
+                    });
+                }));
+                exemplarSelect.value = auswahl.Exemplar;
+                felder.unshift(el("div", { class: "field" }, [
+                    el("label", { for: "exemplar", text: "Exemplar wählen" }),
+                    exemplarSelect
+                ]));
+            }
+
             const kaufBereich = el("div", { class: "buy-area" });
             const hinweis = el("p", { class: "buy-hint", "aria-live": "polite" });
             const anfrageLink = "mailto:" + shop.email + "?subject=" + encodeURIComponent("Anfrage zu: " + p.name);
@@ -365,6 +445,15 @@
                         type: "button",
                         text: "In den Warenkorb",
                         onclick: function () {
+                            if (hatExemplare(p) && korbLesen().some(function (e) {
+                                return e.id === p.id && e.varianten && e.varianten.Exemplar === auswahl.Exemplar;
+                            })) {
+                                hinweis.replaceChildren(
+                                    "Exemplar " + auswahl.Exemplar + " liegt schon im Warenkorb. ",
+                                    el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
+                                );
+                                return;
+                            }
                             if (imKorb() >= bestand(p)) {
                                 hinweis.replaceChildren(
                                     istUnikat(p) ? "Dieses Unikat liegt schon im Warenkorb. " : "Alle verfügbaren Exemplare liegen schon im Warenkorb. ",
@@ -408,7 +497,16 @@
                     el("span", { text: p.name })
                 ]),
                 el("div", { class: "detail" }, [
-                    galerie(p.bilder, p.name, badges),
+                    (galerieEl = galerie(bilderAlle, p.name, badges, {
+                        beschriftung: beschriftung,
+                        beiWechsel: function (src) {
+                            const x = bildZuNr[src];
+                            if (x && !x.verkauft && exemplarSelect) {
+                                exemplarSelect.value = exemplarName(p, x.nr);
+                                auswahl.Exemplar = exemplarSelect.value;
+                            }
+                        }
+                    })),
                     el("div", { class: "detail-info" }, [
                         el("span", { class: "card-kicker", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
                         el("h1", { text: p.name }),
@@ -439,6 +537,13 @@
                     ])
                 ])
             );
+            const ausgewaehlt = hatExemplare(p) && p.exemplare.find(function (x) {
+                return exemplarName(p, x.nr) === auswahl.Exemplar;
+            });
+            const startExemplar = ausgewaehlt;
+            if (startExemplar && startExemplar.bild && (p.bilder || []).length === 0) {
+                galerieEl.zeige(startExemplar.bild, exemplarName(p, startExemplar.nr));
+            }
         }).catch(function () { fehler(ziel, "Werk konnte nicht geladen werden."); });
     }
 
@@ -496,6 +601,10 @@
             /* Einträge, die es nicht mehr gibt oder nicht verfügbar sind, entfernen */
             const bereinigt = korbLesen().filter(function (e) {
                 const p = produkte.find(function (x) { return x.id === e.id; });
+                if (p && hatExemplare(p)) {
+                    const nr = e.varianten && e.varianten.Exemplar;
+                    if (!freieExemplare(p).some(function (x) { return exemplarName(p, x.nr) === nr; })) return false;
+                }
                 return p && verfuegbar(p) && e.menge > 0;
             }).map(function (e) {
                 const p = produkte.find(function (x) { return x.id === e.id; });
@@ -522,7 +631,7 @@
                     const andere = korb.reduce(function (s, e, i) {
                         return s + (i !== index && e.id === korb[index].id ? e.menge : 0);
                     }, 0);
-                    korb[index].menge = Math.max(1, Math.min(neu, bestand(p) - andere));
+                    korb[index].menge = hatExemplare(p) ? 1 : Math.max(1, Math.min(neu, bestand(p) - andere));
                 }
                 korbSpeichern(korb);
                 zeichnen();
@@ -629,7 +738,7 @@
                                 el("span", { "aria-live": "polite", text: String(x.eintrag.menge) }),
                                 el("button", {
                                     type: "button", "aria-label": "Eins mehr", text: "+",
-                                    disabled: korbLesen().filter(function (e) { return e.id === x.produkt.id; })
+                                    disabled: hatExemplare(x.produkt) || korbLesen().filter(function (e) { return e.id === x.produkt.id; })
                                         .reduce(function (s, e) { return s + e.menge; }, 0) >= bestand(x.produkt),
                                     onclick: function () { menge(i, x.eintrag.menge + 1); }
                                 }),

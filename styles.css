@@ -1157,3 +1157,46 @@ p {
         transition: none;
     }
 }
+
+/* ---------- Exemplar-Auswahl ---------- */
+
+.gallery-main {
+    scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.exemplar-tag {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #0d0d0d;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+.exemplar-tag[hidden] {
+    display: none;
+}
+
+.thumbs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+}
+
+.thumb {
+    flex: none;
+}
+
+.select option:disabled {
+    color: #555;
+}
+
+.detail > *,
+.project-body > * {
+    min-width: 0;
+}

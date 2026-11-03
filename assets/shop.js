@@ -111,21 +111,47 @@
         });
     }
 
+    /* ---------- Werke: Unikat, Kleinserie, Bestand ---------- */
+
+    function bestand(p) {
+        if (typeof p.bestand === "number") return Math.max(0, p.bestand);
+        return p.verfuegbar ? 1 : 0;
+    }
+
+    function verfuegbar(p) {
+        return bestand(p) > 0;
+    }
+
+    function istUnikat(p) {
+        return !p.auflage || p.auflage === "Unikat" || p.auflage === 1;
+    }
+
+    function auflageText(p) {
+        return istUnikat(p) ? "Unikat" : "Kleinserie, Auflage " + p.auflage;
+    }
+
+    function verfuegbarText(p) {
+        const n = bestand(p);
+        if (n === 0) return "Verkauft";
+        if (istUnikat(p)) return "Verfügbar";
+        return "Noch " + n + " von " + p.auflage + " verfügbar";
+    }
+
     /* ---------- Karten ---------- */
 
     function produktKarte(p, shop) {
         const badges = [];
-        if (!p.verfuegbar) badges.push(el("span", { class: "badge", text: "Bald verfügbar" }));
-        if (p.typ === "digital") badges.push(el("span", { class: "badge badge-muted", text: "Digital" }));
-        if (p.beispiel && badges.length < 2) badges.push(el("span", { class: "badge badge-muted", text: "Beispiel" }));
+        if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: "Verkauft" }));
+        else badges.push(el("span", { class: "badge badge-muted", text: istUnikat(p) ? "Unikat" : "Edition /" + p.auflage }));
+        if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: "Beispiel" }));
 
-        return el("a", { class: "card", href: "produkt.html?id=" + encodeURIComponent(p.id) }, [
+        return el("a", { class: "card" + (verfuegbar(p) ? "" : " card-sold"), href: "produkt.html?id=" + encodeURIComponent(p.id) }, [
             el("div", { class: "card-media" }, [bild(p.bilder && p.bilder[0], p.name)].concat(badges)),
             el("div", { class: "card-body" }, [
-                el("span", { class: "card-kicker", text: p.kategorie }),
+                el("span", { class: "card-kicker", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
                 el("h3", { text: p.name }),
                 el("p", { text: p.kurz }),
-                el("span", { class: "card-price", text: preis(p.preis, shop.waehrung) })
+                el("span", { class: "card-price", text: verfuegbar(p) ? preis(p.preis, shop.waehrung) : "Verkauft" })
             ])
         ]);
     }
@@ -213,7 +239,7 @@
         Promise.all([ladeShop(), ladeProdukte()]).then(function (r) {
             const shop = r[0];
             const liste = r[1].slice().sort(function (a, b) {
-                return Number(b.verfuegbar) - Number(a.verfuegbar);
+                return Number(verfuegbar(b)) - Number(verfuegbar(a));
             });
             uebersicht(liste, shop.kategorien, gitter, document.getElementById("filter"), function (p) {
                 return produktKarte(p, shop);
@@ -271,6 +297,17 @@
 
     /* ---------- Produktdetail ---------- */
 
+    function versandText(p, shop) {
+        if (p.versand === "anfrage") return "auf Anfrage, Abholung möglich";
+        if (p.versand && typeof p.versand === "object") {
+            return Object.keys(p.versand).map(function (zone) {
+                const wert = p.versand[zone];
+                return zone.replace("-Land", "") + " " + (wert === null ? "auf Anfrage" : preis(wert, shop.waehrung));
+            }).join(" · ");
+        }
+        return shop.versandkosten;
+    }
+
     function produktSeite() {
         const ziel = document.getElementById("produkt");
         const id = param("id");
@@ -280,14 +317,13 @@
             const p = r[1].find(function (e) { return e.id === id; });
             if (!p) {
                 ziel.replaceChildren(
-                    el("p", { class: "empty", text: "Dieses Produkt gibt es nicht (mehr)." }),
-                    el("a", { class: "button", href: "shop.html", text: "Zum Shop" })
+                    el("p", { class: "empty", text: "Dieses Werk gibt es nicht (mehr)." }),
+                    el("a", { class: "button", href: "shop.html", text: "Alle Werke" })
                 );
                 return;
             }
 
-            document.title = p.name + " – L057 Shop";
-            const digital = p.typ === "digital";
+            document.title = p.name + " – L057";
             const auswahl = {};
             const felder = [];
 
@@ -301,101 +337,88 @@
                     el("select", {
                         class: "select",
                         id: feldId,
-                        onchange: function (e) {
-                            auswahl[name] = e.target.value;
-                            knopfAktualisieren();
-                        }
+                        onchange: function (e) { auswahl[name] = e.target.value; }
                     }, werte.map(function (w) { return el("option", { value: w, text: w }); }))
                 ]));
             });
 
             const kaufBereich = el("div", { class: "buy-area" });
             const hinweis = el("p", { class: "buy-hint", "aria-live": "polite" });
+            const anfrageLink = "mailto:" + shop.email + "?subject=" + encodeURIComponent("Anfrage zu: " + p.name);
 
-            function zahlungslink() {
-                const link = p.zahlungslink;
-                if (!link) return "";
-                if (typeof link === "string") return link;
-                /* Pro Variante ein eigener Link: { "M": "https://buy.stripe.com/..." } */
-                const werte = Object.keys(auswahl).map(function (k) { return auswahl[k]; });
-                return link[werte.join(" / ")] || link[werte[0]] || "";
+            function imKorb() {
+                return korbLesen().filter(function (e) { return e.id === p.id; })
+                    .reduce(function (s, e) { return s + e.menge; }, 0);
             }
 
-            function knopfAktualisieren() {
-                const link = zahlungslink();
-                const knoepfe = [];
-
-                if (!p.verfuegbar) {
-                    knoepfe.push(el("a", {
-                        class: "button button-block",
-                        href: "mailto:" + shop.email + "?subject=" + encodeURIComponent("Benachrichtigung: " + p.name),
-                        text: "Benachrichtigen, wenn verfügbar"
-                    }));
-                    hinweis.textContent = "Dieses Produkt ist derzeit nicht erhältlich.";
-                } else {
-                    knoepfe.push(el("button", {
+            if (!verfuegbar(p)) {
+                kaufBereich.replaceChildren(el("a", {
+                    class: "button button-block",
+                    href: anfrageLink,
+                    text: "Ähnliches Werk anfragen"
+                }));
+                hinweis.textContent = "Dieses Werk ist bereits verkauft.";
+            } else {
+                kaufBereich.replaceChildren(
+                    el("button", {
                         class: "button button-primary button-block",
                         type: "button",
                         text: "In den Warenkorb",
                         onclick: function () {
+                            if (imKorb() >= bestand(p)) {
+                                hinweis.replaceChildren(
+                                    istUnikat(p) ? "Dieses Unikat liegt schon im Warenkorb. " : "Alle verfügbaren Exemplare liegen schon im Warenkorb. ",
+                                    el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
+                                );
+                                return;
+                            }
                             korbHinzufuegen(p.id, Object.assign({}, auswahl), 1);
                             hinweis.replaceChildren(
                                 "✓ Im Warenkorb · ",
                                 el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
                             );
                         }
-                    }));
-                    if (link) {
-                        knoepfe.push(el("a", {
-                            class: "button button-block",
-                            href: link,
-                            rel: "noopener",
-                            text: "Direkt kaufen"
-                        }));
-                    }
-                    hinweis.textContent = "";
-                }
-                if (p.etsy) {
-                    knoepfe.push(el("a", {
-                        class: "button button-block",
-                        href: p.etsy,
-                        rel: "noopener",
-                        target: "_blank",
-                        text: "Auf Etsy ansehen"
-                    }));
-                }
-                kaufBereich.replaceChildren.apply(kaufBereich, knoepfe);
+                    }),
+                    el("a", { class: "button button-block", href: anfrageLink, text: "Frage zum Werk" })
+                );
             }
-            knopfAktualisieren();
 
-            const badges = p.beispiel ? [el("span", { class: "badge badge-muted", text: "Beispiel" })] : [];
+            const badges = [];
+            if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: "Verkauft" }));
+            if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: "Beispiel" }));
+
             const fakten = [
-                ["Kategorie", p.kategorie],
-                ["Art", digital ? "Digitaler Download" : "Physisches Produkt"],
-                p.material ? ["Material", p.material] : null,
+                p.jahr ? ["Jahr", p.jahr] : null,
+                p.technik ? ["Technik / Material", p.technik] : null,
+                p.masse ? ["Maße", p.masse] : null,
+                p.gewicht ? ["Gewicht", p.gewicht] : null,
+                ["Auflage", auflageText(p)],
+                ["Verfügbarkeit", verfuegbarText(p)],
+                p.signiert ? ["Signatur", p.signiert] : null,
+                p.zertifikat ? ["Echtheitszertifikat", "liegt bei"] : null,
                 p.pflege ? ["Pflege", p.pflege] : null,
-                digital ? null : ["Lieferzeit", shop.lieferzeit],
-                digital ? null : ["Versand", shop.versandkosten]
+                verfuegbar(p) ? ["Lieferzeit", shop.lieferzeit] : null,
+                verfuegbar(p) ? ["Versand", versandText(p, shop)] : null
             ].filter(Boolean);
 
             ziel.replaceChildren(
                 el("nav", { class: "breadcrumb", "aria-label": "Brotkrümel" }, [
-                    el("a", { href: "shop.html", text: "Shop" }), " / ",
+                    el("a", { href: "shop.html", text: "Werke" }), " / ",
                     el("a", { href: "shop.html?kategorie=" + encodeURIComponent(p.kategorie), text: p.kategorie }), " / ",
                     el("span", { text: p.name })
                 ]),
                 el("div", { class: "detail" }, [
                     galerie(p.bilder, p.name, badges),
                     el("div", { class: "detail-info" }, [
-                        el("span", { class: "card-kicker", text: p.kategorie }),
+                        el("span", { class: "card-kicker", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
                         el("h1", { text: p.name }),
-                        el("p", { class: "price", text: preis(p.preis, shop.waehrung) }),
-                        el("p", { class: "price-note" }, [
-                            digital ? shop.preishinweis_digital : shop.preishinweis,
-                            digital ? null : " · ",
-                            digital ? null : el("a", { href: "versand.html", text: "Versand & Zahlung" })
-                        ]),
-                        el("div", {}, felder),
+                        el("p", { class: "price", text: verfuegbar(p) ? preis(p.preis, shop.waehrung) : "Verkauft" }),
+                        verfuegbar(p) ? el("p", { class: "price-note" }, [
+                            shop.preishinweis, " · ",
+                            el("a", { href: "versand.html", text: "Versand & Zahlung" })
+                        ]) : el("p", { class: "price-note", text: auflageText(p) }),
+                        el("p", { class: "availability", text: auflageText(p) + " · " + verfuegbarText(p) }),
+                        el("div", {}, verfuegbar(p) ? felder : []),
                         kaufBereich,
                         hinweis,
                         el("div", { class: "description" }, absaetze(p.beschreibung)),
@@ -403,22 +426,20 @@
                             return el("li", {}, [el("span", { text: f[0] }), el("span", { text: f[1] })]);
                         })),
                         p.hinweise ? el("div", { class: "notice" }, [
-                            el("h2", { text: "Sicherheitshinweise" }),
+                            el("h2", { text: "Hinweise" }),
                             el("p", { text: p.hinweise })
                         ]) : null,
                         el("p", { class: "maker" }, [
-                            el("span", { text: "Hersteller: " }), shop.hersteller || ""
+                            el("span", { text: "Künstler: " }), shop.hersteller || ""
                         ]),
-                        el("p", { class: "maker" }, [
-                            digital
-                                ? "Bei digitalen Inhalten erlischt das Widerrufsrecht, sobald der Download mit deiner Zustimmung beginnt. "
-                                : "14 Tage Widerrufsrecht. ",
+                        verfuegbar(p) ? el("p", { class: "maker" }, [
+                            "14 Tage Widerrufsrecht. ",
                             el("a", { href: "widerruf.html", text: "Widerrufsbelehrung" })
-                        ])
+                        ]) : null
                     ])
                 ])
             );
-        }).catch(function () { fehler(ziel, "Produkt konnte nicht geladen werden."); });
+        }).catch(function () { fehler(ziel, "Werk konnte nicht geladen werden."); });
     }
 
     /* ---------- Projektdetail ---------- */
@@ -475,7 +496,10 @@
             /* Einträge, die es nicht mehr gibt oder nicht verfügbar sind, entfernen */
             const bereinigt = korbLesen().filter(function (e) {
                 const p = produkte.find(function (x) { return x.id === e.id; });
-                return p && p.verfuegbar && e.menge > 0;
+                return p && verfuegbar(p) && e.menge > 0;
+            }).map(function (e) {
+                const p = produkte.find(function (x) { return x.id === e.id; });
+                return Object.assign({}, e, { menge: Math.min(e.menge, bestand(p)) });
             });
             korbSpeichern(bereinigt);
 
@@ -491,8 +515,15 @@
 
             function menge(index, neu) {
                 const korb = korbLesen();
-                if (neu <= 0) korb.splice(index, 1);
-                else korb[index].menge = Math.min(99, neu);
+                if (neu <= 0) {
+                    korb.splice(index, 1);
+                } else {
+                    const p = produkte.find(function (x) { return x.id === korb[index].id; });
+                    const andere = korb.reduce(function (s, e, i) {
+                        return s + (i !== index && e.id === korb[index].id ? e.menge : 0);
+                    }, 0);
+                    korb[index].menge = Math.max(1, Math.min(neu, bestand(p) - andere));
+                }
                 korbSpeichern(korb);
                 zeichnen();
             }
@@ -503,10 +534,22 @@
                 const frei = shop.versandfrei_ab > 0 && zwischensumme >= shop.versandfrei_ab;
                 const zonen = shop.versandzonen || [];
                 const zone = zonen[formular.zone || 0] || { name: "", preis: 0 };
-                const anfrage = physisch && !frei && zone.preis === null;
-                const versand = physisch && !frei && !anfrage ? zone.preis : 0;
+                const abholung = !!zone.abholung;
+                /* Versand pro Bestellung: der höchste Versandpreis der enthaltenen Werke */
+                let anfrage = physisch && !frei && !abholung && zone.preis === null;
+                let versand = 0;
+                if (physisch && !frei && !abholung && !anfrage) {
+                    liste.forEach(function (x) {
+                        const v = x.produkt.versand;
+                        if (v === "anfrage") { anfrage = true; return; }
+                        const eigen = v && typeof v === "object" ? v[zone.name] : undefined;
+                        if (eigen === null) { anfrage = true; return; }
+                        versand = Math.max(versand, typeof eigen === "number" ? eigen : zone.preis);
+                    });
+                    if (anfrage) versand = 0;
+                }
                 return {
-                    zwischensumme: zwischensumme, versand: versand, physisch: physisch,
+                    zwischensumme: zwischensumme, versand: versand, physisch: physisch, abholung: abholung,
                     anfrage: anfrage, zone: zone.name, gesamt: zwischensumme + versand
                 };
             }
@@ -525,13 +568,14 @@
                     zeilen.join("\n"),
                     "",
                     "Zwischensumme: " + preis(summe.zwischensumme, shop.waehrung),
-                    summe.physisch ? "Lieferland: " + summe.zone : null,
-                    summe.physisch ? "Versand: " + (summe.anfrage ? "bitte um Angebot" : preis(summe.versand, shop.waehrung)) : null,
+                    summe.physisch ? (summe.abholung ? "Lieferung: " : "Lieferland: ") + summe.zone : null,
+                    summe.physisch ? "Versand: " + (summe.abholung ? "keiner (Abholung)" : summe.anfrage ? "bitte um Angebot" : preis(summe.versand, shop.waehrung)) : null,
                     "Gesamt: " + preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? " zzgl. Versand" : ""),
                     "Zahlung: " + (formular.zahlung || (shop.zahlungsarten || [""])[0]),
                     "",
                     "Name: " + (formular.name || ""),
-                    summe.physisch ? "Lieferadresse:\n" + (formular.adresse || "") : null,
+                    summe.physisch && !summe.abholung ? "Lieferadresse:\n" + (formular.adresse || "") : null,
+                    summe.abholung ? "Telefon / Kontakt für die Abholung: " + (formular.adresse || "") : null,
                     formular.notiz ? "\nAnmerkung:\n" + formular.notiz : null,
                     formular.agb ? "\nAGB und Widerrufsbelehrung gelesen: ja" : null,
                     "",
@@ -579,11 +623,16 @@
                         el("div", { class: "cart-info" }, [
                             el("a", { class: "cart-name", href: "produkt.html?id=" + encodeURIComponent(x.produkt.id), text: x.produkt.name }),
                             v ? el("span", { class: "cart-variant", text: v }) : null,
-                            el("span", { class: "cart-variant", text: preis(x.produkt.preis, shop.waehrung) + " / Stück" }),
+                            el("span", { class: "cart-variant", text: auflageText(x.produkt) + " · " + preis(x.produkt.preis, shop.waehrung) + (istUnikat(x.produkt) ? "" : " / Exemplar") }),
                             el("div", { class: "qty" }, [
                                 el("button", { type: "button", "aria-label": "Eins weniger", text: "−", onclick: function () { menge(i, x.eintrag.menge - 1); } }),
                                 el("span", { "aria-live": "polite", text: String(x.eintrag.menge) }),
-                                el("button", { type: "button", "aria-label": "Eins mehr", text: "+", onclick: function () { menge(i, x.eintrag.menge + 1); } }),
+                                el("button", {
+                                    type: "button", "aria-label": "Eins mehr", text: "+",
+                                    disabled: korbLesen().filter(function (e) { return e.id === x.produkt.id; })
+                                        .reduce(function (s, e) { return s + e.menge; }, 0) >= bestand(x.produkt),
+                                    onclick: function () { menge(i, x.eintrag.menge + 1); }
+                                }),
                                 el("button", { type: "button", class: "cart-remove", text: "Entfernen", onclick: function () { menge(i, 0); } })
                             ])
                         ]),
@@ -596,7 +645,7 @@
                 }
 
                 const versandText = !summe.physisch ? null :
-                    (summe.anfrage ? "auf Anfrage" : (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung)));
+                    (summe.abholung ? "Abholung" : summe.anfrage ? "auf Anfrage" : (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung)));
 
                 function auswahlFeld(name, label, optionen, onchange) {
                     const id = "feld-" + name;
@@ -621,7 +670,7 @@
                 if (zahlWahl) zahlWahl.select.value = String(Math.max(0, shop.zahlungsarten.indexOf(formular.zahlung)));
 
                 function absenden() {
-                    if (!formular.name || (summe.physisch && !formular.adresse)) {
+                    if (!formular.name || (summe.physisch && !summe.abholung && !formular.adresse)) {
                         status.textContent = summe.physisch
                             ? "Bitte Name und Lieferadresse ausfüllen."
                             : "Bitte deinen Namen ausfüllen.";
@@ -672,7 +721,7 @@
                             }, [
                                 landWahl ? landWahl.feld : null,
                                 eingabe("name", "Name", false, true),
-                                summe.physisch ? eingabe("adresse", "Lieferadresse", true, true) : null,
+                                summe.physisch ? eingabe("adresse", summe.abholung ? "Telefon oder Hinweis zur Abholung (optional)" : "Lieferadresse", true, !summe.abholung) : null,
                                 zahlWahl ? zahlWahl.feld : null,
                                 eingabe("notiz", "Anmerkung (optional)", true, false),
                                 el("label", { class: "check" }, [

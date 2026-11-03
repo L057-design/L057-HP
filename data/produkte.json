@@ -1,108 +1,98 @@
 [
   {
-    "id": "deathodils-shirt",
-    "name": "Deathodils Shirt",
-    "kategorie": "Clothing",
-    "typ": "physisch",
-    "preis": 35.0,
-    "kurz": "Handgedruckter Linolschnitt auf Baumwolle",
+    "id": "fundstueck-i",
+    "name": "Fundstück I",
+    "kategorie": "Objekte",
+    "jahr": "2026",
+    "kurz": "Beton und 3D-gedruckte Form",
+    "technik": "Beton, PLA (3D-Druck), Wachs",
+    "masse": "18 × 12 × 9 cm",
+    "gewicht": "ca. 1,4 kg",
+    "auflage": "Unikat",
+    "bestand": 1,
+    "preis": 290.0,
+    "signiert": "Signiert am Boden",
+    "zertifikat": true,
     "beschreibung": [
-      "Beispieltext: Jedes Shirt wird einzeln von Hand mit dem Deathodils-Linolschnitt bedruckt. Kleine Abweichungen im Druckbild sind gewollt und machen jedes Stück zum Unikat."
+      "Beispieltext: Eine gedruckte Form, in Beton gegossen und wieder freigelegt. Was verloren war, bekommt eine neue Gestalt.",
+      "Jedes Objekt entsteht einzeln; Lufteinschlüsse und Spuren der Schalung gehören zum Werk."
     ],
-    "bilder": [
-      "images/project-placeholder.jpg"
-    ],
-    "varianten": {
-      "Größe": [
-        "S",
-        "M",
-        "L",
-        "XL"
-      ]
+    "versand": {
+      "Österreich": 9.9,
+      "EU-Land": 19.9
     },
-    "verfuegbar": true,
+    "bilder": [
+      "images/project-placeholder.jpg"
+    ],
     "hervorgehoben": true,
-    "zahlungslink": "",
-    "beispiel": true,
-    "etsy": "",
-    "material": "100 % Baumwolle",
-    "pflege": "Auf links waschen, max. 30 °C, nicht in den Trockner",
-    "hinweise": ""
+    "beispiel": true
   },
   {
-    "id": "deathodils-print-a4",
-    "name": "Deathodils Print A4",
-    "kategorie": "Art",
-    "typ": "physisch",
-    "preis": 25.0,
-    "kurz": "Linolschnitt auf Papier, signiert",
+    "id": "deathodils",
+    "name": "Deathodils",
+    "kategorie": "Druckgrafik",
+    "jahr": "2026",
+    "kurz": "Linolschnitt, handgedruckt",
+    "technik": "Linolschnitt auf Büttenpapier",
+    "masse": "30 × 40 cm (Blatt)",
+    "auflage": 20,
+    "bestand": 12,
+    "preis": 120.0,
+    "signiert": "Signiert und nummeriert",
+    "zertifikat": false,
     "beschreibung": [
-      "Beispieltext: Handabzug des Deathodils-Linolschnitts auf säurefreiem Papier, nummeriert und signiert.",
-      "Format A4, ohne Rahmen."
+      "Beispieltext: Handabzug von der Linolplatte, jeder Druck einzeln mit dem Löffel abgerieben. Kleine Unterschiede im Farbauftrag machen jedes Blatt einzigartig."
+    ],
+    "pflege": "Hinter UV-Schutzglas rahmen, vor direkter Sonne schützen",
+    "bilder": [
+      "images/project-placeholder.jpg"
+    ],
+    "hervorgehoben": true,
+    "beispiel": true
+  },
+  {
+    "id": "lichtform-i",
+    "name": "Lichtform I",
+    "kategorie": "Licht",
+    "jahr": "2026",
+    "kurz": "Leuchtobjekt aus Beton und Licht",
+    "technik": "Beton, 3D-gedruckter Diffusor, LED",
+    "masse": "24 × 15 × 15 cm",
+    "auflage": "Unikat",
+    "bestand": 0,
+    "preis": 480.0,
+    "signiert": "Signiert",
+    "zertifikat": true,
+    "beschreibung": [
+      "Beispieltext: Ein Lichtobjekt, das zeigt, wie ein verkauftes Werk dargestellt wird. Verkaufte Arbeiten bleiben als Archiv sichtbar."
+    ],
+    "versand": "anfrage",
+    "bilder": [
+      "images/project-placeholder.jpg"
+    ],
+    "hervorgehoben": true,
+    "beispiel": true
+  },
+  {
+    "id": "fundstueck-serie",
+    "name": "Fundstück – Kleinserie",
+    "kategorie": "Objekte",
+    "jahr": "2026",
+    "kurz": "Abguss in kleiner Auflage",
+    "technik": "Beton, pigmentiert",
+    "masse": "10 × 8 × 6 cm",
+    "auflage": 5,
+    "bestand": 2,
+    "preis": 140.0,
+    "signiert": "Signiert und nummeriert",
+    "zertifikat": true,
+    "beschreibung": [
+      "Beispieltext: Fünf Abgüsse derselben Form, jeder mit eigener Oberfläche."
     ],
     "bilder": [
       "images/project-placeholder.jpg"
     ],
-    "varianten": {},
-    "verfuegbar": true,
-    "hervorgehoben": true,
-    "zahlungslink": "",
-    "beispiel": true,
-    "etsy": "",
-    "material": "Säurefreies Papier, Druckfarbe auf Ölbasis",
-    "pflege": "Vor direkter Sonne schützen",
-    "hinweise": ""
-  },
-  {
-    "id": "wandhalter",
-    "name": "Wandhalter Modular",
-    "kategorie": "Living",
-    "typ": "physisch",
-    "preis": 19.0,
-    "kurz": "3D-gedruckt, in mehreren Farben",
-    "beschreibung": [
-      "Beispieltext: Minimalistischer Wandhalter aus PETG, konstruiert für Schlüssel, Kopfhörer oder Pflanzen. Inklusive Schrauben und Dübel."
-    ],
-    "bilder": [
-      "images/project-placeholder.jpg"
-    ],
-    "varianten": {
-      "Farbe": [
-        "Schwarz",
-        "Grau",
-        "Weiß"
-      ]
-    },
-    "verfuegbar": true,
-    "hervorgehoben": true,
-    "zahlungslink": "",
-    "beispiel": true,
-    "etsy": "",
-    "material": "PETG (3D-gedruckt)",
-    "pflege": "Mit feuchtem Tuch reinigen",
-    "hinweise": "Kein Spielzeug. Enthält Kleinteile (Schrauben), nicht für Kinder unter 3 Jahren. Maximale Belastung: [x] kg."
-  },
-  {
-    "id": "schnittmuster-beispiel",
-    "name": "Schnittmuster (PDF)",
-    "kategorie": "Digital",
-    "typ": "digital",
-    "preis": 9.0,
-    "kurz": "Digitaler Download zum Selbstausdrucken",
-    "beschreibung": [
-      "Beispieltext: Schnittmuster als PDF in Originalgröße, mit Testquadrat und Anleitung. Nach dem Kauf erhältst du den Download per E-Mail."
-    ],
-    "bilder": [
-      "images/project-placeholder.jpg"
-    ],
-    "varianten": {},
-    "verfuegbar": false,
     "hervorgehoben": false,
-    "zahlungslink": "",
-    "beispiel": true,
-    "etsy": "",
-    "material": "PDF-Datei",
-    "pflege": "",
-    "hinweise": ""
+    "beispiel": true
   }
 ]

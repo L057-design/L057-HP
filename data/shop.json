@@ -2,16 +2,14 @@
   "email": "l057.design@gmail.com",
   "waehrung": "EUR",
   "preishinweis": "Endpreis zzgl. Versand",
-  "preishinweis_digital": "Endpreis, digitaler Download",
-  "lieferzeit": "2–5 Werktage (AT), 5–10 (EU)",
-  "versandkosten": "Österreich 4,90 € · EU 9,90 €",
+  "lieferzeit": "3–7 Werktage (AT), 5–10 (EU)",
+  "versandkosten": "ab 6,90 € (AT) · ab 14,90 € (EU)",
   "versandfrei_ab": 0,
   "bestellung": "email",
   "kategorien": [
-    "Art",
-    "Clothing",
-    "Living",
-    "Digital"
+    "Objekte",
+    "Licht",
+    "Druckgrafik"
   ],
   "social": {
     "Instagram": "https://www.instagram.com/l057_design",
@@ -21,23 +19,29 @@
     "Printables": ""
   },
   "steuerhinweis": "Gemäß § 6 Abs. 1 Z 27 UStG (Kleinunternehmerregelung) wird keine Umsatzsteuer ausgewiesen.",
-  "hersteller": "L057 · Dimitri Wastl, Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Österreich · l057.design@gmail.com",
+  "hersteller": "Dimitri Wastl (L057), Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Österreich · l057.design@gmail.com",
   "versandzonen": [
     {
       "name": "Österreich",
-      "preis": 4.9
+      "preis": 6.9
     },
     {
       "name": "EU-Land",
-      "preis": 9.9
+      "preis": 14.9
     },
     {
       "name": "Anderes Land (auf Anfrage)",
       "preis": null
+    },
+    {
+      "name": "Abholung in Kapfenberg (nach Absprache)",
+      "preis": 0,
+      "abholung": true
     }
   ],
   "zahlungsarten": [
     "Überweisung",
     "PayPal"
-  ]
+  ],
+  "etsy_hinweis": "Serienprodukte und Alltagsobjekte von L057 gibt es auf Etsy."
 }

@@ -852,6 +852,42 @@ p {
     border-color: var(--text);
 }
 
+/* ---------- Werke: verkauft, Auflage ---------- */
+
+.card-sold .card-media img {
+    filter: grayscale(1);
+    opacity: 0.45;
+}
+
+.card-sold .card-price {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+}
+
+.availability {
+    margin: -14px 0 22px;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.etsy-hint {
+    margin-top: 6px;
+    font-size: 0.88rem;
+}
+
+.etsy-hint a {
+    color: var(--text);
+}
+
+.qty button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
 /* ---------- Über, Hinweise, Rechtliches ---------- */
 
 .about {

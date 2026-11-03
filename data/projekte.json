@@ -2,39 +2,45 @@
   {
     "id": "deathodils",
     "titel": "Deathodils",
-    "kategorie": "Clothing",
+    "kategorie": "Druckgrafik",
     "jahr": "2026",
     "kurz": "Linoleumcut Print",
     "text": [
       "Beispieltext: Vom Entwurf über den Linolschnitt bis zum Druck auf Stoff. Hier steht, wie das Motiv entstanden ist, welche Technik verwendet wurde und was dabei gelernt wurde."
     ],
-    "bilder": ["images/project-placeholder.jpg"],
-    "produkt": "deathodils-shirt",
+    "bilder": [
+      "images/project-placeholder.jpg"
+    ],
+    "produkt": "deathodils",
     "beispiel": true
   },
   {
     "id": "projekt-art",
-    "titel": "Projekt Art",
-    "kategorie": "Art",
+    "titel": "Projekt Objekte",
+    "kategorie": "Objekte",
     "jahr": "2026",
     "kurz": "Platzhalterbeschreibung",
     "text": [
       "Beispieltext für ein Kunstprojekt."
     ],
-    "bilder": ["images/project-placeholder.jpg"],
+    "bilder": [
+      "images/project-placeholder.jpg"
+    ],
     "produkt": "",
     "beispiel": true
   },
   {
     "id": "projekt-living",
-    "titel": "Projekt Living",
-    "kategorie": "Living",
+    "titel": "Projekt Engineering",
+    "kategorie": "Engineering",
     "jahr": "2026",
     "kurz": "Platzhalterbeschreibung",
     "text": [
-      "Beispieltext für ein Wohn- oder 3D-Druck-Projekt."
+      "Beispieltext für ein Design- oder Engineering-Projekt, z. B. eine Konstruktion für den 3D-Druck."
     ],
-    "bilder": ["images/project-placeholder.jpg"],
+    "bilder": [
+      "images/project-placeholder.jpg"
+    ],
     "produkt": "",
     "beispiel": true
   }

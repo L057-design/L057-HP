@@ -7,6 +7,26 @@
 <meta name="description" content="L057 – Kunst von Dimitri Wastl: Einzelstücke und Kleinserien aus Beton, Licht, 3D-Druck und Druckgrafik. Kapfenberg, Österreich.">
 <meta name="theme-color" content="#0d0d0d">
 <meta name="robots" content="noindex, follow">
+<script>
+(function () {
+    try {
+        if (/bot|crawl|spider|slurp|preview|lighthouse/i.test(navigator.userAgent)) return;
+        var pfad = location.pathname;
+        var aufEn = pfad.indexOf("/en/") === 0 || pfad === "/en";
+        var gewaehlt = localStorage.getItem("l057-sprache");
+        var browser = (navigator.languages && navigator.languages[0]) || navigator.language || "de";
+        if (!gewaehlt && aufEn) return;
+        var ziel = gewaehlt || (/^de/i.test(browser) ? "de" : "en");
+        var datei = pfad.replace(/^\/en(\/|$)/, "/").replace(/^\/$/, "/index.html");
+        if (ziel === "en" && !aufEn) location.replace("/en" + (datei === "/index.html" ? "/" : datei) + location.search + location.hash);
+        if (ziel === "de" && aufEn) location.replace((datei === "/index.html" ? "/" : datei) + location.search + location.hash);
+    } catch (e) { /* ohne Speicher bleibt die aktuelle Sprache */ }
+})();
+</script>
+<link rel="canonical" href="https://l057.at/warenkorb.html">
+<link rel="alternate" hreflang="de" href="https://l057.at/warenkorb.html">
+<link rel="alternate" hreflang="en" href="https://l057.at/en/warenkorb.html">
+<link rel="alternate" hreflang="x-default" href="https://l057.at/warenkorb.html">
 
 <meta property="og:title" content="Warenkorb – L057">
 <meta property="og:description" content="L057 – Kunst von Dimitri Wastl: Einzelstücke und Kleinserien aus Beton, Licht, 3D-Druck und Druckgrafik. Kapfenberg, Österreich.">
@@ -22,20 +42,21 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
 <link rel="manifest" href="/site.webmanifest">
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body data-seite="warenkorb">
 
 <header class="site-header">
     <div class="header-inner">
         <a href="index.html" class="brand" aria-label="L057 Startseite">
-            <img src="assets/logo-mark.png" alt="" width="28" height="25">
+            <img src="/assets/logo-mark.png" alt="" width="28" height="25">
             <span>L057</span>
         </a>
         <nav class="main-nav" aria-label="Hauptnavigation">
             <a href="shop.html">Werke</a>
             <a href="projekte.html">Projekte</a>
-            <a href="mailto:l057.design@gmail.com">Kontakt</a>
+            <a href="mailto:l057.design@gmail.com" class="nav-contact">Kontakt</a>
+            <a href="/en/warenkorb.html" class="lang-switch" data-lang-switch="en" hreflang="en" lang="en" aria-label="English version">EN</a>
             <a href="warenkorb.html" class="cart-link" aria-label="Warenkorb" aria-current="page">
                 <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
                 <span class="cart-count" data-korb-anzahl hidden>0</span>
@@ -43,13 +64,12 @@
         </nav>
     </div>
 </header>
-
 <main class="page" id="warenkorb"></main>
 
 <footer class="site-footer">
     <div class="footer-inner">
         <div class="footer-col">
-            <a href="index.html" class="brand"><img src="assets/logo-mark.png" alt="" width="28" height="25"><span>L057</span></a>
+            <a href="index.html" class="brand"><img src="/assets/logo-mark.png" alt="" width="28" height="25"><span>L057</span></a>
             <p>Something Lost. Found Form.<br>Einzelstücke und Kleinserien aus Beton, Licht und Druck. Kapfenberg, Österreich.</p>
         </div>
         <nav class="footer-col" aria-label="Werke">
@@ -80,6 +100,6 @@
     <div class="footer-bottom">© <span data-jahr>2026</span> L057 · Alle Preise sind Endpreise. Gemäß § 6 Abs. 1 Z 27 UStG wird keine Umsatzsteuer ausgewiesen.</div>
 </footer>
 
-<script src="assets/shop.js" defer></script>
+<script src="/assets/shop.js" defer></script>
 </body>
 </html>

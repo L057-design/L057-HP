@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /warenkorb.html
 Disallow: /verwaltung.html
+Disallow: /en/warenkorb.html
 
 Sitemap: https://l057.at/sitemap.xml

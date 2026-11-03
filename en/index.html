@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L057 – Design · Engineering · 3D Printing</title>
+<meta name="description" content="L057 – Art by Dimitri Wastl: unique pieces and small editions in concrete, light, 3D printing and printmaking. Kapfenberg, Austria.">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="robots" content="index, follow">
+<script>
+(function () {
+    try {
+        if (/bot|crawl|spider|slurp|preview|lighthouse/i.test(navigator.userAgent)) return;
+        var pfad = location.pathname;
+        var aufEn = pfad.indexOf("/en/") === 0 || pfad === "/en";
+        var gewaehlt = localStorage.getItem("l057-sprache");
+        var browser = (navigator.languages && navigator.languages[0]) || navigator.language || "de";
+        if (!gewaehlt && aufEn) return;
+        var ziel = gewaehlt || (/^de/i.test(browser) ? "de" : "en");
+        var datei = pfad.replace(/^\/en(\/|$)/, "/").replace(/^\/$/, "/index.html");
+        if (ziel === "en" && !aufEn) location.replace("/en" + (datei === "/index.html" ? "/" : datei) + location.search + location.hash);
+        if (ziel === "de" && aufEn) location.replace((datei === "/index.html" ? "/" : datei) + location.search + location.hash);
+    } catch (e) { /* ohne Speicher bleibt die aktuelle Sprache */ }
+})();
+</script>
+<link rel="canonical" href="https://l057.at/en/">
+<link rel="alternate" hreflang="de" href="https://l057.at/">
+<link rel="alternate" hreflang="en" href="https://l057.at/en/">
+<link rel="alternate" hreflang="x-default" href="https://l057.at/">
+
+<meta property="og:title" content="L057 – Design · Engineering · 3D Printing">
+<meta property="og:description" content="L057 – Art by Dimitri Wastl: unique pieces and small editions in concrete, light, 3D printing and printmaking. Kapfenberg, Austria.">
+<meta property="og:image" content="https://l057.at/logo-square-512.png">
+<meta property="og:url" content="https://l057.at/en/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body data-seite="start">
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="brand" aria-label="L057 home">
+            <img src="/assets/logo-mark.png" alt="" width="28" height="25">
+            <span>L057</span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="shop.html">Works</a>
+            <a href="projekte.html">Projects</a>
+            <a href="mailto:l057.design@gmail.com" class="nav-contact">Contact</a>
+            <a href="/" class="lang-switch" data-lang-switch="de" hreflang="de" lang="de" aria-label="Deutsche Version">DE</a>
+            <a href="warenkorb.html" class="cart-link" aria-label="Cart">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                <span class="cart-count" data-korb-anzahl hidden>0</span>
+            </a>
+        </nav>
+    </div>
+</header>
+<main class="page">
+    <section class="hero" aria-labelledby="site-title">
+        <div class="hero-inner">
+            <h1 id="site-title" class="sr-only">L057</h1>
+            <div class="logo-wrap">
+                <img src="/assets/logo.png" alt="L057 logo" class="logo" width="420" height="518">
+            </div>
+            <p class="claim">Design · Engineering · 3D Printing</p>
+            <p class="intro">
+                Unique pieces and small editions at the intersection of art, engineering and digital fabrication.
+            </p>
+            <div class="button-group">
+                <a href="shop.html" class="button button-primary">View works</a>
+                <a href="projekte.html" class="button">Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="neu-titel">
+        <div class="section-head">
+            <h2 id="neu-titel">New works</h2>
+            <a href="shop.html" class="text-link">All works →</a>
+        </div>
+        <div class="card-grid" id="home-produkte"></div>
+    </section>
+
+    <section class="home-section about" aria-labelledby="ueber-titel">
+        <h2 id="ueber-titel">About L057</h2>
+        <p class="about-claim">Something Lost. Found Form.</p>
+        <p>
+            I design and make my objects myself, in Austria. My work brings together technology, nature and emotion,
+            using 3D-printed forms, concrete and light. I experiment with shapes and materials and give physical form
+            to what has so far existed only in my head.
+        </p>
+        <div class="button-group" style="justify-content:flex-start;margin-top:24px">
+            <a href="https://www.instagram.com/l057_design" class="button" rel="noopener me" target="_blank">Instagram</a>
+            <a href="https://www.etsy.com/at/shop/L057shop" class="button" rel="noopener" target="_blank">Etsy</a>
+        </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="projekte-titel">
+        <div class="section-head">
+            <h2 id="projekte-titel">Projects</h2>
+            <a href="projekte.html" class="text-link">All projects →</a>
+        </div>
+        <div class="card-grid" id="home-projekte"></div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <a href="index.html" class="brand"><img src="/assets/logo-mark.png" alt="" width="28" height="25"><span>L057</span></a>
+            <p>Something Lost. Found Form.<br>Unique pieces and small editions in concrete, light and print. Kapfenberg, Austria.</p>
+        </div>
+        <nav class="footer-col" aria-label="Works">
+            <h2>Works</h2>
+            <ul>
+                <li><a href="shop.html">All works</a></li>
+                <li><a href="https://www.etsy.com/at/shop/L057shop" rel="noopener" target="_blank">Series products (Etsy)</a></li>
+                <li><a href="projekte.html">Projects</a></li>
+                <li><a href="versand.html">Shipping &amp; payment</a></li>
+                <li><a href="mailto:l057.design@gmail.com">Contact</a></li>
+            </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Social Media" data-social hidden>
+            <h2>Follow</h2>
+            <ul></ul>
+        </nav>
+        <nav class="footer-col" aria-label="Legal">
+            <h2>Legal</h2>
+            <ul>
+                <li><a href="impressum.html">Imprint</a></li>
+                <li><a href="datenschutz.html">Privacy</a></li>
+                <li><a href="agb.html">Terms</a></li>
+                <li><a href="widerruf.html">Right of withdrawal</a></li>
+                <li><a href="widerruf.html#widerrufen" class="withdraw-link">Withdraw from contract</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="footer-bottom">© <span data-jahr>2026</span> L057 · All prices are final prices. No VAT is charged under the Austrian small business exemption (§ 6 (1) 27 UStG).</div>
+</footer>
+
+<script src="/assets/shop.js" defer></script>
+</body>
+</html>

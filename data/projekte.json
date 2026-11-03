@@ -12,7 +12,12 @@
       "images/project-placeholder.jpg"
     ],
     "produkt": "deathodils",
-    "beispiel": true
+    "beispiel": true,
+    "titel_en": "Deathodils",
+    "kurz_en": "Linocut print",
+    "text_en": [
+      "Example text: From the design and the lino block to the print. This is where you describe how the motif came about, which technique was used and what was learned along the way."
+    ]
   },
   {
     "id": "projekt-art",
@@ -27,7 +32,12 @@
       "images/project-placeholder.jpg"
     ],
     "produkt": "",
-    "beispiel": true
+    "beispiel": true,
+    "titel_en": "Project Objects",
+    "kurz_en": "Placeholder description",
+    "text_en": [
+      "Example text for an art project."
+    ]
   },
   {
     "id": "projekt-living",
@@ -42,6 +52,11 @@
       "images/project-placeholder.jpg"
     ],
     "produkt": "",
-    "beispiel": true
+    "beispiel": true,
+    "titel_en": "Project Engineering",
+    "kurz_en": "Placeholder description",
+    "text_en": [
+      "Example text for a design or engineering project, e.g. a construction for 3D printing."
+    ]
   }
 ]

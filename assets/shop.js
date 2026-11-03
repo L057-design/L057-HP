@@ -7,6 +7,165 @@
 (function () {
     "use strict";
 
+    /* ---------- Sprache ---------- */
+
+    const SPRACHE = document.documentElement.lang === "en" ? "en" : "de";
+    const UEBERSETZUNG = {
+        "An: ": "To: ",
+        "Warenkorb, ": "Cart, ",
+        " Artikel": " items",
+        "Kleinserie, Auflage ": "Limited edition of ",
+        "Verkauft": "Sold",
+        "Verfügbar": "Available",
+        "Edition /": "Edition /",
+        "Beispiel": "Example",
+        "Produkte konnten nicht geladen werden.": "Works could not be loaded.",
+        "Projekte konnten nicht geladen werden.": "Projects could not be loaded.",
+        "In dieser Kategorie gibt es noch keine Einträge.": "Nothing in this category yet.",
+        "auf Anfrage, Abholung möglich": "on request, pickup possible",
+        "auf Anfrage": "on request",
+        "Dieses Werk gibt es nicht (mehr).": "This work does not exist (anymore).",
+        "Alle Werke": "All works",
+        "Exemplar ": "Copy ",
+        " – verkauft": " – sold",
+        "Exemplar wählen": "Choose your copy",
+        "Anfrage zu: ": "Enquiry about: ",
+        "Ähnliches Werk anfragen": "Ask about a similar work",
+        "Dieses Werk ist bereits verkauft.": "This work has been sold.",
+        "In den Warenkorb": "Add to cart",
+        " liegt schon im Warenkorb. ": " is already in your cart. ",
+        "Zum Warenkorb →": "Go to cart →",
+        "Dieses Unikat liegt schon im Warenkorb. ": "This unique piece is already in your cart. ",
+        "Alle verfügbaren Exemplare liegen schon im Warenkorb. ": "All available copies are already in your cart. ",
+        "✓ Im Warenkorb · ": "✓ Added to cart · ",
+        "Frage zum Werk": "Ask about this work",
+        "Jahr": "Year",
+        "Technik / Material": "Technique / material",
+        "Maße": "Dimensions",
+        "Gewicht": "Weight",
+        "Auflage": "Edition",
+        "Verfügbarkeit": "Availability",
+        "Signatur": "Signature",
+        "Echtheitszertifikat": "Certificate of authenticity",
+        "liegt bei": "included",
+        "Pflege": "Care",
+        "Lieferzeit": "Delivery time",
+        "Versand": "Shipping",
+        "Brotkrümel": "Breadcrumb",
+        "Werke": "Works",
+        "Versand & Zahlung": "Shipping & payment",
+        "Hinweise": "Notes",
+        "Künstler: ": "Artist: ",
+        "14 Tage Widerrufsrecht. ": "14-day right of withdrawal. ",
+        "Widerrufsbelehrung": "Right of withdrawal",
+        "Werk konnte nicht geladen werden.": "Work could not be loaded.",
+        "Dieses Projekt gibt es nicht (mehr).": "This project does not exist (anymore).",
+        "Alle Projekte": "All projects",
+        " – L057 Projekte": " – L057 Projects",
+        "Projekte": "Projects",
+        "Im Shop ansehen": "View in shop",
+        "Projekt konnte nicht geladen werden.": "Project could not be loaded.",
+        "Hallo,": "Hello,",
+        "ich möchte folgendes bestellen:": "I would like to order:",
+        "Zwischensumme: ": "Subtotal: ",
+        "Lieferung: ": "Delivery: ",
+        "Lieferland: ": "Destination: ",
+        "Versand: ": "Shipping: ",
+        "keiner (Abholung)": "none (pickup)",
+        "bitte um Angebot": "please send a quote",
+        "Gesamt: ": "Total: ",
+        " zzgl. Versand": " plus shipping",
+        "Zahlung: ": "Payment: ",
+        "Name: ": "Name: ",
+        "Lieferadresse:\n": "Shipping address:\n",
+        "Telefon / Kontakt für die Abholung: ": "Phone / contact for pickup: ",
+        "\nAnmerkung:\n": "\nNote:\n",
+        "\nAGB und Widerrufsbelehrung gelesen: ja": "\nTerms and withdrawal policy read: yes",
+        "Danke!": "Thank you!",
+        "Warenkorb": "Cart",
+        "Dein Warenkorb ist leer.": "Your cart is empty.",
+        "Zum Shop": "To the shop",
+        " / Exemplar": " / copy",
+        "Eins weniger": "One less",
+        "Eins mehr": "One more",
+        "Entfernen": "Remove",
+        "Abholung": "Pickup",
+        "Lieferland": "Destination",
+        "Zahlungsart": "Payment method",
+        "Bitte Name und Lieferadresse ausfüllen.": "Please enter your name and shipping address.",
+        "Bitte deinen Namen ausfüllen.": "Please enter your name.",
+        "Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.": "Please confirm that you have read the terms and the withdrawal policy.",
+        "Bestellung über l057.at (": "Order via l057.at (",
+        "Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.": "Your email app will open. Please send the email from there.",
+        "Bestellung kopiert. Füge sie in eine Mail an ": "Order copied. Paste it into an email to ",
+        "Kopieren nicht möglich. Bitte schreib an ": "Copying not possible. Please write to ",
+        "Bestellung": "Order",
+        "Zwischensumme": "Subtotal",
+        "Gesamt": "Total",
+        " + Versand": " + shipping",
+        "Name": "Name",
+        "Telefon oder Hinweis zur Abholung (optional)": "Phone or note for pickup (optional)",
+        "Lieferadresse": "Shipping address",
+        "Anmerkung (optional)": "Note (optional)",
+        "Ich habe die ": "I have read the ",
+        "AGB": "terms",
+        " und die ": " and the ",
+        " gelesen.": ".",
+        "Bestellung per E-Mail senden": "Send order by email",
+        "Bestellung kopieren": "Copy order",
+        "Du bekommst eine Bestätigung mit den Zahlungsinfos per E-Mail. Erst damit ist die Bestellung verbindlich.": "You will receive a confirmation with payment details by email. The order is only binding once confirmed.",
+        "Warenkorb konnte nicht geladen werden.": "Cart could not be loaded.",
+        "Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren:": "I hereby withdraw from my contract for the purchase of the following goods:",
+        "(alle Artikel der Bestellung)": "(all items of the order)",
+        "Bestellt am / Bestellung: ": "Ordered on / order: ",
+        "Erhalten am: ": "Received on: ",
+        "E-Mail: ": "Email: ",
+        "Datum der Erklärung: ": "Date of declaration: ",
+        "Bitte Name, E-Mail und Bestellung (Datum oder Nummer) angeben.": "Please enter your name, email and order (date or number).",
+        "Vertrag widerrufen – ": "Withdrawal from contract – ",
+        "Dein Mailprogramm öffnet sich mit der fertigen Widerrufserklärung. ": "Your email app will open with the prepared withdrawal notice. ",
+        "Bitte sende die Mail ab. Du bekommst eine Eingangsbestätigung per E-Mail.": "Please send the email. You will receive a confirmation of receipt by email.",
+        "\nBetreff: Vertrag widerrufen\n\n": "\nSubject: Withdrawal from contract\n\n",
+        "Widerrufserklärung kopiert. Füge sie in eine Mail an ": "Withdrawal notice copied. Paste it into an email to ",
+        " ein.": ".",
+        "Alle": "All",
+        "Unikat": "Unique piece",
+        "Benachrichtigung: ": "Notification: "
+    };
+
+    function t(text) {
+        return SPRACHE === "en" && Object.prototype.hasOwnProperty.call(UEBERSETZUNG, text) ? UEBERSETZUNG[text] : text;
+    }
+
+    /* Englische Felder ("name_en" usw.) verwenden, wenn vorhanden */
+    function lokal(eintrag) {
+        if (SPRACHE !== "en" || !eintrag || typeof eintrag !== "object") return eintrag;
+        const kopie = Object.assign({}, eintrag);
+        Object.keys(eintrag).forEach(function (k) {
+            if (!/_en$/.test(k)) return;
+            const wert = eintrag[k];
+            const leer = wert === "" || wert == null || (Array.isArray(wert) && !wert.length);
+            if (!leer) kopie[k.slice(0, -3)] = wert;
+        });
+        return kopie;
+    }
+
+    let kategorieNamen = {};
+
+    function kat(name) {
+        return SPRACHE === "en" && kategorieNamen[name] ? kategorieNamen[name] : name;
+    }
+
+    function zoneName(zone) {
+        return SPRACHE === "en" && zone.name_en ? zone.name_en : zone.name;
+    }
+
+    /* Pfade immer ab Seitenwurzel, damit /en/-Seiten dieselben Dateien nutzen */
+    function pfad(src) {
+        if (!src) return "/images/project-placeholder.jpg";
+        return /^(https?:|\/|data:|blob:)/.test(src) ? src : "/" + src;
+    }
+
     const cache = {};
 
     function laden(datei) {
@@ -19,9 +178,14 @@
         return cache[datei];
     }
 
-    const ladeShop = function () { return laden("data/shop.json"); };
-    const ladeProdukte = function () { return laden("data/produkte.json"); };
-    const ladeProjekte = function () { return laden("data/projekte.json"); };
+    const ladeShop = function () {
+        return laden("/data/shop.json").then(function (shop) {
+            kategorieNamen = shop.kategorien_englisch || {};
+            return lokal(shop);
+        });
+    };
+    const ladeProdukte = function () { return laden("/data/produkte.json").then(function (l) { return l.map(lokal); }); };
+    const ladeProjekte = function () { return laden("/data/projekte.json").then(function (l) { return l.map(lokal); }); };
 
     /* Kleines Hilfsmittel zum Erzeugen von Elementen */
     function el(tag, attrs, kinder) {
@@ -43,7 +207,7 @@
     }
 
     function preis(betrag, waehrung) {
-        return new Intl.NumberFormat("de-AT", {
+        return new Intl.NumberFormat(SPRACHE === "en" ? "en-IE" : "de-AT", {
             style: "currency",
             currency: waehrung || "EUR"
         }).format(betrag);
@@ -94,7 +258,7 @@
             n.hidden = anzahl === 0;
         });
         document.querySelectorAll(".cart-link").forEach(function (n) {
-            n.setAttribute("aria-label", "Warenkorb, " + anzahl + (anzahl === 1 ? " Artikel" : " Artikel"));
+            n.setAttribute("aria-label", t("Warenkorb, ") + anzahl + (anzahl === 1 ? t(" Artikel") : t(" Artikel")));
         });
     }
 
@@ -104,7 +268,7 @@
 
     function bild(src, alt) {
         return el("img", {
-            src: src || "images/project-placeholder.jpg",
+            src: pfad(src),
             alt: alt || "",
             loading: "lazy",
             decoding: "async"
@@ -141,41 +305,41 @@
     }
 
     function auflageText(p) {
-        return istUnikat(p) ? "Unikat" : "Kleinserie, Auflage " + p.auflage;
+        return istUnikat(p) ? t("Unikat") : t("Kleinserie, Auflage ") + p.auflage;
     }
 
     function verfuegbarText(p) {
         const n = bestand(p);
-        if (n === 0) return "Verkauft";
-        if (istUnikat(p)) return "Verfügbar";
-        return "Noch " + n + " von " + p.auflage + " verfügbar";
+        if (n === 0) return t("Verkauft");
+        if (istUnikat(p)) return t("Verfügbar");
+        return SPRACHE === "en" ? n + " of " + p.auflage + " available" : "Noch " + n + " von " + p.auflage + " verfügbar";
     }
 
     /* ---------- Karten ---------- */
 
     function produktKarte(p, shop) {
         const badges = [];
-        if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: "Verkauft" }));
-        else badges.push(el("span", { class: "badge badge-muted", text: istUnikat(p) ? "Unikat" : "Edition /" + p.auflage }));
-        if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: "Beispiel" }));
+        if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: t("Verkauft") }));
+        else badges.push(el("span", { class: "badge badge-muted", text: istUnikat(p) ? t("Unikat") : t("Edition /") + p.auflage }));
+        if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: t("Beispiel") }));
 
         return el("a", { class: "card" + (verfuegbar(p) ? "" : " card-sold"), href: "produkt.html?id=" + encodeURIComponent(p.id) }, [
             el("div", { class: "card-media" }, [bild(p.bilder && p.bilder[0], p.name)].concat(badges)),
             el("div", { class: "card-body" }, [
-                el("span", { class: "card-kicker", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
+                el("span", { class: "card-kicker", text: kat(p.kategorie) + (p.jahr ? " · " + p.jahr : "") }),
                 el("h3", { text: p.name }),
                 el("p", { text: p.kurz }),
-                el("span", { class: "card-price", text: verfuegbar(p) ? preis(p.preis, shop.waehrung) : "Verkauft" })
+                el("span", { class: "card-price", text: verfuegbar(p) ? preis(p.preis, shop.waehrung) : t("Verkauft") })
             ])
         ]);
     }
 
     function projektKarte(p) {
-        const badges = p.beispiel ? [el("span", { class: "badge badge-muted", text: "Beispiel" })] : [];
+        const badges = p.beispiel ? [el("span", { class: "badge badge-muted", text: t("Beispiel") })] : [];
         return el("a", { class: "card", href: "projekt.html?id=" + encodeURIComponent(p.id) }, [
             el("div", { class: "card-media" }, [bild(p.bilder && p.bilder[0], p.titel)].concat(badges)),
             el("div", { class: "card-body" }, [
-                el("span", { class: "card-kicker", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
+                el("span", { class: "card-kicker", text: kat(p.kategorie) + (p.jahr ? " · " + p.jahr : "") }),
                 el("h3", { text: p.titel }),
                 el("p", { text: p.kurz })
             ])
@@ -199,11 +363,11 @@
             produktZiel.replaceChildren.apply(produktZiel, liste.slice(0, 3).map(function (p) {
                 return produktKarte(p, shop);
             }));
-        }).catch(function () { fehler(produktZiel, "Produkte konnten nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(produktZiel, t("Produkte konnten nicht geladen werden.")); });
 
         ladeProjekte().then(function (liste) {
             projektZiel.replaceChildren.apply(projektZiel, liste.slice(0, 3).map(projektKarte));
-        }).catch(function () { fehler(projektZiel, "Projekte konnten nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(projektZiel, t("Projekte konnten nicht geladen werden.")); });
     }
 
     /* ---------- Filterbare Übersicht (Shop und Projekte) ---------- */
@@ -220,7 +384,7 @@
                 return aktiv === "Alle" || e.kategorie === aktiv;
             });
             if (!gefiltert.length) {
-                fehler(gitter, "In dieser Kategorie gibt es noch keine Einträge.");
+                fehler(gitter, t("In dieser Kategorie gibt es noch keine Einträge."));
             } else {
                 gitter.replaceChildren.apply(gitter, gefiltert.map(karte));
             }
@@ -234,7 +398,7 @@
                 class: "filter",
                 type: "button",
                 "data-kategorie": k,
-                text: k,
+                text: k === "Alle" ? t("Alle") : kat(k),
                 onclick: function () {
                     aktiv = k;
                     const url = new URL(window.location.href);
@@ -258,7 +422,7 @@
             uebersicht(liste, shop.kategorien, gitter, document.getElementById("filter"), function (p) {
                 return produktKarte(p, shop);
             });
-        }).catch(function () { fehler(gitter, "Produkte konnten nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(gitter, t("Produkte konnten nicht geladen werden.")); });
     }
 
     function projekteSeite() {
@@ -269,7 +433,7 @@
                 if (kategorien.indexOf(p.kategorie) === -1) kategorien.push(p.kategorie);
             });
             uebersicht(r[1], kategorien, gitter, document.getElementById("filter"), projektKarte);
-        }).catch(function () { fehler(gitter, "Projekte konnten nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(gitter, t("Projekte konnten nicht geladen werden.")); });
     }
 
     /* ---------- Galerie ---------- */
@@ -279,7 +443,7 @@
     function galerie(bilder, alt, badges, optionen) {
         optionen = optionen || {};
         const liste = bilder && bilder.length ? bilder : ["images/project-placeholder.jpg"];
-        const haupt = el("img", { src: liste[0], alt: alt });
+        const haupt = el("img", { src: pfad(liste[0]), alt: alt });
         const markierung = el("span", { class: "exemplar-tag", hidden: true });
         const thumbs = el("div", { class: "thumbs" });
 
@@ -295,15 +459,15 @@
                     class: "thumb",
                     type: "button",
                     "data-src": src,
-                    "aria-label": (optionen.beschriftung && optionen.beschriftung[src]) || "Bild " + (i + 1) + " anzeigen",
+                    "aria-label": (optionen.beschriftung && optionen.beschriftung[src]) || (SPRACHE === "en" ? "Show image " + (i + 1) : "Bild " + (i + 1) + " anzeigen"),
                     "aria-current": i === 0 ? "true" : "false",
                     onclick: function () {
-                        haupt.src = src;
+                        haupt.src = pfad(src);
                         aktiv(src);
                         markierung.hidden = true;
                         if (optionen.beiWechsel) optionen.beiWechsel(src);
                     }
-                }, [el("img", { src: src, alt: "" })]));
+                }, [el("img", { src: pfad(src), alt: "" })]));
             });
         }
 
@@ -314,7 +478,7 @@
 
         wrapper.zeige = function (src, text) {
             if (!src) return;
-            haupt.src = src;
+            haupt.src = pfad(src);
             aktiv(src);
             markierung.textContent = text || "";
             markierung.hidden = !text;
@@ -338,11 +502,11 @@
     /* ---------- Produktdetail ---------- */
 
     function versandText(p, shop) {
-        if (p.versand === "anfrage") return "auf Anfrage, Abholung möglich";
+        if (p.versand === "anfrage") return t("auf Anfrage, Abholung möglich");
         if (p.versand && typeof p.versand === "object") {
             return Object.keys(p.versand).map(function (zone) {
                 const wert = p.versand[zone];
-                return zone.replace("-Land", "") + " " + (wert === null ? "auf Anfrage" : preis(wert, shop.waehrung));
+                return (SPRACHE === "en" ? ({ "Österreich": "Austria", "EU-Land": "EU" }[zone] || zone) : zone.replace("-Land", "")) + " " + (wert === null ? t("auf Anfrage") : preis(wert, shop.waehrung));
             }).join(" · ");
         }
         return shop.versandkosten;
@@ -357,8 +521,8 @@
             const p = r[1].find(function (e) { return e.id === id; });
             if (!p) {
                 ziel.replaceChildren(
-                    el("p", { class: "empty", text: "Dieses Werk gibt es nicht (mehr)." }),
-                    el("a", { class: "button", href: "shop.html", text: "Alle Werke" })
+                    el("p", { class: "empty", text: t("Dieses Werk gibt es nicht (mehr).") }),
+                    el("a", { class: "button", href: "shop.html", text: t("Alle Werke") })
                 );
                 return;
             }
@@ -392,7 +556,7 @@
                     if (!x.bild) return;
                     if (bilderAlle.indexOf(x.bild) === -1) bilderAlle.push(x.bild);
                     bildZuNr[x.bild] = x;
-                    beschriftung[x.bild] = "Exemplar " + exemplarName(p, x.nr) + " anzeigen";
+                    beschriftung[x.bild] = SPRACHE === "en" ? "Show copy " + exemplarName(p, x.nr) : "Exemplar " + exemplarName(p, x.nr) + " anzeigen";
                 });
             }
             let exemplarSelect = null;
@@ -412,19 +576,19 @@
                     return el("option", {
                         value: exemplarName(p, x.nr),
                         disabled: !!x.verkauft,
-                        text: exemplarName(p, x.nr) + (x.verkauft ? " – verkauft" : "")
+                        text: exemplarName(p, x.nr) + (x.verkauft ? t(" – verkauft") : "")
                     });
                 }));
                 exemplarSelect.value = auswahl.Exemplar;
                 felder.unshift(el("div", { class: "field" }, [
-                    el("label", { for: "exemplar", text: "Exemplar wählen" }),
+                    el("label", { for: "exemplar", text: t("Exemplar wählen") }),
                     exemplarSelect
                 ]));
             }
 
             const kaufBereich = el("div", { class: "buy-area" });
             const hinweis = el("p", { class: "buy-hint", "aria-live": "polite" });
-            const anfrageLink = "mailto:" + shop.email + "?subject=" + encodeURIComponent("Anfrage zu: " + p.name);
+            const anfrageLink = "mailto:" + shop.email + "?subject=" + encodeURIComponent(t("Anfrage zu: ") + p.name);
 
             function imKorb() {
                 return korbLesen().filter(function (e) { return e.id === p.id; })
@@ -435,65 +599,65 @@
                 kaufBereich.replaceChildren(el("a", {
                     class: "button button-block",
                     href: anfrageLink,
-                    text: "Ähnliches Werk anfragen"
+                    text: t("Ähnliches Werk anfragen")
                 }));
-                hinweis.textContent = "Dieses Werk ist bereits verkauft.";
+                hinweis.textContent = t("Dieses Werk ist bereits verkauft.");
             } else {
                 kaufBereich.replaceChildren(
                     el("button", {
                         class: "button button-primary button-block",
                         type: "button",
-                        text: "In den Warenkorb",
+                        text: t("In den Warenkorb"),
                         onclick: function () {
                             if (hatExemplare(p) && korbLesen().some(function (e) {
                                 return e.id === p.id && e.varianten && e.varianten.Exemplar === auswahl.Exemplar;
                             })) {
                                 hinweis.replaceChildren(
-                                    "Exemplar " + auswahl.Exemplar + " liegt schon im Warenkorb. ",
-                                    el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
+                                    t("Exemplar ") + auswahl.Exemplar + t(" liegt schon im Warenkorb. "),
+                                    el("a", { href: "warenkorb.html", text: t("Zum Warenkorb →") })
                                 );
                                 return;
                             }
                             if (imKorb() >= bestand(p)) {
                                 hinweis.replaceChildren(
-                                    istUnikat(p) ? "Dieses Unikat liegt schon im Warenkorb. " : "Alle verfügbaren Exemplare liegen schon im Warenkorb. ",
-                                    el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
+                                    istUnikat(p) ? t("Dieses Unikat liegt schon im Warenkorb. ") : t("Alle verfügbaren Exemplare liegen schon im Warenkorb. "),
+                                    el("a", { href: "warenkorb.html", text: t("Zum Warenkorb →") })
                                 );
                                 return;
                             }
                             korbHinzufuegen(p.id, Object.assign({}, auswahl), 1);
                             hinweis.replaceChildren(
-                                "✓ Im Warenkorb · ",
-                                el("a", { href: "warenkorb.html", text: "Zum Warenkorb →" })
+                                t("✓ Im Warenkorb · "),
+                                el("a", { href: "warenkorb.html", text: t("Zum Warenkorb →") })
                             );
                         }
                     }),
-                    el("a", { class: "button button-block", href: anfrageLink, text: "Frage zum Werk" })
+                    el("a", { class: "button button-block", href: anfrageLink, text: t("Frage zum Werk") })
                 );
             }
 
             const badges = [];
-            if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: "Verkauft" }));
-            if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: "Beispiel" }));
+            if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: t("Verkauft") }));
+            if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: t("Beispiel") }));
 
             const fakten = [
-                p.jahr ? ["Jahr", p.jahr] : null,
-                p.technik ? ["Technik / Material", p.technik] : null,
-                p.masse ? ["Maße", p.masse] : null,
-                p.gewicht ? ["Gewicht", p.gewicht] : null,
-                ["Auflage", auflageText(p)],
-                ["Verfügbarkeit", verfuegbarText(p)],
-                p.signiert ? ["Signatur", p.signiert] : null,
-                p.zertifikat ? ["Echtheitszertifikat", "liegt bei"] : null,
-                p.pflege ? ["Pflege", p.pflege] : null,
-                verfuegbar(p) ? ["Lieferzeit", shop.lieferzeit] : null,
-                verfuegbar(p) ? ["Versand", versandText(p, shop)] : null
+                p.jahr ? [t("Jahr"), p.jahr] : null,
+                p.technik ? [t("Technik / Material"), p.technik] : null,
+                p.masse ? [t("Maße"), p.masse] : null,
+                p.gewicht ? [t("Gewicht"), p.gewicht] : null,
+                [t("Auflage"), auflageText(p)],
+                [t("Verfügbarkeit"), verfuegbarText(p)],
+                p.signiert ? [t("Signatur"), p.signiert] : null,
+                p.zertifikat ? [t("Echtheitszertifikat"), t("liegt bei")] : null,
+                p.pflege ? [t("Pflege"), p.pflege] : null,
+                verfuegbar(p) ? [t("Lieferzeit"), shop.lieferzeit] : null,
+                verfuegbar(p) ? [t("Versand"), versandText(p, shop)] : null
             ].filter(Boolean);
 
             ziel.replaceChildren(
-                el("nav", { class: "breadcrumb", "aria-label": "Brotkrümel" }, [
-                    el("a", { href: "shop.html", text: "Werke" }), " / ",
-                    el("a", { href: "shop.html?kategorie=" + encodeURIComponent(p.kategorie), text: p.kategorie }), " / ",
+                el("nav", { class: "breadcrumb", "aria-label": t("Brotkrümel") }, [
+                    el("a", { href: "shop.html", text: t("Werke") }), " / ",
+                    el("a", { href: "shop.html?kategorie=" + encodeURIComponent(p.kategorie), text: kat(p.kategorie) }), " / ",
                     el("span", { text: p.name })
                 ]),
                 el("div", { class: "detail" }, [
@@ -508,12 +672,12 @@
                         }
                     })),
                     el("div", { class: "detail-info" }, [
-                        el("span", { class: "card-kicker", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
+                        el("span", { class: "card-kicker", text: kat(p.kategorie) + (p.jahr ? " · " + p.jahr : "") }),
                         el("h1", { text: p.name }),
-                        el("p", { class: "price", text: verfuegbar(p) ? preis(p.preis, shop.waehrung) : "Verkauft" }),
+                        el("p", { class: "price", text: verfuegbar(p) ? preis(p.preis, shop.waehrung) : t("Verkauft") }),
                         verfuegbar(p) ? el("p", { class: "price-note" }, [
                             shop.preishinweis, " · ",
-                            el("a", { href: "versand.html", text: "Versand & Zahlung" })
+                            el("a", { href: "versand.html", text: t("Versand & Zahlung") })
                         ]) : el("p", { class: "price-note", text: auflageText(p) }),
                         el("p", { class: "availability", text: auflageText(p) + " · " + verfuegbarText(p) }),
                         el("div", {}, verfuegbar(p) ? felder : []),
@@ -524,15 +688,15 @@
                             return el("li", {}, [el("span", { text: f[0] }), el("span", { text: f[1] })]);
                         })),
                         p.hinweise ? el("div", { class: "notice" }, [
-                            el("h2", { text: "Hinweise" }),
+                            el("h2", { text: t("Hinweise") }),
                             el("p", { text: p.hinweise })
                         ]) : null,
                         el("p", { class: "maker" }, [
-                            el("span", { text: "Künstler: " }), shop.hersteller || ""
+                            el("span", { text: t("Künstler: ") }), shop.hersteller || ""
                         ]),
                         verfuegbar(p) ? el("p", { class: "maker" }, [
-                            "14 Tage Widerrufsrecht. ",
-                            el("a", { href: "widerruf.html", text: "Widerrufsbelehrung" })
+                            t("14 Tage Widerrufsrecht. "),
+                            el("a", { href: "widerruf.html", text: t("Widerrufsbelehrung") })
                         ]) : null
                     ])
                 ])
@@ -544,7 +708,7 @@
             if (startExemplar && startExemplar.bild && (p.bilder || []).length === 0) {
                 galerieEl.zeige(startExemplar.bild, exemplarName(p, startExemplar.nr));
             }
-        }).catch(function () { fehler(ziel, "Werk konnte nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(ziel, t("Werk konnte nicht geladen werden.")); });
     }
 
     /* ---------- Projektdetail ---------- */
@@ -557,22 +721,22 @@
             const p = r[0].find(function (e) { return e.id === id; });
             if (!p) {
                 ziel.replaceChildren(
-                    el("p", { class: "empty", text: "Dieses Projekt gibt es nicht (mehr)." }),
-                    el("a", { class: "button", href: "projekte.html", text: "Alle Projekte" })
+                    el("p", { class: "empty", text: t("Dieses Projekt gibt es nicht (mehr).") }),
+                    el("a", { class: "button", href: "projekte.html", text: t("Alle Projekte") })
                 );
                 return;
             }
-            document.title = p.titel + " – L057 Projekte";
+            document.title = p.titel + t(" – L057 Projekte");
             const produkt = p.produkt && r[1].find(function (e) { return e.id === p.produkt; });
-            const badges = p.beispiel ? [el("span", { class: "badge badge-muted", text: "Beispiel" })] : [];
+            const badges = p.beispiel ? [el("span", { class: "badge badge-muted", text: t("Beispiel") })] : [];
 
             ziel.replaceChildren(
-                el("nav", { class: "breadcrumb", "aria-label": "Brotkrümel" }, [
-                    el("a", { href: "projekte.html", text: "Projekte" }), " / ",
+                el("nav", { class: "breadcrumb", "aria-label": t("Brotkrümel") }, [
+                    el("a", { href: "projekte.html", text: t("Projekte") }), " / ",
                     el("span", { text: p.titel })
                 ]),
                 el("article", { class: "project-body" }, [
-                    el("p", { class: "project-meta", text: p.kategorie + (p.jahr ? " · " + p.jahr : "") }),
+                    el("p", { class: "project-meta", text: kat(p.kategorie) + (p.jahr ? " · " + p.jahr : "") }),
                     el("h1", { text: p.titel }),
                     galerie(p.bilder, p.titel, badges),
                     el("div", { class: "description" }, absaetze(p.text)),
@@ -580,12 +744,12 @@
                         el("a", {
                             class: "button button-primary",
                             href: "produkt.html?id=" + encodeURIComponent(produkt.id),
-                            text: "Im Shop ansehen"
+                            text: t("Im Shop ansehen")
                         })
                     ]) : null
                 ])
             );
-        }).catch(function () { fehler(ziel, "Projekt konnte nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(ziel, t("Projekt konnte nicht geladen werden.")); });
     }
 
     /* ---------- Warenkorb-Seite ---------- */
@@ -619,7 +783,7 @@
             }
 
             function variantenText(v) {
-                return Object.keys(v || {}).map(function (k) { return k + ": " + v[k]; }).join(", ");
+                return Object.keys(v || {}).map(function (k) { return (k === "Exemplar" ? t("Exemplar ").trim() : k) + ": " + v[k]; }).join(", ");
             }
 
             function menge(index, neu) {
@@ -659,7 +823,7 @@
                 }
                 return {
                     zwischensumme: zwischensumme, versand: versand, physisch: physisch, abholung: abholung,
-                    anfrage: anfrage, zone: zone.name, gesamt: zwischensumme + versand
+                    anfrage: anfrage, zone: zoneName(zone), gesamt: zwischensumme + versand
                 };
             }
 
@@ -670,25 +834,25 @@
                         " – " + preis(x.produkt.preis * x.eintrag.menge, shop.waehrung);
                 });
                 return [
-                    "Hallo,",
+                    t("Hallo,"),
                     "",
-                    "ich möchte folgendes bestellen:",
+                    t("ich möchte folgendes bestellen:"),
                     "",
                     zeilen.join("\n"),
                     "",
-                    "Zwischensumme: " + preis(summe.zwischensumme, shop.waehrung),
-                    summe.physisch ? (summe.abholung ? "Lieferung: " : "Lieferland: ") + summe.zone : null,
-                    summe.physisch ? "Versand: " + (summe.abholung ? "keiner (Abholung)" : summe.anfrage ? "bitte um Angebot" : preis(summe.versand, shop.waehrung)) : null,
-                    "Gesamt: " + preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? " zzgl. Versand" : ""),
-                    "Zahlung: " + (formular.zahlung || (shop.zahlungsarten || [""])[0]),
+                    t("Zwischensumme: ") + preis(summe.zwischensumme, shop.waehrung),
+                    summe.physisch ? (summe.abholung ? t("Lieferung: ") : t("Lieferland: ")) + summe.zone : null,
+                    summe.physisch ? t("Versand: ") + (summe.abholung ? t("keiner (Abholung)") : summe.anfrage ? t("bitte um Angebot") : preis(summe.versand, shop.waehrung)) : null,
+                    t("Gesamt: ") + preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? t(" zzgl. Versand") : ""),
+                    t("Zahlung: ") + (formular.zahlung || (shop.zahlungsarten || [""])[0]),
                     "",
-                    "Name: " + (formular.name || ""),
-                    summe.physisch && !summe.abholung ? "Lieferadresse:\n" + (formular.adresse || "") : null,
-                    summe.abholung ? "Telefon / Kontakt für die Abholung: " + (formular.adresse || "") : null,
-                    formular.notiz ? "\nAnmerkung:\n" + formular.notiz : null,
-                    formular.agb ? "\nAGB und Widerrufsbelehrung gelesen: ja" : null,
+                    t("Name: ") + (formular.name || ""),
+                    summe.physisch && !summe.abholung ? t("Lieferadresse:\n") + (formular.adresse || "") : null,
+                    summe.abholung ? t("Telefon / Kontakt für die Abholung: ") + (formular.adresse || "") : null,
+                    formular.notiz ? t("\nAnmerkung:\n") + formular.notiz : null,
+                    formular.agb ? t("\nAGB und Widerrufsbelehrung gelesen: ja") : null,
                     "",
-                    "Danke!"
+                    t("Danke!")
                 ].filter(function (z) { return z !== null; }).join("\n");
             }
 
@@ -713,9 +877,9 @@
 
                 if (!liste.length) {
                     ziel.replaceChildren(
-                        el("header", { class: "page-head" }, [el("h1", { text: "Warenkorb" })]),
-                        el("p", { class: "empty", text: "Dein Warenkorb ist leer." }),
-                        el("a", { class: "button", href: "shop.html", text: "Zum Shop" })
+                        el("header", { class: "page-head" }, [el("h1", { text: t("Warenkorb") })]),
+                        el("p", { class: "empty", text: t("Dein Warenkorb ist leer.") }),
+                        el("a", { class: "button", href: "shop.html", text: t("Zum Shop") })
                     );
                     return;
                 }
@@ -732,17 +896,17 @@
                         el("div", { class: "cart-info" }, [
                             el("a", { class: "cart-name", href: "produkt.html?id=" + encodeURIComponent(x.produkt.id), text: x.produkt.name }),
                             v ? el("span", { class: "cart-variant", text: v }) : null,
-                            el("span", { class: "cart-variant", text: auflageText(x.produkt) + " · " + preis(x.produkt.preis, shop.waehrung) + (istUnikat(x.produkt) ? "" : " / Exemplar") }),
+                            el("span", { class: "cart-variant", text: auflageText(x.produkt) + " · " + preis(x.produkt.preis, shop.waehrung) + (istUnikat(x.produkt) ? "" : t(" / Exemplar")) }),
                             el("div", { class: "qty" }, [
-                                el("button", { type: "button", "aria-label": "Eins weniger", text: "−", onclick: function () { menge(i, x.eintrag.menge - 1); } }),
+                                el("button", { type: "button", "aria-label": t("Eins weniger"), text: "−", onclick: function () { menge(i, x.eintrag.menge - 1); } }),
                                 el("span", { "aria-live": "polite", text: String(x.eintrag.menge) }),
                                 el("button", {
-                                    type: "button", "aria-label": "Eins mehr", text: "+",
+                                    type: "button", "aria-label": t("Eins mehr"), text: "+",
                                     disabled: hatExemplare(x.produkt) || korbLesen().filter(function (e) { return e.id === x.produkt.id; })
                                         .reduce(function (s, e) { return s + e.menge; }, 0) >= bestand(x.produkt),
                                     onclick: function () { menge(i, x.eintrag.menge + 1); }
                                 }),
-                                el("button", { type: "button", class: "cart-remove", text: "Entfernen", onclick: function () { menge(i, 0); } })
+                                el("button", { type: "button", class: "cart-remove", text: t("Entfernen"), onclick: function () { menge(i, 0); } })
                             ])
                         ]),
                         el("span", { class: "cart-line-price", text: preis(x.produkt.preis * x.eintrag.menge, shop.waehrung) })
@@ -754,7 +918,7 @@
                 }
 
                 const versandText = !summe.physisch ? null :
-                    (summe.abholung ? "Abholung" : summe.anfrage ? "auf Anfrage" : (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung)));
+                    (summe.abholung ? t("Abholung") : summe.anfrage ? t("auf Anfrage") : (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung)));
 
                 function auswahlFeld(name, label, optionen, onchange) {
                     const id = "feld-" + name;
@@ -764,16 +928,16 @@
                 }
 
                 const landWahl = summe.physisch && (shop.versandzonen || []).length ? auswahlFeld(
-                    "zone", "Lieferland",
+                    "zone", t("Lieferland"),
                     shop.versandzonen.map(function (z) {
-                        return z.name + (z.preis === null ? "" : " – " + preis(z.preis, shop.waehrung));
+                        return zoneName(z) + (z.preis === null ? "" : " – " + preis(z.preis, shop.waehrung));
                     }),
                     function (e) { formular.zone = Number(e.target.value); zeichnen(); }
                 ) : null;
                 if (landWahl) landWahl.select.value = String(formular.zone || 0);
 
                 const zahlWahl = (shop.zahlungsarten || []).length > 1 ? auswahlFeld(
-                    "zahlung", "Zahlungsart", shop.zahlungsarten,
+                    "zahlung", t("Zahlungsart"), shop.zahlungsarten,
                     function (e) { formular.zahlung = shop.zahlungsarten[Number(e.target.value)]; }
                 ) : null;
                 if (zahlWahl) zahlWahl.select.value = String(Math.max(0, shop.zahlungsarten.indexOf(formular.zahlung)));
@@ -781,47 +945,47 @@
                 function absenden() {
                     if (!formular.name || (summe.physisch && !summe.abholung && !formular.adresse)) {
                         status.textContent = summe.physisch
-                            ? "Bitte Name und Lieferadresse ausfüllen."
-                            : "Bitte deinen Namen ausfüllen.";
+                            ? t("Bitte Name und Lieferadresse ausfüllen.")
+                            : t("Bitte deinen Namen ausfüllen.");
                         return;
                     }
                     if (!formular.agb) {
-                        status.textContent = "Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.";
+                        status.textContent = t("Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.");
                         return;
                     }
-                    const betreff = "Bestellung über l057.at (" + preis(summe.gesamt, shop.waehrung) + ")";
+                    const betreff = t("Bestellung über l057.at (") + preis(summe.gesamt, shop.waehrung) + ")";
                     window.location.href = "mailto:" + shop.email +
                         "?subject=" + encodeURIComponent(betreff) +
                         "&body=" + encodeURIComponent(bestelltext(liste, summe));
-                    status.textContent = "Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.";
+                    status.textContent = t("Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.");
                 }
 
                 function kopieren() {
-                    const text = "An: " + shop.email + "\n\n" + bestelltext(liste, summe);
-                    const ok = function () { status.textContent = "Bestellung kopiert. Füge sie in eine Mail an " + shop.email + " ein."; };
+                    const text = t("An: ") + shop.email + "\n\n" + bestelltext(liste, summe);
+                    const ok = function () { status.textContent = t("Bestellung kopiert. Füge sie in eine Mail an ") + shop.email + t(" ein."); };
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(text).then(ok, function () {
-                            status.textContent = "Kopieren nicht möglich. Bitte schreib an " + shop.email + ".";
+                            status.textContent = t("Kopieren nicht möglich. Bitte schreib an ") + shop.email + ".";
                         });
                     } else {
-                        status.textContent = "Kopieren nicht möglich. Bitte schreib an " + shop.email + ".";
+                        status.textContent = t("Kopieren nicht möglich. Bitte schreib an ") + shop.email + ".";
                     }
                 }
 
                 ziel.replaceChildren(
-                    el("header", { class: "page-head" }, [el("h1", { text: "Warenkorb" })]),
+                    el("header", { class: "page-head" }, [el("h1", { text: t("Warenkorb") })]),
                     el("div", { class: "cart" }, [
                         el("ul", { class: "cart-list" }, zeilen),
                         el("aside", { class: "cart-summary" }, [
-                            el("h2", { text: "Bestellung" }),
+                            el("h2", { text: t("Bestellung") }),
                             el("ul", { class: "facts" }, [
-                                summenZeile("Zwischensumme", preis(summe.zwischensumme, shop.waehrung)),
-                                versandText ? summenZeile("Versand", versandText) : null,
-                                summenZeile("Gesamt", preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? " + Versand" : ""), true)
+                                summenZeile(t("Zwischensumme"), preis(summe.zwischensumme, shop.waehrung)),
+                                versandText ? summenZeile(t("Versand"), versandText) : null,
+                                summenZeile(t("Gesamt"), preis(summe.gesamt, shop.waehrung) + (summe.anfrage ? t(" + Versand") : ""), true)
                             ]),
                             el("p", { class: "price-note", style: "margin-top:10px" }, [
                                 (shop.steuerhinweis || "") + " ",
-                                summe.physisch ? el("a", { href: "versand.html", text: "Versand & Zahlung" }) : null
+                                summe.physisch ? el("a", { href: "versand.html", text: t("Versand & Zahlung") }) : null
                             ]),
                             el("form", {
                                 class: "cart-form",
@@ -829,10 +993,10 @@
                                 onsubmit: function (e) { e.preventDefault(); absenden(); }
                             }, [
                                 landWahl ? landWahl.feld : null,
-                                eingabe("name", "Name", false, true),
-                                summe.physisch ? eingabe("adresse", summe.abholung ? "Telefon oder Hinweis zur Abholung (optional)" : "Lieferadresse", true, !summe.abholung) : null,
+                                eingabe("name", t("Name"), false, true),
+                                summe.physisch ? eingabe("adresse", summe.abholung ? t("Telefon oder Hinweis zur Abholung (optional)") : t("Lieferadresse"), true, !summe.abholung) : null,
                                 zahlWahl ? zahlWahl.feld : null,
-                                eingabe("notiz", "Anmerkung (optional)", true, false),
+                                eingabe("notiz", t("Anmerkung (optional)"), true, false),
                                 el("label", { class: "check" }, [
                                     (function () {
                                         const box = el("input", {
@@ -844,19 +1008,19 @@
                                         return box;
                                     })(),
                                     el("span", {}, [
-                                        "Ich habe die ",
-                                        el("a", { href: "agb.html", target: "_blank", text: "AGB" }),
-                                        " und die ",
-                                        el("a", { href: "widerruf.html", target: "_blank", text: "Widerrufsbelehrung" }),
-                                        " gelesen."
+                                        t("Ich habe die "),
+                                        el("a", { href: "agb.html", target: "_blank", text: t("AGB") }),
+                                        t(" und die "),
+                                        el("a", { href: "widerruf.html", target: "_blank", text: t("Widerrufsbelehrung") }),
+                                        t(" gelesen.")
                                     ])
                                 ]),
-                                el("button", { class: "button button-primary button-block", type: "submit", text: "Bestellung per E-Mail senden" }),
-                                el("button", { class: "button button-block", type: "button", style: "margin-top:10px", text: "Bestellung kopieren", onclick: kopieren })
+                                el("button", { class: "button button-primary button-block", type: "submit", text: t("Bestellung per E-Mail senden") }),
+                                el("button", { class: "button button-block", type: "button", style: "margin-top:10px", text: t("Bestellung kopieren"), onclick: kopieren })
                             ]),
                             status,
                             el("p", { class: "buy-hint" }, [
-                                "Du bekommst eine Bestätigung mit den Zahlungsinfos per E-Mail. Erst damit ist die Bestellung verbindlich."
+                                t("Du bekommst eine Bestätigung mit den Zahlungsinfos per E-Mail. Erst damit ist die Bestellung verbindlich.")
                             ])
                         ])
                     ])
@@ -864,7 +1028,7 @@
             }
 
             zeichnen();
-        }).catch(function () { fehler(ziel, "Warenkorb konnte nicht geladen werden."); });
+        }).catch(function (e) { console.error(e); fehler(ziel, t("Warenkorb konnte nicht geladen werden.")); });
     }
 
     /* ---------- Widerrufsfunktion (§ 13a FAGG) ---------- */
@@ -887,15 +1051,15 @@
 
         function text(w) {
             return [
-                "Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren:",
+                t("Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren:"),
                 "",
-                w.artikel || "(alle Artikel der Bestellung)",
+                w.artikel || t("(alle Artikel der Bestellung)"),
                 "",
-                "Bestellt am / Bestellung: " + w.bestellung,
-                "Erhalten am: " + (w.erhalten || "-"),
-                "Name: " + w.name,
-                "E-Mail: " + w.email,
-                "Datum der Erklärung: " + new Date().toLocaleDateString("de-AT")
+                t("Bestellt am / Bestellung: ") + w.bestellung,
+                t("Erhalten am: ") + (w.erhalten || "-"),
+                t("Name: ") + w.name,
+                t("E-Mail: ") + w.email,
+                t("Datum der Erklärung: ") + new Date().toLocaleDateString(SPRACHE === "en" ? "en-GB" : "de-AT")
             ].join("\n");
         }
 
@@ -904,25 +1068,25 @@
                 e.preventDefault();
                 const w = werte();
                 if (!w.name || !w.email || !w.bestellung) {
-                    status.textContent = "Bitte Name, E-Mail und Bestellung (Datum oder Nummer) angeben.";
+                    status.textContent = t("Bitte Name, E-Mail und Bestellung (Datum oder Nummer) angeben.");
                     return;
                 }
                 window.location.href = "mailto:" + shop.email +
-                    "?subject=" + encodeURIComponent("Vertrag widerrufen – " + w.name + " (" + w.bestellung + ")") +
+                    "?subject=" + encodeURIComponent(t("Vertrag widerrufen – ") + w.name + " (" + w.bestellung + ")") +
                     "&body=" + encodeURIComponent(text(w));
-                status.textContent = "Dein Mailprogramm öffnet sich mit der fertigen Widerrufserklärung. " +
-                    "Bitte sende die Mail ab. Du bekommst eine Eingangsbestätigung per E-Mail.";
+                status.textContent = t("Dein Mailprogramm öffnet sich mit der fertigen Widerrufserklärung. ") +
+                    t("Bitte sende die Mail ab. Du bekommst eine Eingangsbestätigung per E-Mail.");
             });
 
             document.getElementById("widerruf-kopieren").addEventListener("click", function () {
                 const w = werte();
-                const fertig = "An: " + shop.email + "\nBetreff: Vertrag widerrufen\n\n" + text(w);
+                const fertig = t("An: ") + shop.email + t("\nBetreff: Vertrag widerrufen\n\n") + text(w);
                 const fehlt = function () {
-                    status.textContent = "Kopieren nicht möglich. Bitte schreib an " + shop.email + ".";
+                    status.textContent = t("Kopieren nicht möglich. Bitte schreib an ") + shop.email + ".";
                 };
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(fertig).then(function () {
-                        status.textContent = "Widerrufserklärung kopiert. Füge sie in eine Mail an " + shop.email + " ein.";
+                        status.textContent = t("Widerrufserklärung kopiert. Füge sie in eine Mail an ") + shop.email + t(" ein.");
                     }, fehlt);
                 } else {
                     fehlt();
@@ -944,6 +1108,16 @@
     };
 
     korbAnzeigen();
+
+    /* Sprachschalter: gleiche Seite in der anderen Sprache, Auswahl merken */
+    document.querySelectorAll("[data-lang-switch]").forEach(function (link) {
+        link.href = link.getAttribute("href") + window.location.search + window.location.hash;
+        link.addEventListener("click", function () {
+            try {
+                localStorage.setItem("l057-sprache", link.dataset.langSwitch);
+            } catch (e) { /* ohne Speicher gilt die Wahl nur für diesen Besuch */ }
+        });
+    });
 
     /* Social-Media-Links aus data/shop.json (leere Einträge werden ausgeblendet) */
     ladeShop().then(function (shop) {

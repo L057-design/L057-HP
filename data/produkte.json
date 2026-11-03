@@ -25,7 +25,17 @@
       "images/project-placeholder.jpg"
     ],
     "hervorgehoben": true,
-    "beispiel": true
+    "beispiel": true,
+    "name_en": "Found Object I",
+    "kurz_en": "Concrete and 3D-printed form",
+    "technik_en": "Concrete, PLA (3D print), wax",
+    "masse_en": "18 × 12 × 9 cm",
+    "gewicht_en": "approx. 1.4 kg",
+    "signiert_en": "Signed on the base",
+    "beschreibung_en": [
+      "Example text: A printed form, cast in concrete and uncovered again. What was lost takes on a new shape.",
+      "Each object is made individually; air pockets and traces of the mould are part of the work."
+    ]
   },
   {
     "id": "deathodils",
@@ -150,6 +160,16 @@
         "bild": "images/werke/deathodils-20.jpg",
         "verkauft": false
       }
+    ],
+    "name_en": "Deathodils",
+    "kurz_en": "Linocut, hand-printed",
+    "technik_en": "Linocut on handmade paper",
+    "masse_en": "30 × 40 cm (sheet)",
+    "signiert_en": "Signed and numbered",
+    "pflege_en": "Frame behind UV-protective glass, keep out of direct sunlight",
+    "beschreibung_en": [
+      "Example text: Hand-pulled print from the lino block, each sheet burnished individually with a spoon. Small differences in the ink make every sheet unique.",
+      "Choose your copy: every sheet is photographed individually, so you get exactly the piece you see."
     ]
   },
   {
@@ -173,7 +193,15 @@
       "images/project-placeholder.jpg"
     ],
     "hervorgehoben": true,
-    "beispiel": true
+    "beispiel": true,
+    "name_en": "Light Form I",
+    "kurz_en": "Light object in concrete and light",
+    "technik_en": "Concrete, 3D-printed diffuser, LED",
+    "masse_en": "24 × 15 × 15 cm",
+    "signiert_en": "Signed",
+    "beschreibung_en": [
+      "Example text: A light object showing how a sold work is displayed. Sold works remain visible as an archive."
+    ]
   },
   {
     "id": "fundstueck-serie",
@@ -195,6 +223,14 @@
       "images/project-placeholder.jpg"
     ],
     "hervorgehoben": false,
-    "beispiel": true
+    "beispiel": true,
+    "name_en": "Found Object – Small Edition",
+    "kurz_en": "Cast in a small edition",
+    "technik_en": "Concrete, pigmented",
+    "masse_en": "10 × 8 × 6 cm",
+    "signiert_en": "Signed and numbered",
+    "beschreibung_en": [
+      "Example text: Five casts of the same form, each with its own surface."
+    ]
   }
 ]

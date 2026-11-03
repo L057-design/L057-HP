@@ -1,11 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://l057.at/</loc></url>
-  <url><loc>https://l057.at/shop.html</loc></url>
-  <url><loc>https://l057.at/projekte.html</loc></url>
-  <url><loc>https://l057.at/versand.html</loc></url>
-  <url><loc>https://l057.at/agb.html</loc></url>
-  <url><loc>https://l057.at/widerruf.html</loc></url>
-  <url><loc>https://l057.at/impressum.html</loc></url>
-  <url><loc>https://l057.at/datenschutz.html</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://l057.at/agb.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/agb.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/agb.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/agb.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/agb.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/agb.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/datenschutz.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/datenschutz.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/datenschutz.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/datenschutz.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/datenschutz.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/datenschutz.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/impressum.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/impressum.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/impressum.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/impressum.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/impressum.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/impressum.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/"/>
+  </url>
+  <url>
+    <loc>https://l057.at/produkt.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/produkt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/produkt.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/produkt.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/produkt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/produkt.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/projekt.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekt.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/projekt.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekt.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/projekte.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekte.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekte.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/projekte.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekte.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekte.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/shop.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/shop.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/shop.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/shop.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/shop.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/shop.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/versand.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/versand.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/versand.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/versand.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/versand.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/versand.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/widerruf.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/widerruf.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/widerruf.html"/>
+  </url>
+  <url>
+    <loc>https://l057.at/en/widerruf.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/widerruf.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/widerruf.html"/>
+  </url>
 </urlset>

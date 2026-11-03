@@ -23,25 +23,43 @@
   "versandzonen": [
     {
       "name": "Österreich",
-      "preis": 6.9
+      "preis": 6.9,
+      "name_en": "Austria"
     },
     {
       "name": "EU-Land",
-      "preis": 14.9
+      "preis": 14.9,
+      "name_en": "EU country"
     },
     {
       "name": "Anderes Land (auf Anfrage)",
-      "preis": null
+      "preis": null,
+      "name_en": "Other country (on request)"
     },
     {
       "name": "Abholung in Kapfenberg (nach Absprache)",
       "preis": 0,
-      "abholung": true
+      "abholung": true,
+      "name_en": "Pickup in Kapfenberg (by arrangement)"
     }
   ],
   "zahlungsarten": [
     "Überweisung",
     "PayPal"
   ],
-  "etsy_hinweis": "Serienprodukte und Alltagsobjekte von L057 gibt es auf Etsy."
+  "kategorien_englisch": {
+    "Objekte": "Objects",
+    "Licht": "Light",
+    "Druckgrafik": "Prints",
+    "Engineering": "Engineering"
+  },
+  "preishinweis_en": "Final price plus shipping",
+  "lieferzeit_en": "3–7 working days (AT), 5–10 (EU)",
+  "versandkosten_en": "from €6.90 (AT) · from €14.90 (EU)",
+  "steuerhinweis_en": "No VAT is charged under the Austrian small business exemption (§ 6 (1) 27 UStG).",
+  "hersteller_en": "Dimitri Wastl (L057), Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Austria · l057.design@gmail.com",
+  "zahlungsarten_en": [
+    "Bank transfer",
+    "PayPal"
+  ]
 }

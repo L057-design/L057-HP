@@ -1605,3 +1605,52 @@ p {
 .admin-editor + * {
     margin-bottom: 72px;
 }
+
+/* ---------- Sprachschalter ---------- */
+
+.main-nav .lang-switch {
+    padding: 6px 9px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--text);
+}
+
+.main-nav .lang-switch:hover,
+.main-nav .lang-switch:focus-visible {
+    border-color: var(--text);
+    background: transparent;
+}
+
+.brand {
+    flex: none;
+}
+
+@media (max-width: 420px) {
+    .main-nav a.nav-contact {
+        display: none;
+    }
+
+    .main-nav {
+        gap: 0;
+    }
+}
+
+.admin-en {
+    margin-bottom: 8px;
+    padding: 14px 16px;
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+}
+
+.admin-en summary {
+    cursor: pointer;
+    color: var(--text);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.admin-en[open] summary {
+    margin-bottom: 12px;
+}

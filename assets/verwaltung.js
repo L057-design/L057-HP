@@ -773,6 +773,19 @@
         ]);
     }
 
+    /* Ausklappbarer Bereich für die englischen Texte */
+    function englischBereich(felder, hinweis) {
+        const box = el("details", {
+            class: "admin-en",
+            open: ansicht.englisch,
+            ontoggle: function (e) { ansicht.englisch = e.target.open; }
+        }, [
+            el("summary", { text: "English / Englisch" }),
+            el("p", { class: "admin-hint", text: hinweis || "Leere Felder zeigen auf der englischen Seite den deutschen Text." })
+        ].concat(felder));
+        return box;
+    }
+
     function werkFelder(w, name) {
         const n = function () { return name(); };
         const teile = [];
@@ -872,6 +885,19 @@
             teile.push(zahlFeld(w.versand, "EU-Land", "Versand EU (€)", { name: n(), step: "0.01" }));
         }
 
+        teile.push(abschnitt("Englisch"));
+        teile.push(englischBereich([
+            textFeld(w, "name_en", "Title", { name: n() }),
+            textFeld(w, "kurz_en", "Short description", { name: n() }),
+            absatzFeld(w, "beschreibung_en", "Description", { name: n(), hilfe: "Separate paragraphs with an empty line." }),
+            textFeld(w, "technik_en", "Technique / material", { name: n() }),
+            textFeld(w, "masse_en", "Dimensions", { name: n() }),
+            textFeld(w, "gewicht_en", "Weight", { name: n() }),
+            textFeld(w, "signiert_en", "Signature", { name: n() }),
+            textFeld(w, "pflege_en", "Care", { name: n() }),
+            absatzFeld(w, "hinweise_en", "Notes", { name: n(), einfach: true, zeilen: 2 })
+        ]));
+
         teile.push(abschnitt("Anzeige"));
         teile.push(hakenFeld(w, "hervorgehoben", "Auf der Startseite zeigen", { name: n() }));
         teile.push(hakenFeld(w, "beispiel", "Als „Beispiel“ markieren", { name: n() }));
@@ -930,6 +956,12 @@
             absatzFeld(p, "text", "Text", { name: n(), zeilen: 8 }),
             abschnitt("Fotos"),
             bilderFeld(p, "projekte", n()),
+            abschnitt("Englisch"),
+            englischBereich([
+                textFeld(p, "titel_en", "Title", { name: n() }),
+                textFeld(p, "kurz_en", "Short description", { name: n() }),
+                absatzFeld(p, "text_en", "Text", { name: n(), zeilen: 8, hilfe: "Separate paragraphs with an empty line." })
+            ]),
             abschnitt("Verknüpfung"),
             auswahlFeld("Zugehöriges Werk im Shop (optional)", werkOptionen, p.produkt || "", function (wert) {
                 p.produkt = wert;
@@ -958,9 +990,16 @@
         });
         teile.push(feld("Kategorien (Reihenfolge der Filter)", kategorien, "Mit Komma trennen, z. B. Objekte, Licht, Druckgrafik"));
 
+        s.kategorien_englisch = s.kategorien_englisch || {};
+        teile.push(englischBereich((s.kategorien || []).map(function (k) {
+            return textFeld(s.kategorien_englisch, k, "Kategorie „" + k + "“ auf Englisch", { name: name });
+        }), "Englische Namen der Kategorien für die englische Seite."));
+
         teile.push(abschnitt("Versand"));
         teile.push(textFeld(s, "lieferzeit", "Lieferzeit (Text)", { name: name }));
+        teile.push(textFeld(s, "lieferzeit_en", "Lieferzeit Englisch", { name: name }));
         teile.push(textFeld(s, "versandkosten", "Versandkosten (Text auf Werkseiten)", { name: name }));
+        teile.push(textFeld(s, "versandkosten_en", "Versandkosten Englisch", { name: name }));
         (s.versandzonen || []).forEach(function (z) {
             if (z.preis === null || z.abholung) return;
             teile.push(zahlFeld(z, "preis", "Versandpreis " + z.name + " (€)", { name: name, step: "0.01" }));

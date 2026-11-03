@@ -33,7 +33,6 @@ TEXTE = {
         "sprache_label": "English version",
         "claim": "Something Lost. Found Form.<br>Einzelstücke und Kleinserien aus Beton, Licht und Druck. Kapfenberg, Österreich.",
         "alle_werke": "Alle Werke",
-        "etsy": "Serienprodukte (Etsy)",
         "versand": "Versand &amp; Zahlung",
         "folgen": "Folgen",
         "recht": "Rechtliches",
@@ -56,7 +55,6 @@ TEXTE = {
         "sprache_label": "Deutsche Version",
         "claim": "Something Lost. Found Form.<br>Unique pieces and small editions in concrete, light and print. Kapfenberg, Austria.",
         "alle_werke": "All works",
-        "etsy": "Series products (Etsy)",
         "versand": "Shipping &amp; payment",
         "folgen": "Follow",
         "recht": "Legal",
@@ -198,7 +196,6 @@ def seite(lang, datei):
             <h2>{t['werke']}</h2>
             <ul>
                 <li><a href="shop.html">{t['alle_werke']}</a></li>
-                <li><a href="{ETSY}" rel="noopener" target="_blank">{t['etsy']}</a></li>
                 <li><a href="projekte.html">{t['projekte']}</a></li>
                 <li><a href="versand.html">{t['versand']}</a></li>
                 <li><a href="mailto:{EMAIL}">{t['kontakt']}</a></li>

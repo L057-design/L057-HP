@@ -452,56 +452,118 @@
 
     /* ---------- Galerie ---------- */
 
-    /* Galerie mit Vorschaubildern. Rückgabe: Element mit .zeige(src, markierung)
-       zum Springen auf ein bestimmtes Bild; optionen.beiWechsel(src) meldet Klicks. */
+    /* Pfeil im Stil ">" mit 120° Öffnung */
+    function pfeil(richtung) {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("aria-hidden", "true");
+        const linie = document.createElementNS(ns, "polyline");
+        linie.setAttribute("points", richtung > 0 ? "10,3.3 15,12 10,20.7" : "14,3.3 9,12 14,20.7");
+        svg.appendChild(linie);
+        return svg;
+    }
+
+    /* Galerie mit Pfeilen, Wischen, Tastatur und Vorschaubildern.
+       Rückgabe: Element mit .zeige(src, markierung) zum Springen auf ein Bild.
+       optionen.beiWechsel(src) meldet jeden Bildwechsel,
+       optionen.markierungen[src] zeigt eine Markierung (z. B. "#06 / 20") am Bild. */
     function galerie(bilder, alt, badges, optionen) {
         optionen = optionen || {};
         const liste = bilder && bilder.length ? bilder : ["images/project-placeholder.jpg"];
-        const haupt = el("img", { src: pfad(liste[0]), alt: alt });
+        const mehrere = liste.length > 1;
+        const haupt = el("img", { src: pfad(liste[0]), alt: alt, draggable: "false" });
         const markierung = el("span", { class: "exemplar-tag", hidden: true });
+        const zaehler = el("span", { class: "gallery-count", "aria-live": "polite" });
         const thumbs = el("div", { class: "thumbs" });
+        let index = 0;
 
-        function aktiv(src) {
-            Array.prototype.forEach.call(thumbs.children, function (t) {
-                t.setAttribute("aria-current", String(t.dataset.src === src));
+        function anzeigen(i, text, melden) {
+            index = (i + liste.length) % liste.length;
+            const src = liste[index];
+            if (haupt.getAttribute("src") !== pfad(src)) {
+                haupt.classList.add("wechsel");
+                const neu = new Image();
+                neu.onload = neu.onerror = function () {
+                    haupt.src = pfad(src);
+                    requestAnimationFrame(function () { haupt.classList.remove("wechsel"); });
+                };
+                setTimeout(function () { neu.src = pfad(src); }, 120);
+            }
+            Array.prototype.forEach.call(thumbs.children, function (t, k) {
+                t.setAttribute("aria-current", String(k === index));
             });
+            const tag = text || (optionen.markierungen && optionen.markierungen[src]) || "";
+            markierung.textContent = tag;
+            markierung.hidden = !tag;
+            zaehler.textContent = (index + 1) + " / " + liste.length;
+            const thumb = thumbs.children[index];
+            if (thumb && thumbs.scrollWidth > thumbs.clientWidth) {
+                thumbs.scrollTo({ left: thumb.offsetLeft - thumbs.clientWidth / 2 + thumb.clientWidth / 2, behavior: "smooth" });
+            }
+            if (melden && optionen.beiWechsel) optionen.beiWechsel(src);
         }
 
-        if (liste.length > 1) {
+        if (mehrere) {
             liste.forEach(function (src, i) {
                 thumbs.appendChild(el("button", {
                     class: "thumb",
                     type: "button",
                     "data-src": src,
-                    "aria-label": (optionen.beschriftung && optionen.beschriftung[src]) || (SPRACHE === "en" ? "Show image " + (i + 1) : "Bild " + (i + 1) + " anzeigen"),
+                    "aria-label": (optionen.beschriftung && optionen.beschriftung[src]) ||
+                        (SPRACHE === "en" ? "Show image " + (i + 1) : "Bild " + (i + 1) + " anzeigen"),
                     "aria-current": i === 0 ? "true" : "false",
-                    onclick: function () {
-                        haupt.src = pfad(src);
-                        aktiv(src);
-                        markierung.hidden = true;
-                        if (optionen.beiWechsel) optionen.beiWechsel(src);
-                    }
-                }, [el("img", { src: pfad(src), alt: "" })]));
+                    onclick: function () { anzeigen(i, null, true); }
+                }, [el("img", { src: pfad(src), alt: "", loading: "lazy" })]));
             });
         }
 
-        const wrapper = el("div", {}, [
-            el("div", { class: "gallery-main" }, [haupt, markierung].concat(badges || [])),
-            liste.length > 1 ? thumbs : null
-        ]);
+        const buehne = el("div", { class: "gallery-main", tabindex: mehrere ? "0" : null }, [haupt, markierung].concat(badges || []));
+
+        if (mehrere) {
+            buehne.appendChild(el("button", {
+                class: "gallery-arrow gallery-prev", type: "button",
+                "aria-label": SPRACHE === "en" ? "Previous image" : "Vorheriges Bild",
+                onclick: function () { anzeigen(index - 1, null, true); }
+            }, [pfeil(-1)]));
+            buehne.appendChild(el("button", {
+                class: "gallery-arrow gallery-next", type: "button",
+                "aria-label": SPRACHE === "en" ? "Next image" : "Nächstes Bild",
+                onclick: function () { anzeigen(index + 1, null, true); }
+            }, [pfeil(1)]));
+            buehne.appendChild(zaehler);
+            zaehler.textContent = "1 / " + liste.length;
+
+            /* Wischen mit dem Finger */
+            let startX = null, startY = null;
+            buehne.addEventListener("touchstart", function (e) {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            buehne.addEventListener("touchend", function (e) {
+                if (startX === null) return;
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                startX = null;
+                if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) anzeigen(index + (dx < 0 ? 1 : -1), null, true);
+            }, { passive: true });
+
+            /* Pfeiltasten am PC */
+            buehne.addEventListener("keydown", function (e) {
+                if (e.key === "ArrowRight") { anzeigen(index + 1, null, true); e.preventDefault(); }
+                if (e.key === "ArrowLeft") { anzeigen(index - 1, null, true); e.preventDefault(); }
+            });
+        }
+
+        const wrapper = el("div", {}, [buehne, mehrere ? thumbs : null]);
 
         wrapper.zeige = function (src, text) {
-            if (!src) return;
-            haupt.src = pfad(src);
-            aktiv(src);
-            markierung.textContent = text || "";
-            markierung.hidden = !text;
-            const thumb = Array.prototype.find.call(thumbs.children, function (t) { return t.dataset.src === src; });
-            if (thumb && thumb.scrollIntoView) thumb.scrollIntoView({ block: "nearest", inline: "nearest" });
-            const main = wrapper.firstChild;
-            const box = main.getBoundingClientRect();
+            const i = liste.indexOf(src);
+            if (i === -1) return;
+            anzeigen(i, text, false);
+            const box = buehne.getBoundingClientRect();
             if (box.top < 0 || box.bottom > window.innerHeight) {
-                main.scrollIntoView({ behavior: "smooth", block: "start" });
+                buehne.scrollIntoView({ behavior: "smooth", block: "start" });
             }
         };
         return wrapper;
@@ -524,6 +586,114 @@
             }).join(" · ");
         }
         return shop.versandkosten;
+    }
+
+    /* Kompakte Auswahlliste (statt nativem Dropdown, das am Handy den ganzen Bildschirm füllt).
+       Rückgabe: { element, value } – value lässt sich lesen und setzen. */
+    function auswahlListe(id, eintraege, start, beiAenderung) {
+        let wert = start;
+        const knopfText = el("span", { class: "picker-value" });
+        const knopf = el("button", {
+            class: "select picker-button",
+            id: id,
+            type: "button",
+            "aria-haspopup": "listbox",
+            "aria-expanded": "false",
+            "aria-labelledby": id + "-label " + id
+        }, [knopfText]);
+        const liste = el("ul", { class: "picker-list", role: "listbox", tabindex: "-1" });
+        const daumen = el("span", { class: "picker-thumb" });
+        const spur = el("span", { class: "picker-track", "aria-hidden": "true" }, [daumen]);
+        const panel = el("div", { class: "picker-panel" }, [liste, spur]);
+        const box = el("div", { class: "picker" }, [knopf, panel]);
+
+        /* Eigene, immer sichtbare Scrollleiste (Android blendet die normale aus) */
+        function leisteSetzen() {
+            const sicht = liste.clientHeight;
+            const gesamt = liste.scrollHeight;
+            if (gesamt <= sicht + 1) {
+                spur.hidden = true;
+                return;
+            }
+            spur.hidden = false;
+            const hoehe = Math.max(28, sicht * sicht / gesamt);
+            const weg = (sicht - 16 - hoehe) * liste.scrollTop / (gesamt - sicht);
+            daumen.style.height = hoehe + "px";
+            daumen.style.transform = "translateY(" + weg + "px)";
+        }
+        liste.addEventListener("scroll", leisteSetzen, { passive: true });
+
+        function zeichneListe() {
+            liste.replaceChildren.apply(liste, eintraege.map(function (e) {
+                return el("li", {
+                    role: "option",
+                    class: "picker-option",
+                    "data-wert": e.wert,
+                    "aria-selected": String(e.wert === wert),
+                    "aria-disabled": e.gesperrt ? "true" : null,
+                    onclick: function () {
+                        if (e.gesperrt) return;
+                        setze(e.wert, true);
+                        schliessen();
+                        knopf.focus();
+                    }
+                }, [el("span", { text: e.text }), e.zusatz ? el("span", { class: "picker-extra", text: e.zusatz }) : null]);
+            }));
+        }
+
+        function setze(neu, melden) {
+            wert = neu;
+            const e = eintraege.find(function (x) { return x.wert === neu; });
+            knopfText.textContent = e ? e.text : neu;
+            Array.prototype.forEach.call(liste.children, function (li) {
+                li.setAttribute("aria-selected", String(li.dataset.wert === neu));
+            });
+            if (melden) beiAenderung(neu);
+        }
+
+        function oeffnen() {
+            box.classList.add("offen");
+            knopf.setAttribute("aria-expanded", "true");
+            const aktiv = liste.querySelector('[aria-selected="true"]');
+            if (aktiv) liste.scrollTop = aktiv.offsetTop - liste.clientHeight / 2 + aktiv.clientHeight / 2;
+            leisteSetzen();
+            setTimeout(function () { document.addEventListener("click", aussen); }, 0);
+        }
+
+        function schliessen() {
+            box.classList.remove("offen");
+            knopf.setAttribute("aria-expanded", "false");
+            document.removeEventListener("click", aussen);
+        }
+
+        function aussen(e) {
+            if (!box.contains(e.target)) schliessen();
+        }
+
+        function blaettern(richtung) {
+            const frei = eintraege.filter(function (e) { return !e.gesperrt; });
+            const i = frei.findIndex(function (e) { return e.wert === wert; });
+            const neu = frei[Math.max(0, Math.min(frei.length - 1, i + richtung))];
+            if (neu && neu.wert !== wert) setze(neu.wert, true);
+        }
+
+        knopf.addEventListener("click", function () {
+            if (box.classList.contains("offen")) schliessen(); else oeffnen();
+        });
+        box.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") { schliessen(); knopf.focus(); }
+            if (e.key === "ArrowDown") { blaettern(1); e.preventDefault(); }
+            if (e.key === "ArrowUp") { blaettern(-1); e.preventDefault(); }
+        });
+
+        zeichneListe();
+        setze(start, false);
+
+        return {
+            element: box,
+            get value() { return wert; },
+            set value(neu) { setze(neu, false); }
+        };
     }
 
     function produktSeite() {
@@ -565,11 +735,13 @@
             const bilderAlle = (p.bilder || []).slice();
             const bildZuNr = {};
             const beschriftung = {};
+            const markierungen = {};
             if (hatExemplare(p)) {
                 p.exemplare.forEach(function (x) {
                     if (!x.bild) return;
                     if (bilderAlle.indexOf(x.bild) === -1) bilderAlle.push(x.bild);
                     bildZuNr[x.bild] = x;
+                    markierungen[x.bild] = exemplarName(p, x.nr);
                     beschriftung[x.bild] = SPRACHE === "en" ? "Show copy " + exemplarName(p, x.nr) : "Exemplar " + exemplarName(p, x.nr) + " anzeigen";
                 });
             }
@@ -577,26 +749,22 @@
             if (hatExemplare(p) && verfuegbar(p)) {
                 const frei = freieExemplare(p);
                 auswahl.Exemplar = exemplarName(p, frei[0].nr);
-                exemplarSelect = el("select", {
-                    class: "select",
-                    id: "exemplar",
-                    onchange: function (e) {
-                        const x = p.exemplare.find(function (y) { return exemplarName(p, y.nr) === e.target.value; });
-                        auswahl.Exemplar = e.target.value;
-                        hinweis.textContent = "";
-                        if (x && x.bild && galerieEl) galerieEl.zeige(x.bild, exemplarName(p, x.nr));
-                    }
-                }, p.exemplare.map(function (x) {
-                    return el("option", {
-                        value: exemplarName(p, x.nr),
-                        disabled: !!x.verkauft,
-                        text: exemplarName(p, x.nr) + (x.verkauft ? t(" – verkauft") : "")
-                    });
-                }));
-                exemplarSelect.value = auswahl.Exemplar;
+                exemplarSelect = auswahlListe("exemplar", p.exemplare.map(function (x) {
+                    return {
+                        wert: exemplarName(p, x.nr),
+                        text: exemplarName(p, x.nr),
+                        zusatz: x.verkauft ? t(" – verkauft").replace(" – ", "") : "",
+                        gesperrt: !!x.verkauft
+                    };
+                }), auswahl.Exemplar, function (wert) {
+                    const x = p.exemplare.find(function (y) { return exemplarName(p, y.nr) === wert; });
+                    auswahl.Exemplar = wert;
+                    hinweis.textContent = "";
+                    if (x && x.bild && galerieEl) galerieEl.zeige(x.bild, exemplarName(p, x.nr));
+                });
                 felder.unshift(el("div", { class: "field" }, [
-                    el("label", { for: "exemplar", text: t("Exemplar wählen") }),
-                    exemplarSelect
+                    el("label", { id: "exemplar-label", for: "exemplar", text: t("Exemplar wählen") }),
+                    exemplarSelect.element
                 ]));
             }
 
@@ -677,6 +845,7 @@
                 el("div", { class: "detail" }, [
                     (galerieEl = galerie(bilderAlle, p.name, badges, {
                         beschriftung: beschriftung,
+                        markierungen: markierungen,
                         beiWechsel: function (src) {
                             const x = bildZuNr[src];
                             if (x && !x.verkauft && exemplarSelect) {

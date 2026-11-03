@@ -9,7 +9,8 @@
       "Beispieltext: Vom Entwurf über den Linolschnitt bis zum Druck auf Stoff. Hier steht, wie das Motiv entstanden ist, welche Technik verwendet wurde und was dabei gelernt wurde."
     ],
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/deathodils-detail.jpg",
+      "images/werke/deathodils-uebersicht.jpg"
     ],
     "produkt": "deathodils",
     "beispiel": true,
@@ -29,7 +30,8 @@
       "Beispieltext für ein Kunstprojekt."
     ],
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/fundstueck-3.jpg",
+      "images/werke/fundstueck-2.jpg"
     ],
     "produkt": "",
     "beispiel": true,
@@ -49,7 +51,8 @@
       "Beispieltext für ein Design- oder Engineering-Projekt, z. B. eine Konstruktion für den 3D-Druck."
     ],
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/licht-2.jpg",
+      "images/werke/serie-2.jpg"
     ],
     "produkt": "",
     "beispiel": true,

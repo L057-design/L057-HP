@@ -22,7 +22,9 @@
       "EU-Land": 19.9
     },
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/fundstueck-1.jpg",
+      "images/werke/fundstueck-2.jpg",
+      "images/werke/fundstueck-3.jpg"
     ],
     "hervorgehoben": true,
     "beispiel": true,
@@ -55,7 +57,8 @@
     ],
     "pflege": "Hinter UV-Schutzglas rahmen, vor direkter Sonne schützen",
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/deathodils-uebersicht.jpg",
+      "images/werke/deathodils-detail.jpg"
     ],
     "hervorgehoben": true,
     "beispiel": true,
@@ -190,7 +193,8 @@
     ],
     "versand": "anfrage",
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/licht-1.jpg",
+      "images/werke/licht-2.jpg"
     ],
     "hervorgehoben": true,
     "beispiel": true,
@@ -220,7 +224,8 @@
       "Beispieltext: Fünf Abgüsse derselben Form, jeder mit eigener Oberfläche."
     ],
     "bilder": [
-      "images/project-placeholder.jpg"
+      "images/werke/serie-1.jpg",
+      "images/werke/serie-2.jpg"
     ],
     "hervorgehoben": false,
     "beispiel": true,

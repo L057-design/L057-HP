@@ -352,6 +352,18 @@
 
     /* ---------- Startseite ---------- */
 
+    /* Handy (kein Hover): Karte in der Bildschirmmitte bekommt Farbe */
+    const fokusBeobachter = window.IntersectionObserver && window.matchMedia && window.matchMedia("(hover: none)").matches
+        ? new IntersectionObserver(function (eintraege) {
+            eintraege.forEach(function (e) { e.target.classList.toggle("im-fokus", e.isIntersecting); });
+        }, { rootMargin: "-35% 0px -35% 0px" })
+        : null;
+
+    function fokusBeobachten(ziel) {
+        if (!fokusBeobachter) return;
+        Array.prototype.forEach.call(ziel.querySelectorAll(".card"), function (karte) { fokusBeobachter.observe(karte); });
+    }
+
     function startseite() {
         const produktZiel = document.getElementById("home-produkte");
         const projektZiel = document.getElementById("home-projekte");
@@ -363,10 +375,12 @@
             produktZiel.replaceChildren.apply(produktZiel, liste.slice(0, 3).map(function (p) {
                 return produktKarte(p, shop);
             }));
+            fokusBeobachten(produktZiel);
         }).catch(function (e) { console.error(e); fehler(produktZiel, t("Produkte konnten nicht geladen werden.")); });
 
         ladeProjekte().then(function (liste) {
             projektZiel.replaceChildren.apply(projektZiel, liste.slice(0, 3).map(projektKarte));
+            fokusBeobachten(projektZiel);
         }).catch(function (e) { console.error(e); fehler(projektZiel, t("Projekte konnten nicht geladen werden.")); });
     }
 

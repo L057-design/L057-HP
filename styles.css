@@ -1654,3 +1654,53 @@ p {
 .admin-en[open] summary {
     margin-bottom: 12px;
 }
+
+/* ---------- Startseite: dunkler Graufilter auf den Bildern ----------
+   Am PC kommt die Farbe beim Darüberfahren zurück,
+   am Handy, sobald das Bild in die Bildschirmmitte scrollt. */
+
+[data-seite="start"] .card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(13, 13, 13, 0) 45%, rgba(13, 13, 13, 0.55) 100%),
+        rgba(18, 18, 18, 0.22);
+    pointer-events: none;
+    transition: opacity 500ms ease;
+}
+
+[data-seite="start"] .card-media .badge {
+    z-index: 2;
+}
+
+[data-seite="start"] .card-media img {
+    filter: grayscale(0.9) brightness(0.68) contrast(1.1);
+    transition: filter 600ms ease, transform 400ms ease;
+}
+
+[data-seite="start"] .card:hover .card-media img,
+[data-seite="start"] .card:focus-visible .card-media img,
+[data-seite="start"] .card.im-fokus .card-media img {
+    filter: none;
+}
+
+[data-seite="start"] .card:hover .card-media::after,
+[data-seite="start"] .card:focus-visible .card-media::after,
+[data-seite="start"] .card.im-fokus .card-media::after {
+    opacity: 0.25;
+}
+
+[data-seite="start"] .card-sold .card-media img,
+[data-seite="start"] .card-sold:hover .card-media img,
+[data-seite="start"] .card-sold.im-fokus .card-media img {
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-seite="start"] .card-media img,
+    [data-seite="start"] .card-media::after {
+        transition: none;
+    }
+}

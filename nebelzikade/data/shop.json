@@ -1,0 +1,63 @@
+{
+  "email": "l057.design@gmail.com",
+  "waehrung": "EUR",
+  "preishinweis": "Endpreis zzgl. Versand",
+  "lieferzeit": "3–7 Werktage (AT), 5–10 (EU)",
+  "versandkosten": "ab 4,90 € (AT) · ab 9,90 € (EU)",
+  "versandfrei_ab": 0,
+  "bestellung": "email",
+  "kategorien": [
+    "Armreifen",
+    "Talismane",
+    "Ketten"
+  ],
+  "social": {
+    "Instagram": "",
+    "TikTok": "",
+    "Pinterest": "",
+    "Etsy": ""
+  },
+  "steuerhinweis": "[Steuerhinweis folgt – z. B. Kleinunternehmerregelung]",
+  "hersteller": "[Name] (Nebelzikade), [Adresse] · [E-Mail]",
+  "versandzonen": [
+    {
+      "name": "Österreich",
+      "preis": 4.9,
+      "name_en": "Austria"
+    },
+    {
+      "name": "EU-Land",
+      "preis": 9.9,
+      "name_en": "EU country"
+    },
+    {
+      "name": "Anderes Land (auf Anfrage)",
+      "preis": null,
+      "name_en": "Other country (on request)"
+    },
+    {
+      "name": "Persönliche Übergabe (nach Absprache)",
+      "preis": 0,
+      "abholung": true,
+      "name_en": "Personal handover (by arrangement)"
+    }
+  ],
+  "zahlungsarten": [
+    "Überweisung",
+    "PayPal"
+  ],
+  "kategorien_englisch": {
+    "Armreifen": "Bracelets",
+    "Talismane": "Talismans",
+    "Ketten": "Necklaces"
+  },
+  "preishinweis_en": "Final price plus shipping",
+  "lieferzeit_en": "3–7 working days (AT), 5–10 (EU)",
+  "versandkosten_en": "from €4.90 (AT) · from €9.90 (EU)",
+  "steuerhinweis_en": "[Tax note to follow]",
+  "hersteller_en": "[Name] (Nebelzikade), [address] · [email]",
+  "zahlungsarten_en": [
+    "Bank transfer",
+    "PayPal"
+  ]
+}

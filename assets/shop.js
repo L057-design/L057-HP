@@ -10,6 +10,13 @@
     /* ---------- Sprache ---------- */
 
     const SPRACHE = document.documentElement.lang === "en" ? "en" : "de";
+
+    /* Marke: L057 (Wurzel) oder eine zweite Marke in einem Unterordner, z. B. /nebelzikade/.
+       Die Seite gibt das über data-Attribute am <body> an (siehe werkzeug/build.py). */
+    const MARKE = document.body.dataset.marke || "L057";
+    const BASIS = document.body.dataset.basis || "/";
+    const WEBSITE = document.body.dataset.website || "l057.at";
+    const WORTE = window.MARKE_TEXTE || {};
     const UEBERSETZUNG = {
         "An: ": "To: ",
         "Warenkorb, ": "Cart, ",
@@ -95,7 +102,7 @@
         "Bitte Name und Lieferadresse ausfüllen.": "Please enter your name and shipping address.",
         "Bitte deinen Namen ausfüllen.": "Please enter your name.",
         "Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.": "Please confirm that you have read the terms and the withdrawal policy.",
-        "Bestellung über l057.at (": "Order via l057.at (",
+        "Bestellung über ": "Order via ",
         "Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.": "Your email app will open. Please send the email from there.",
         "Bestellung kopiert. Füge sie in eine Mail an ": "Order copied. Paste it into an email to ",
         "Kopieren nicht möglich. Bitte schreib an ": "Copying not possible. Please write to ",
@@ -134,6 +141,7 @@
     };
 
     function t(text) {
+        if (Object.prototype.hasOwnProperty.call(WORTE, text)) return WORTE[text];
         return SPRACHE === "en" && Object.prototype.hasOwnProperty.call(UEBERSETZUNG, text) ? UEBERSETZUNG[text] : text;
     }
 
@@ -163,7 +171,7 @@
     /* Pfade immer ab Seitenwurzel, damit /en/-Seiten dieselben Dateien nutzen */
     function pfad(src) {
         if (!src) return "/images/project-placeholder.jpg";
-        return /^(https?:|\/|data:|blob:)/.test(src) ? src : "/" + src;
+        return /^(https?:|\/|data:|blob:)/.test(src) ? src : BASIS + src;
     }
 
     const cache = {};
@@ -179,13 +187,13 @@
     }
 
     const ladeShop = function () {
-        return laden("/data/shop.json").then(function (shop) {
+        return laden(BASIS + "data/shop.json").then(function (shop) {
             kategorieNamen = shop.kategorien_englisch || {};
             return lokal(shop);
         });
     };
-    const ladeProdukte = function () { return laden("/data/produkte.json").then(function (l) { return l.map(lokal); }); };
-    const ladeProjekte = function () { return laden("/data/projekte.json").then(function (l) { return l.map(lokal); }); };
+    const ladeProdukte = function () { return laden(BASIS + "data/produkte.json").then(function (l) { return l.map(lokal); }); };
+    const ladeProjekte = function () { return laden(BASIS + "data/projekte.json").then(function (l) { return l.map(lokal); }); };
 
     /* Kleines Hilfsmittel zum Erzeugen von Elementen */
     function el(tag, attrs, kinder) {
@@ -219,7 +227,7 @@
 
     /* ---------- Warenkorb (bleibt im Browser des Kunden gespeichert) ---------- */
 
-    const KORB_SCHLUESSEL = "l057-warenkorb";
+    const KORB_SCHLUESSEL = document.body.dataset.korb || "l057-warenkorb";
     let korbErsatz = [];
 
     function korbLesen() {
@@ -378,7 +386,7 @@
             fokusBeobachten(produktZiel);
         }).catch(function (e) { console.error(e); fehler(produktZiel, t("Produkte konnten nicht geladen werden.")); });
 
-        ladeProjekte().then(function (liste) {
+        if (projektZiel) ladeProjekte().then(function (liste) {
             projektZiel.replaceChildren.apply(projektZiel, liste.slice(0, 3).map(projektKarte));
             fokusBeobachten(projektZiel);
         }).catch(function (e) { console.error(e); fehler(projektZiel, t("Projekte konnten nicht geladen werden.")); });
@@ -711,7 +719,7 @@
                 return;
             }
 
-            document.title = p.name + " – L057";
+            document.title = p.name + " – " + MARKE;
             const auswahl = {};
             const felder = [];
 
@@ -1136,7 +1144,7 @@
                         status.textContent = t("Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.");
                         return;
                     }
-                    const betreff = t("Bestellung über l057.at (") + preis(summe.gesamt, shop.waehrung) + ")";
+                    const betreff = t("Bestellung über ") + WEBSITE + " (" + preis(summe.gesamt, shop.waehrung) + ")";
                     window.location.href = "mailto:" + shop.email +
                         "?subject=" + encodeURIComponent(betreff) +
                         "&body=" + encodeURIComponent(bestelltext(liste, summe));

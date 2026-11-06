@@ -1,0 +1,13 @@
+{
+  "name": "Nebelzikade",
+  "short_name": "Nebelzikade",
+  "start_url": "/nebelzikade/",
+  "scope": "/nebelzikade/",
+  "display": "browser",
+  "background_color": "#faf8f4",
+  "theme_color": "#faf8f4",
+  "icons": [
+    { "src": "/nebelzikade/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/nebelzikade/assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

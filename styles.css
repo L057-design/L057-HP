@@ -1917,12 +1917,11 @@ p {
     gap: 10px;
 }
 
-.brand-duo .brand img {
-    width: 28px;
-}
-
+/* Beide Logos gleich hoch */
+.brand-duo .brand img,
 .brand-duo .brand-partner img {
-    width: 30px;
+    width: auto;
+    height: 30px;
 }
 
 .brand-duo .brand-partner {

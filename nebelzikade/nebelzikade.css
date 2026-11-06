@@ -550,15 +550,6 @@ h3 {
     }
 }
 
-/* Kopfzeile: eigenes Logo × L057 */
-.brand-duo .brand img {
-    width: 34px;
-}
-
-.brand-duo .brand-partner img {
-    width: 27px;
-}
-
 /* Handy: Kopfzeile mit Logo-Paar und vier Menüpunkten kompakter */
 @media (max-width: 640px) {
     .header-inner {
@@ -568,14 +559,6 @@ h3 {
     .brand-duo {
         gap: 6px;
         flex: none;
-    }
-
-    .brand-duo .brand img {
-        width: 30px;
-    }
-
-    .brand-duo .brand-partner img {
-        width: 24px;
     }
 
     .main-nav {

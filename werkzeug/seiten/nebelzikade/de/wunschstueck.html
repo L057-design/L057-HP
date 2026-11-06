@@ -1,0 +1,39 @@
+title: Wunschstück – Nebelzikade
+desc: Ein Armreif nach deinen Wünschen: Farben, Steine, Größe und Anlass.
+seite: wunsch
+robots: index, follow
+---
+<main class="page">
+    <header class="page-head nz-kopf">
+        <p class="claim">Auftragsarbeit</p>
+        <h1>Dein Wunschstück</h1>
+        <p class="nz-lead">Ein Armreif für dich oder als Geschenk: in deinen Farben, mit deinen Steinen, in deiner Größe.</p>
+    </header>
+
+    <section class="home-section">
+        <ol class="nz-schritte">
+            <li><span class="nz-zahl">I</span><h3>Erzähl mir davon</h3><p>Schreib mir über das Formular, was du dir vorstellst. Farben, Steine, Anlass, alles hilft.</p></li>
+            <li><span class="nz-zahl">II</span><h3>Vorschlag</h3><p>Ich melde mich mit einem Vorschlag, einem Foto der Steine und einem Preis.</p></li>
+            <li><span class="nz-zahl">III</span><h3>Fädeln</h3><p>Wenn alles passt, entsteht dein Stück. Nach der Zahlung geht es auf die Reise.</p></li>
+        </ol>
+    </section>
+
+    <section class="home-section nz-formular">
+        <h2>Anfrage</h2>
+        <form id="wunsch-form" class="withdraw-form" data-email="{{email}}" novalidate>
+            <div class="field"><label for="wu-name">Name</label><input class="input" id="wu-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="wu-art">Was soll es werden?</label>
+                <select class="select" id="wu-art" name="art">
+                    <option>Armreif</option><option>Talisman</option><option>Kette</option><option>Weiß ich noch nicht</option>
+                </select></div>
+            <div class="field"><label for="wu-groesse">Handgelenk / Länge</label><input class="input" id="wu-groesse" name="groesse" placeholder="z. B. 16 cm"></div>
+            <div class="field"><label for="wu-farben">Farben und Steine</label><input class="input" id="wu-farben" name="farben" placeholder="z. B. Mondstein, etwas Silber, nichts Pinkes"></div>
+            <div class="field"><label for="wu-anlass">Anlass (optional)</label><input class="input" id="wu-anlass" name="anlass" placeholder="z. B. Geburtstag im Dezember"></div>
+            <div class="field"><label for="wu-wunsch">Dein Wunsch</label><textarea class="input" id="wu-wunsch" name="wunsch" rows="4" required></textarea></div>
+            <button type="submit" class="button button-primary button-block">Anfrage senden</button>
+            <p id="wunsch-status" class="buy-hint" aria-live="polite"></p>
+        </form>
+        <p class="nz-hinweis">Es öffnet sich dein Mailprogramm mit der fertigen Anfrage. Die Anfrage ist unverbindlich.
+        Hinweis: Stücke, die nach deinen Vorgaben angefertigt werden, sind vom Widerrufsrecht ausgenommen (siehe <a href="widerruf.html">Widerrufsbelehrung</a>).</p>
+    </section>
+</main>

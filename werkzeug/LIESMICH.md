@@ -19,4 +19,9 @@ Helles Design, gleiche Technik wie L057.
 - Daten: `nebelzikade/data/*.json`, Bilder: `nebelzikade/images/`
 - Design: `nebelzikade/nebelzikade.css` (lädt nach `/styles.css`)
 - Einstellungen der Marke (Texte, Kopf, Fuß, E-Mail): `NEBELZIKADE` in `build.py`
+- Seiten: Start, Schmuck, Stück, Warenkorb, Über mich, Musik, Wunschstück
+  (Anfrage-Formular → fertige E-Mail), Pflege & Größe, Versand und Rechtstexte.
+- In Vorlagen wird `{{email}}` durch die E-Mail-Adresse der Marke ersetzt.
+- Platzhalter für noch fehlende Angaben: `<span class="platzhalter">[…]</span>`.
 - Solange `entwurf: True` gesetzt ist, sind die Seiten `noindex` und nicht in der Sitemap.
+- Die Verwaltung (`/verwaltung.html`) bearbeitet bisher nur die L057-Daten.

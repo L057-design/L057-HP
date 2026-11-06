@@ -1,0 +1,39 @@
+title: Custom piece – Nebelzikade
+desc: A bracelet made to your wishes: colours, stones, size and occasion.
+seite: wunsch
+robots: index, follow
+---
+<main class="page">
+    <header class="page-head nz-kopf">
+        <p class="claim">Commission</p>
+        <h1>Your custom piece</h1>
+        <p class="nz-lead">A bracelet for you or as a gift: in your colours, with your stones, in your size.</p>
+    </header>
+
+    <section class="home-section">
+        <ol class="nz-schritte">
+            <li><span class="nz-zahl">I</span><h3>Tell me about it</h3><p>Use the form to tell me what you have in mind. Colours, stones, occasion – everything helps.</p></li>
+            <li><span class="nz-zahl">II</span><h3>Proposal</h3><p>I'll get back to you with a proposal, a photo of the stones and a price.</p></li>
+            <li><span class="nz-zahl">III</span><h3>Stringing</h3><p>Once everything fits, your piece is made. After payment it sets off on its journey.</p></li>
+        </ol>
+    </section>
+
+    <section class="home-section nz-formular">
+        <h2>Request</h2>
+        <form id="wunsch-form" class="withdraw-form" data-email="{{email}}" novalidate>
+            <div class="field"><label for="wu-name">Name</label><input class="input" id="wu-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="wu-art">What should it be?</label>
+                <select class="select" id="wu-art" name="art">
+                    <option>Bracelet</option><option>Talisman</option><option>Necklace</option><option>Not sure yet</option>
+                </select></div>
+            <div class="field"><label for="wu-groesse">Wrist size / length</label><input class="input" id="wu-groesse" name="groesse" placeholder="e.g. 16 cm"></div>
+            <div class="field"><label for="wu-farben">Colours and stones</label><input class="input" id="wu-farben" name="farben" placeholder="e.g. moonstone, a little silver, nothing pink"></div>
+            <div class="field"><label for="wu-anlass">Occasion (optional)</label><input class="input" id="wu-anlass" name="anlass" placeholder="e.g. birthday in December"></div>
+            <div class="field"><label for="wu-wunsch">Your wish</label><textarea class="input" id="wu-wunsch" name="wunsch" rows="4" required></textarea></div>
+            <button type="submit" class="button button-primary button-block">Send request</button>
+            <p id="wunsch-status" class="buy-hint" aria-live="polite"></p>
+        </form>
+        <p class="nz-hinweis">Your email app opens with the finished request. The request is non-binding.
+        Note: pieces made to your specifications are excluded from the right of withdrawal (see <a href="widerruf.html">withdrawal policy</a>).</p>
+    </section>
+</main>

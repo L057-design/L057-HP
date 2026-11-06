@@ -167,6 +167,11 @@ NZ_TEXTE = {
         "hauptnav": "Hauptnavigation",
         "werke": "Schmuck",
         "ueber": "Über",
+        "musik": "Musik",
+        "wunsch": "Wunschstück",
+        "pflege": "Pflege &amp; Größe",
+        "ueber_mich": "Über mich",
+        "marke": "Nebelzikade",
         "kontakt": "Kontakt",
         "warenkorb": "Warenkorb",
         "sprache_ziel": "EN",
@@ -189,6 +194,11 @@ NZ_TEXTE = {
         "hauptnav": "Main navigation",
         "werke": "Jewellery",
         "ueber": "About",
+        "musik": "Music",
+        "wunsch": "Custom piece",
+        "pflege": "Care &amp; size",
+        "ueber_mich": "About me",
+        "marke": "Nebelzikade",
         "kontakt": "Contact",
         "warenkorb": "Cart",
         "sprache_ziel": "DE",
@@ -264,7 +274,8 @@ def nz_kopf(m, t, aktiv, schalter):
         </a>
         <nav class="main-nav" aria-label="{t['hauptnav']}">
             <a href="shop.html"{aktiv('shop', 'produkt')}>{t['werke']}</a>
-            <a href="index.html#ueber" class="nav-about">{t['ueber']}</a>
+            <a href="ueber.html"{aktiv('ueber')}>{t['ueber']}</a>
+            <a href="musik.html"{aktiv('musik')}>{t['musik']}</a>
             <a href="mailto:{m['email']}" class="nav-contact">{t['kontakt']}</a>
             {schalter}
             <a href="warenkorb.html" class="cart-link" aria-label="{t['warenkorb']}"{aktiv('warenkorb')}>
@@ -286,7 +297,16 @@ def nz_fuss(m, t):
             <h2>{t['werke']}</h2>
             <ul>
                 <li><a href="shop.html">{t['alle_werke']}</a></li>
+                <li><a href="wunschstueck.html">{t['wunsch']}</a></li>
+                <li><a href="pflege.html">{t['pflege']}</a></li>
                 <li><a href="versand.html">{t['versand']}</a></li>
+            </ul>
+        </nav>
+        <nav class="footer-col" aria-label="{t['marke']}">
+            <h2>{t['marke']}</h2>
+            <ul>
+                <li><a href="ueber.html">{t['ueber_mich']}</a></li>
+                <li><a href="musik.html">{t['musik']}</a></li>
                 <li><a href="mailto:{m['email']}">{t['kontakt']}</a></li>
             </ul>
         </nav>"""
@@ -341,6 +361,7 @@ def lies(m, lang, datei):
 
 def seite(m, lang, datei):
     meta, inhalt = lies(m, lang, datei)
+    inhalt = inhalt.replace("{{email}}", m["email"])
     t = m["texte"][lang]
     s = meta["seite"]
     zweisprachig = datei not in m["nur_de"]

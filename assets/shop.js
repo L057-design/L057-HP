@@ -97,12 +97,15 @@
         "Eins mehr": "One more",
         "Entfernen": "Remove",
         "Abholung": "Pickup",
+        "kostenlos": "free",
         "Lieferland": "Destination",
         "Zahlungsart": "Payment method",
         "Bitte Name und Lieferadresse ausfüllen.": "Please enter your name and shipping address.",
         "Bitte deinen Namen ausfüllen.": "Please enter your name.",
         "Bitte bestätige, dass du AGB und Widerrufsbelehrung gelesen hast.": "Please confirm that you have read the terms and the withdrawal policy.",
         "Bestellung über ": "Order via ",
+        "Bitte Name und Wunsch ausfüllen.": "Please enter your name and your wish.",
+        "Wunschstück – ": "Custom piece – ",
         "Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.": "Your email app will open. Please send the email from there.",
         "Bestellung kopiert. Füge sie in eine Mail an ": "Order copied. Paste it into an email to ",
         "Kopieren nicht möglich. Bitte schreib an ": "Copying not possible. Please write to ",
@@ -266,7 +269,7 @@
             n.hidden = anzahl === 0;
         });
         document.querySelectorAll(".cart-link").forEach(function (n) {
-            n.setAttribute("aria-label", t("Warenkorb, ") + anzahl + (anzahl === 1 ? t(" Artikel") : t(" Artikel")));
+            n.setAttribute("aria-label", t("Warenkorb, ") + anzahl + (anzahl === 1 && SPRACHE === "en" ? " item" : t(" Artikel")));
         });
     }
 
@@ -478,7 +481,7 @@
        optionen.markierungen[src] zeigt eine Markierung (z. B. "#06 / 20") am Bild. */
     function galerie(bilder, alt, badges, optionen) {
         optionen = optionen || {};
-        const liste = bilder && bilder.length ? bilder : ["images/project-placeholder.jpg"];
+        const liste = bilder && bilder.length ? bilder : ["/images/project-placeholder.jpg"];
         const mehrere = liste.length > 1;
         const haupt = el("img", { src: pfad(liste[0]), alt: alt, draggable: "false" });
         const markierung = el("span", { class: "exemplar-tag", hidden: true });
@@ -1109,7 +1112,7 @@
                 }
 
                 const versandText = !summe.physisch ? null :
-                    (summe.abholung ? t("Abholung") : summe.anfrage ? t("auf Anfrage") : (summe.versand === 0 ? "kostenlos" : preis(summe.versand, shop.waehrung)));
+                    (summe.abholung ? t("Abholung") : summe.anfrage ? t("auf Anfrage") : (summe.versand === 0 ? t("kostenlos") : preis(summe.versand, shop.waehrung)));
 
                 function auswahlFeld(name, label, optionen, onchange) {
                     const id = "feld-" + name;
@@ -1222,6 +1225,38 @@
         }).catch(function (e) { console.error(e); fehler(ziel, t("Warenkorb konnte nicht geladen werden.")); });
     }
 
+    /* ---------- Wunschstück-Anfrage (Nebelzikade): fertige E-Mail aus dem Formular ---------- */
+
+    function wunschSeite() {
+        const form = document.getElementById("wunsch-form");
+        const status = document.getElementById("wunsch-status");
+        if (!form) return;
+        const email = form.dataset.email;
+
+        function beschriftung(feld) {
+            const label = form.querySelector('label[for="' + feld.id + '"]');
+            return label ? label.textContent.trim() : feld.name;
+        }
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const name = form.elements.name.value.trim();
+            if (!name || !form.elements.wunsch.value.trim()) {
+                status.textContent = t("Bitte Name und Wunsch ausfüllen.");
+                return;
+            }
+            const text = Array.prototype.filter.call(form.elements, function (f) {
+                return f.name && f.value && f.value.trim();
+            }).map(function (f) {
+                return beschriftung(f) + ": " + f.value.trim();
+            }).join("\n");
+            window.location.href = "mailto:" + email +
+                "?subject=" + encodeURIComponent(t("Wunschstück – ") + name) +
+                "&body=" + encodeURIComponent(text);
+            status.textContent = t("Dein Mailprogramm öffnet sich. Bitte die Mail dort noch absenden.");
+        });
+    }
+
     /* ---------- Widerrufsfunktion (§ 13a FAGG) ---------- */
 
     function widerrufSeite() {
@@ -1295,7 +1330,8 @@
         projekte: projekteSeite,
         projekt: projektSeite,
         warenkorb: warenkorbSeite,
-        widerruf: widerrufSeite
+        widerruf: widerrufSeite,
+        wunsch: wunschSeite
     };
 
     korbAnzeigen();

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom piece – Nebelzikade</title>
+<meta name="description" content="A bracelet made to your wishes: colours, stones, size and occasion.">
+<meta name="theme-color" content="#faf8f4">
+<meta name="robots" content="noindex, nofollow">
+<script>
+(function () {
+    try {
+        if (/bot|crawl|spider|slurp|preview|lighthouse/i.test(navigator.userAgent)) return;
+        var B = "/nebelzikade";
+        var pfad = location.pathname;
+        if (pfad.indexOf(B) !== 0) return;
+        var rest = pfad.slice(B.length);
+        var aufEn = rest.indexOf("/en/") === 0 || rest === "/en";
+        var gewaehlt = localStorage.getItem("l057-sprache");
+        var browser = (navigator.languages && navigator.languages[0]) || navigator.language || "de";
+        if (!gewaehlt && aufEn) return;
+        var ziel = gewaehlt || (/^de/i.test(browser) ? "de" : "en");
+        var datei = rest.replace(/^\/en(\/|$)/, "/").replace(/^\/?$/, "/index.html");
+        if (ziel === "en" && !aufEn) location.replace(B + "/en" + (datei === "/index.html" ? "/" : datei) + location.search + location.hash);
+        if (ziel === "de" && aufEn) location.replace(B + (datei === "/index.html" ? "/" : datei) + location.search + location.hash);
+    } catch (e) { /* ohne Speicher bleibt die aktuelle Sprache */ }
+})();
+</script>
+<link rel="canonical" href="https://l057.at/nebelzikade/en/wunschstueck.html">
+<link rel="alternate" hreflang="de" href="https://l057.at/nebelzikade/wunschstueck.html">
+<link rel="alternate" hreflang="en" href="https://l057.at/nebelzikade/en/wunschstueck.html">
+<link rel="alternate" hreflang="x-default" href="https://l057.at/nebelzikade/wunschstueck.html">
+
+<meta property="og:title" content="Custom piece – Nebelzikade">
+<meta property="og:description" content="A bracelet made to your wishes: colours, stones, size and occasion.">
+<meta property="og:image" content="https://l057.at/nebelzikade/assets/logo-teilen.png">
+<meta property="og:url" content="https://l057.at/nebelzikade/en/wunschstueck.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="/nebelzikade/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/nebelzikade/assets/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/nebelzikade/site.webmanifest">
+
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/nebelzikade/nebelzikade.css">
+</head>
+<body data-seite="wunsch" data-basis="/nebelzikade/" data-marke="Nebelzikade" data-korb="nebelzikade-warenkorb" data-website="l057.at/nebelzikade">
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="brand" aria-label="Nebelzikade home">
+            <img src="/nebelzikade/assets/logo-klein.png" alt="" width="34" height="34">
+            <span>Nebelzikade</span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="shop.html">Jewellery</a>
+            <a href="ueber.html">About</a>
+            <a href="musik.html">Music</a>
+            <a href="mailto:l057.design@gmail.com" class="nav-contact">Contact</a>
+            <a href="/nebelzikade/wunschstueck.html" class="lang-switch" data-lang-switch="de" hreflang="de" lang="de" aria-label="Deutsche Version">DE</a>
+            <a href="warenkorb.html" class="cart-link" aria-label="Cart">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                <span class="cart-count" data-korb-anzahl hidden>0</span>
+            </a>
+        </nav>
+    </div>
+</header>
+<main class="page">
+    <header class="page-head nz-kopf">
+        <p class="claim">Commission</p>
+        <h1>Your custom piece</h1>
+        <p class="nz-lead">A bracelet for you or as a gift: in your colours, with your stones, in your size.</p>
+    </header>
+
+    <section class="home-section">
+        <ol class="nz-schritte">
+            <li><span class="nz-zahl">I</span><h3>Tell me about it</h3><p>Use the form to tell me what you have in mind. Colours, stones, occasion – everything helps.</p></li>
+            <li><span class="nz-zahl">II</span><h3>Proposal</h3><p>I'll get back to you with a proposal, a photo of the stones and a price.</p></li>
+            <li><span class="nz-zahl">III</span><h3>Stringing</h3><p>Once everything fits, your piece is made. After payment it sets off on its journey.</p></li>
+        </ol>
+    </section>
+
+    <section class="home-section nz-formular">
+        <h2>Request</h2>
+        <form id="wunsch-form" class="withdraw-form" data-email="l057.design@gmail.com" novalidate>
+            <div class="field"><label for="wu-name">Name</label><input class="input" id="wu-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="wu-art">What should it be?</label>
+                <select class="select" id="wu-art" name="art">
+                    <option>Bracelet</option><option>Talisman</option><option>Necklace</option><option>Not sure yet</option>
+                </select></div>
+            <div class="field"><label for="wu-groesse">Wrist size / length</label><input class="input" id="wu-groesse" name="groesse" placeholder="e.g. 16 cm"></div>
+            <div class="field"><label for="wu-farben">Colours and stones</label><input class="input" id="wu-farben" name="farben" placeholder="e.g. moonstone, a little silver, nothing pink"></div>
+            <div class="field"><label for="wu-anlass">Occasion (optional)</label><input class="input" id="wu-anlass" name="anlass" placeholder="e.g. birthday in December"></div>
+            <div class="field"><label for="wu-wunsch">Your wish</label><textarea class="input" id="wu-wunsch" name="wunsch" rows="4" required></textarea></div>
+            <button type="submit" class="button button-primary button-block">Send request</button>
+            <p id="wunsch-status" class="buy-hint" aria-live="polite"></p>
+        </form>
+        <p class="nz-hinweis">Your email app opens with the finished request. The request is non-binding.
+        Note: pieces made to your specifications are excluded from the right of withdrawal (see <a href="widerruf.html">withdrawal policy</a>).</p>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <a href="index.html" class="brand"><img src="/nebelzikade/assets/logo-klein.png" alt="" width="34" height="34"><span>Nebelzikade</span></a>
+            <p>Strung by moonlight.<br>Bracelets, talismans and small magic made of beads, stone and silver.</p>
+        </div>
+        <nav class="footer-col" aria-label="Jewellery">
+            <h2>Jewellery</h2>
+            <ul>
+                <li><a href="shop.html">All pieces</a></li>
+                <li><a href="wunschstueck.html">Custom piece</a></li>
+                <li><a href="pflege.html">Care &amp; size</a></li>
+                <li><a href="versand.html">Shipping &amp; payment</a></li>
+            </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Nebelzikade">
+            <h2>Nebelzikade</h2>
+            <ul>
+                <li><a href="ueber.html">About me</a></li>
+                <li><a href="musik.html">Music</a></li>
+                <li><a href="mailto:l057.design@gmail.com">Contact</a></li>
+            </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Social Media" data-social hidden>
+            <h2>Follow</h2>
+            <ul></ul>
+        </nav>
+        <nav class="footer-col" aria-label="Legal">
+            <h2>Legal</h2>
+            <ul>
+                <li><a href="impressum.html">Imprint</a></li>
+                <li><a href="datenschutz.html">Privacy</a></li>
+                <li><a href="agb.html">Terms</a></li>
+                <li><a href="widerruf.html">Right of withdrawal</a></li>
+                <li><a href="widerruf.html#widerrufen" class="withdraw-link">Withdraw from contract</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="footer-bottom">© <span data-jahr>2026</span> Nebelzikade · All prices are final prices.</div>
+</footer>
+
+<script>window.MARKE_TEXTE = {"Dieses Werk gibt es nicht (mehr).": "This piece does not exist (anymore).", "Alle Werke": "All pieces", "Ähnliches Werk anfragen": "Ask for a similar piece", "Dieses Werk ist bereits verkauft.": "This piece has already been sold.", "Frage zum Werk": "Question about a piece", "Werke": "Jewellery", "Werk konnte nicht geladen werden.": "Piece could not be loaded.", "Produkte konnten nicht geladen werden.": "Pieces could not be loaded.", "Künstler: ": "Handmade by: "};</script>
+<script src="/assets/shop.js" defer></script>
+</body>
+</html>

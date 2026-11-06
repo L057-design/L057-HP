@@ -246,19 +246,6 @@ h3 {
     font-style: italic;
 }
 
-/* Logo-Paar: das eigene Logo etwas größer */
-.nz-hero .logo-duo .logo-rund {
-    width: min(240px, 40vw);
-}
-
-.nz-hero .logo-duo .logo {
-    filter: none;
-}
-
-.nz-hero .logo-duo .logo-partner .logo {
-    width: min(150px, 26vw);
-}
-
 /* ---------- Unterseiten: Über, Musik, Wunschstück, Pflege ---------- */
 
 .nz-kopf {
@@ -560,5 +547,50 @@ h3 {
 
     .nz-kopf {
         margin: 44px auto 28px;
+    }
+}
+
+/* Kopfzeile: eigenes Logo × L057 */
+.brand-duo .brand img {
+    width: 34px;
+}
+
+.brand-duo .brand-partner img {
+    width: 27px;
+}
+
+/* Handy: Kopfzeile mit Logo-Paar und vier Menüpunkten kompakter */
+@media (max-width: 640px) {
+    .header-inner {
+        gap: 8px;
+    }
+
+    .brand-duo {
+        gap: 6px;
+        flex: none;
+    }
+
+    .brand-duo .brand img {
+        width: 30px;
+    }
+
+    .brand-duo .brand-partner img {
+        width: 24px;
+    }
+
+    .main-nav {
+        gap: 0;
+    }
+
+    .main-nav a {
+        padding: 8px 6px;
+        letter-spacing: 0.05em;
+    }
+}
+
+/* Sehr schmale Handys: Musik steht dann nur im Fuß und auf der Startseite */
+@media (max-width: 380px) {
+    .main-nav a.nav-musik {
+        display: none;
     }
 }

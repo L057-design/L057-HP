@@ -1908,52 +1908,34 @@ p {
     }
 }
 
-/* ---------- Startseite: Logo-Paar (L057 × Nebelzikade) ----------
+/* ---------- Kopfzeile: Logo × Partnerlogo (L057 × Nebelzikade) ----------
    Jedes Logo führt zur Startseite der jeweiligen Marke. */
 
-.logo-duo {
-    display: flex;
+.brand-duo {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: clamp(14px, 4vw, 36px);
-    margin-bottom: 28px;
+    gap: 10px;
 }
 
-.logo-duo .logo-wrap {
-    margin-bottom: 0;
-    border-radius: 12px;
-    transition: transform var(--transition), opacity var(--transition);
+.brand-duo .brand img {
+    width: 28px;
 }
 
-.logo-duo .logo-wrap:hover,
-.logo-duo .logo-wrap:focus-visible {
-    transform: translateY(-2px);
+.brand-duo .brand-partner img {
+    width: 30px;
 }
 
-.logo-duo .logo {
-    width: min(180px, 31vw);
+.brand-duo .brand-partner {
+    opacity: 0.85;
+    transition: opacity var(--transition);
 }
 
-.logo-duo .logo-rund {
-    width: min(196px, 34vw);
-}
-
-.logo-duo .logo-partner {
-    opacity: 0.88;
-}
-
-.logo-duo .logo-partner:hover,
-.logo-duo .logo-partner:focus-visible {
+.brand-duo .brand-partner:hover,
+.brand-duo .brand-partner:focus-visible {
     opacity: 1;
 }
 
-.logo-x {
+.brand-x {
     display: inline-flex;
     color: var(--muted);
-    flex: none;
-}
-
-.logo-x svg {
-    width: clamp(30px, 7vw, 52px);
-    height: auto;
 }

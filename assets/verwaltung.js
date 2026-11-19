@@ -97,7 +97,7 @@
     }
 
     function preis(betrag) {
-        return new Intl.NumberFormat("de-AT", { style: "currency", currency: "EUR" }).format(betrag || 0);
+        return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(betrag || 0);
     }
 
     function nummer(n) {

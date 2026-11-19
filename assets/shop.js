@@ -98,6 +98,12 @@
         "Entfernen": "Remove",
         "Abholung": "Pickup",
         "Handgefertigt, nicht limitiert": "Handmade, not limited",
+        "Preise": "Prices",
+        "Stk": "pcs",
+        "Menge": "Quantity",
+        "Motive frei kombinierbar": "designs can be mixed",
+        "Staffelpreis": "volume price",
+        " Stück im Warenkorb. ": " in the cart. ",
         "Lagernd": "In stock",
         "Abholung gratis": "pickup free",
         "andere Länder auf Anfrage": "other countries on request",
@@ -226,7 +232,7 @@
     }
 
     function preis(betrag, waehrung) {
-        return new Intl.NumberFormat(SPRACHE === "en" ? "en-IE" : "de-AT", {
+        return new Intl.NumberFormat(SPRACHE === "en" ? "en-IE" : "de-DE", {
             style: "currency",
             currency: waehrung || "EUR"
         }).format(betrag);
@@ -326,6 +332,23 @@
     /* Nicht limitiert: laufend gefertigt, mit Lagerstand ("auflage": "offen") */
     function istOffen(p) {
         return p.auflage === "offen";
+    }
+
+    /* Staffelpreise: "staffel": [{ "ab": 5, "preis": 3.2 }, ...] = Stückpreis ab Gesamtmenge
+       dieses Stücks im Warenkorb (Varianten/Motive zusammengezählt) */
+    function stueckpreis(p, menge) {
+        let wert = p.preis;
+        (p.staffel || []).forEach(function (st) {
+            if (menge >= st.ab && typeof st.preis === "number") wert = Math.min(wert, st.preis);
+        });
+        return wert;
+    }
+
+    function staffelText(p, waehrung) {
+        const stufen = [{ ab: 1, preis: p.preis }].concat((p.staffel || []).slice().sort(function (a, b) { return a.ab - b.ab; }));
+        return stufen.map(function (st) {
+            return st.ab + " " + (SPRACHE === "en" && st.ab === 1 ? "pc" : t("Stk")) + " " + preis(Math.round(st.ab * st.preis * 100) / 100, waehrung);
+        }).join(" · ");
     }
 
     function auflageText(p) {
@@ -820,7 +843,12 @@
                 }));
                 hinweis.textContent = t("Dieses Werk ist bereits verkauft.");
             } else {
+                const mengeFeld = !istUnikat(p) && !hatExemplare(p) && bestand(p) > 1 ? el("input", {
+                    class: "input", id: "menge", type: "number", inputmode: "numeric",
+                    min: "1", max: String(Math.min(99, bestand(p))), value: "1"
+                }) : null;
                 kaufBereich.replaceChildren(
+                    mengeFeld ? el("div", { class: "field" }, [el("label", { for: "menge", text: t("Menge") }), mengeFeld]) : "",
                     el("button", {
                         class: "button button-primary button-block",
                         type: "button",
@@ -842,7 +870,9 @@
                                 );
                                 return;
                             }
-                            korbHinzufuegen(p.id, Object.assign({}, auswahl), 1);
+                            const frei = bestand(p) - imKorb();
+                            const gewuenscht = mengeFeld ? Math.max(1, Math.floor(Number(mengeFeld.value) || 1)) : 1;
+                            korbHinzufuegen(p.id, Object.assign({}, auswahl), Math.min(gewuenscht, frei));
                             hinweis.replaceChildren(
                                 t("✓ Im Warenkorb · "),
                                 el("a", { href: "warenkorb.html", text: t("Zum Warenkorb →") })
@@ -873,6 +903,7 @@
                 p.signiert ? [t("Signatur"), p.signiert] : null,
                 p.zertifikat ? [t("Echtheitszertifikat"), t("liegt bei")] : null,
                 p.pflege ? [t("Pflege"), p.pflege] : null,
+                p.staffel && p.staffel.length ? [t("Preise"), staffelText(p, shop.waehrung) + (p.varianten ? " · " + t("Motive frei kombinierbar") : "")] : null,
                 verfuegbar(p) ? [t("Lieferzeit"), shop.lieferzeit] : null,
                 verfuegbar(p) ? [t("Versand"), versandText(p, shop)] : null
             ].filter(Boolean);
@@ -1025,8 +1056,13 @@
                 zeichnen();
             }
 
+            function zeilenpreis(liste, x) {
+                const gesamt = liste.reduce(function (s, y) { return s + (y.produkt.id === x.produkt.id ? y.eintrag.menge : 0); }, 0);
+                return Math.round(stueckpreis(x.produkt, gesamt) * x.eintrag.menge * 100) / 100;
+            }
+
             function berechnen(liste) {
-                const zwischensumme = liste.reduce(function (s, x) { return s + x.produkt.preis * x.eintrag.menge; }, 0);
+                const zwischensumme = liste.reduce(function (s, x) { return s + zeilenpreis(liste, x); }, 0);
                 const physisch = liste.some(function (x) { return x.produkt.typ !== "digital"; });
                 const frei = shop.versandfrei_ab > 0 && zwischensumme >= shop.versandfrei_ab;
                 const zonen = shop.versandzonen || [];
@@ -1058,7 +1094,7 @@
                 const zeilen = liste.map(function (x) {
                     const v = variantenText(x.eintrag.varianten);
                     return "• " + x.eintrag.menge + " × " + x.produkt.name + (v ? " (" + v + ")" : "") +
-                        " – " + preis(x.produkt.preis * x.eintrag.menge, shop.waehrung);
+                        " – " + preis(zeilenpreis(liste, x), shop.waehrung);
                 });
                 return [
                     t("Hallo,"),
@@ -1136,7 +1172,7 @@
                                 el("button", { type: "button", class: "cart-remove", text: t("Entfernen"), onclick: function () { menge(i, 0); } })
                             ])
                         ]),
-                        el("span", { class: "cart-line-price", text: preis(x.produkt.preis * x.eintrag.menge, shop.waehrung) })
+                        el("span", { class: "cart-line-price", text: preis(zeilenpreis(liste, x), shop.waehrung) })
                     ]);
                 });
 

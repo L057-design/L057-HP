@@ -1,1 +1,89 @@
-[]
+[
+  {
+    "id": "rhizombox",
+    "name": "Rhizombox",
+    "kategorie": "Pflanzen",
+    "jahr": "2026",
+    "kurz": "Anzuchtbox für Alocasia-Rhizome",
+    "beschreibung": [
+      "Manches braucht Halt, bevor es Wurzeln schlägt.",
+      "Rhizombox. Eine Anzuchtbox für Alocasia-Rhizome.",
+      "Wasser in die Box. Gitter darüber. Rhizom darauf. Deckel zu.",
+      "Das Rhizom liegt 15 mm über dem Wasser, bei nahezu 100 % Luftfeuchtigkeit. Feucht, aber nie nass.",
+      "Das Gitter ist selbst entworfen und gedruckt. PETG, wasserfest, wiederverwendbar. Das Wasser am besten destilliert."
+    ],
+    "technik": "Gitter PETG · Acrylbox mit Deckel",
+    "masse": "Box 55 × 55 × 56 mm · Gitter 50 × 50 × 15 mm",
+    "pflege": "Wasser regelmäßig wechseln. Gitter und Box mit warmem Wasser reinigen.",
+    "auflage": "offen",
+    "bestand": 30,
+    "preis": 3.5,
+    "staffel": [
+      {
+        "ab": 5,
+        "preis": 3.2
+      },
+      {
+        "ab": 10,
+        "preis": 2.9
+      },
+      {
+        "ab": 25,
+        "preis": 2.6
+      }
+    ],
+    "paket": "klein",
+    "varianten": {
+      "Motiv": [
+        "Alocasia-Blätter",
+        "Please don't die",
+        "Hanf",
+        "Hirsch",
+        "Katze",
+        "Schmetterling",
+        "Herzen",
+        "Herzen verspielt",
+        "Skull",
+        "Spinne",
+        "Cthulhu",
+        "Pentakel",
+        "Hexagon",
+        "Ornament",
+        "L057"
+      ]
+    },
+    "bilder": [],
+    "hervorgehoben": true,
+    "name_en": "Rhizombox",
+    "kurz_en": "Propagation box for Alocasia corms",
+    "beschreibung_en": [
+      "Some things need support before they take root.",
+      "Rhizombox. A propagation box for Alocasia corms.",
+      "Water in the box. Grid on top. Corm on the grid. Lid on.",
+      "The corm sits 15 mm above the water, at almost 100 % humidity. Moist, never wet.",
+      "The grid is my own design, 3D printed in PETG: waterproof and reusable. Distilled water works best."
+    ],
+    "technik_en": "Grid PETG · acrylic box with lid",
+    "masse_en": "Box 55 × 55 × 56 mm · grid 50 × 50 × 15 mm",
+    "pflege_en": "Change the water regularly. Clean grid and box with warm water.",
+    "varianten_en": {
+      "Design": [
+        "Alocasia leaves",
+        "Please don't die",
+        "Hemp",
+        "Deer",
+        "Cat",
+        "Butterfly",
+        "Hearts",
+        "Playful hearts",
+        "Skull",
+        "Spider",
+        "Cthulhu",
+        "Pentacle",
+        "Hexagon",
+        "Ornament",
+        "L057"
+      ]
+    }
+  }
+]

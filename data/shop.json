@@ -3,10 +3,11 @@
   "waehrung": "EUR",
   "preishinweis": "Endpreis zzgl. Versand",
   "lieferzeit": "3–7 Werktage (Österreich)",
-  "versandkosten": "Österreich ab 6,90 € · Abholung in Kapfenberg gratis · andere Länder auf Anfrage",
+  "versandkosten": "Österreich ab 6,90 € · Selbstabholung gratis · andere Länder auf Anfrage",
   "versandfrei_ab": 0,
   "bestellung": "email",
   "kategorien": [
+    "Pflanzen",
     "Objekte",
     "Licht",
     "Druckgrafik"
@@ -32,8 +33,8 @@
       }
     },
     {
-      "name": "Abholung in Kapfenberg (nach Absprache)",
-      "name_en": "Pickup in Kapfenberg (by arrangement)",
+      "name": "Selbstabholung (nach Absprache)",
+      "name_en": "Self-pickup (by arrangement)",
       "preis": 0,
       "abholung": true
     },
@@ -51,11 +52,12 @@
     "Objekte": "Objects",
     "Licht": "Light",
     "Druckgrafik": "Prints",
-    "Engineering": "Engineering"
+    "Engineering": "Engineering",
+    "Pflanzen": "Plants"
   },
   "preishinweis_en": "Final price plus shipping",
   "lieferzeit_en": "3–7 working days (Austria)",
-  "versandkosten_en": "Austria from €6.90 · pickup in Kapfenberg free · other countries on request",
+  "versandkosten_en": "Austria from €6.90 · self-pickup free · other countries on request",
   "steuerhinweis_en": "No VAT is charged under the Austrian small business exemption (§ 6 (1) 27 UStG).",
   "hersteller_en": "Dimitri Wastl (L057), Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Austria · l057.design@gmail.com",
   "zahlungsarten_en": [

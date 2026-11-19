@@ -108,6 +108,10 @@
         return !w.auflage || w.auflage === "Unikat" || w.auflage === 1;
     }
 
+    function istOffen(w) {
+        return w.auflage === "offen";
+    }
+
     function hatExemplare(w) {
         return Array.isArray(w.exemplare) && w.exemplare.length > 0;
     }
@@ -450,7 +454,7 @@
 
         function statusAktualisieren() {
             const n = bestand(w);
-            statusText.textContent = n === 0 ? "Verkauft" : istUnikat(w) ? "Verfügbar" : n + " von " + w.auflage + " verfügbar";
+            statusText.textContent = n === 0 ? "Verkauft" : istOffen(w) ? n + " lagernd" : istUnikat(w) ? "Verfügbar" : n + " von " + w.auflage + " verfügbar";
             statusText.classList.toggle("admin-status-sold", n === 0);
         }
 
@@ -487,7 +491,7 @@
         } else {
             const anzeige = el("span", { class: "admin-count" });
             const setze = function (n) {
-                w.bestand = Math.max(0, Math.min(Number(w.auflage) || 99, n));
+                w.bestand = Math.max(0, istOffen(w) ? n : Math.min(Number(w.auflage) || 99, n));
                 delete w.verfuegbar;
                 anzeige.textContent = w.bestand + " verfügbar";
                 statusAktualisieren();
@@ -508,7 +512,7 @@
                 el("div", { class: "admin-head" }, [
                     el("div", {}, [
                         el("h2", { text: titel(w) }),
-                        el("span", { class: "admin-meta", text: (w.kategorie || "–") + " · " + (istUnikat(w) ? "Unikat" : "Auflage " + w.auflage) + " · " + preis(w.preis) })
+                        el("span", { class: "admin-meta", text: (w.kategorie || "–") + " · " + (istOffen(w) ? "nicht limitiert" : istUnikat(w) ? "Unikat" : "Auflage " + w.auflage) + " · " + preis(w.preis) })
                     ]),
                     statusText
                 ]),
@@ -811,11 +815,20 @@
 
         teile.push(abschnitt("Auflage & Verfügbarkeit"));
         const unikat = istUnikat(w);
-        teile.push(auswahlFeld("Art", [["unikat", "Unikat"], ["serie", "Kleinserie (nummeriert)"]], unikat ? "unikat" : "serie", function (wert) {
+        const offen = istOffen(w);
+        teile.push(auswahlFeld("Art", [
+            ["unikat", "Unikat"],
+            ["serie", "Kleinserie (nummeriert)"],
+            ["offen", "Nicht limitiert (laufend gefertigt, mit Lagerstand)"]
+        ], offen ? "offen" : unikat ? "unikat" : "serie", function (wert) {
             if (wert === "unikat") {
                 w.auflage = "Unikat";
                 delete w.exemplare;
                 w.bestand = 1;
+            } else if (wert === "offen") {
+                w.auflage = "offen";
+                delete w.exemplare;
+                w.bestand = typeof w.bestand === "number" && w.bestand > 0 ? w.bestand : 5;
             } else {
                 w.auflage = Number(w.auflage) > 1 ? Number(w.auflage) : 10;
                 w.bestand = w.auflage;
@@ -824,7 +837,9 @@
             zeichnen();
         }));
 
-        if (unikat) {
+        if (offen) {
+            teile.push(zahlFeld(w, "bestand", "Lagernd (Stück, 0 = ausverkauft)", { name: n() }));
+        } else if (unikat) {
             const box = el("input", {
                 type: "checkbox",
                 onchange: function (e) {
@@ -868,22 +883,29 @@
         teile.push(abschnitt("Preis & Versand"));
         teile.push(zahlFeld(w, "preis", "Preis (€)", { name: n(), step: "0.01" }));
 
-        const versandArt = w.versand === "anfrage" ? "anfrage" : (w.versand && typeof w.versand === "object" ? "eigen" : "standard");
+        const versandArt = w.versand === "anfrage" ? "anfrage" : (w.versand && typeof w.versand === "object" ? "eigen" : (w.paket === "gross" ? "gross" : "klein"));
+        const paketPreis = function (groesse) {
+            const z = (daten.shop.versandzonen || []).find(function (x) { return x.preise; });
+            return z && typeof z.preise[groesse] === "number" ? " (" + preis(z.preise[groesse]) + ")" : "";
+        };
         teile.push(auswahlFeld("Versand", [
-            ["standard", "Standardpreise (" + (daten.shop.versandkosten || "") + ")"],
+            ["klein", "Paket klein" + paketPreis("klein")],
+            ["gross", "Paket groß" + paketPreis("gross")],
             ["eigen", "Eigener Versandpreis"],
             ["anfrage", "Auf Anfrage (z. B. sehr groß oder zerbrechlich)"]
         ], versandArt, function (wert) {
-            if (wert === "standard") delete w.versand;
+            delete w.versand;
+            delete w.paket;
+            if (wert === "gross") w.paket = "gross";
             else if (wert === "anfrage") w.versand = "anfrage";
-            else w.versand = { "Österreich": 9.9, "EU-Land": 19.9 };
+            else if (wert === "eigen") w.versand = { "Österreich": 9.9 };
             notiere(n() + ": Versand");
             zeichnen();
         }));
         if (versandArt === "eigen") {
             teile.push(zahlFeld(w.versand, "Österreich", "Versand Österreich (€)", { name: n(), step: "0.01" }));
-            teile.push(zahlFeld(w.versand, "EU-Land", "Versand EU (€)", { name: n(), step: "0.01" }));
         }
+        teile.push(textFeld(w, "willhaben", "Link zur willhaben-Anzeige (optional)", { name: n(), placeholder: "https://www.willhaben.at/…" }));
 
         teile.push(abschnitt("Englisch"));
         teile.push(englischBereich([
@@ -1002,6 +1024,11 @@
         teile.push(textFeld(s, "versandkosten_en", "Versandkosten Englisch", { name: name }));
         (s.versandzonen || []).forEach(function (z) {
             if (z.preis === null || z.abholung) return;
+            if (z.preise) {
+                teile.push(zahlFeld(z.preise, "klein", "Versand " + z.name + ", Paket klein (€)", { name: name, step: "0.01" }));
+                teile.push(zahlFeld(z.preise, "gross", "Versand " + z.name + ", Paket groß (€)", { name: name, step: "0.01" }));
+                return;
+            }
             teile.push(zahlFeld(z, "preis", "Versandpreis " + z.name + " (€)", { name: name, step: "0.01" }));
         });
         teile.push(zahlFeld(s, "versandfrei_ab", "Gratisversand ab (€, 0 = nie)", { name: name, step: "1" }));

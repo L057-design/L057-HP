@@ -97,6 +97,14 @@
         "Eins mehr": "One more",
         "Entfernen": "Remove",
         "Abholung": "Pickup",
+        "Handgefertigt, nicht limitiert": "Handmade, not limited",
+        "Lagernd": "In stock",
+        "Abholung gratis": "pickup free",
+        "andere Länder auf Anfrage": "other countries on request",
+        "Paket klein": "small parcel",
+        "Paket groß": "large parcel",
+        "Auch auf willhaben erhältlich: ": "Also available on willhaben: ",
+        "zur Anzeige →": "view listing →",
         "kostenlos": "free",
         "Lieferland": "Destination",
         "Zahlungsart": "Payment method",
@@ -315,13 +323,20 @@
         return !p.auflage || p.auflage === "Unikat" || p.auflage === 1;
     }
 
+    /* Nicht limitiert: laufend gefertigt, mit Lagerstand ("auflage": "offen") */
+    function istOffen(p) {
+        return p.auflage === "offen";
+    }
+
     function auflageText(p) {
+        if (istOffen(p)) return t("Handgefertigt, nicht limitiert");
         return istUnikat(p) ? t("Unikat") : t("Kleinserie, Auflage ") + p.auflage;
     }
 
     function verfuegbarText(p) {
         const n = bestand(p);
         if (n === 0) return t("Verkauft");
+        if (istOffen(p)) return t("Lagernd");
         if (istUnikat(p)) return t("Verfügbar");
         return SPRACHE === "en" ? n + " of " + p.auflage + " available" : "Noch " + n + " von " + p.auflage + " verfügbar";
     }
@@ -331,7 +346,7 @@
     function produktKarte(p, shop) {
         const badges = [];
         if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: t("Verkauft") }));
-        else badges.push(el("span", { class: "badge badge-muted", text: istUnikat(p) ? t("Unikat") : t("Edition /") + p.auflage }));
+        else if (!istOffen(p)) badges.push(el("span", { class: "badge badge-muted", text: istUnikat(p) ? t("Unikat") : t("Edition /") + p.auflage }));
         if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: t("Beispiel") }));
 
         return el("a", { class: "card" + (verfuegbar(p) ? "" : " card-sold"), href: "produkt.html?id=" + encodeURIComponent(p.id) }, [
@@ -596,7 +611,16 @@
                 return (SPRACHE === "en" ? ({ "Österreich": "Austria", "EU-Land": "EU" }[zone] || zone) : zone.replace("-Land", "")) + " " + (wert === null ? t("auf Anfrage") : preis(wert, shop.waehrung));
             }).join(" · ");
         }
-        return shop.versandkosten;
+        const zonen = shop.versandzonen || [];
+        const paket = p.paket === "gross" ? "gross" : "klein";
+        const mitPaket = zonen.filter(function (z) { return z.preise && typeof z.preise[paket] === "number"; });
+        if (!mitPaket.length) return shop.versandkosten;
+        const teile = mitPaket.map(function (z) {
+            return zoneName(z) + " " + preis(z.preise[paket], shop.waehrung) + " (" + t(paket === "gross" ? "Paket groß" : "Paket klein") + ")";
+        });
+        if (zonen.some(function (z) { return z.abholung; })) teile.push(t("Abholung gratis"));
+        if (zonen.some(function (z) { return z.preis === null; })) teile.push(t("andere Länder auf Anfrage"));
+        return teile.join(" · ");
     }
 
     /* Kompakte Auswahlliste (statt nativem Dropdown, das am Handy den ganzen Bildschirm füllt).
@@ -828,6 +852,12 @@
                     el("a", { class: "button button-block", href: anfrageLink, text: t("Frage zum Werk") })
                 );
             }
+            if (p.willhaben && /^https:\/\/(www\.)?willhaben\.at\//.test(p.willhaben)) {
+                kaufBereich.appendChild(el("p", { class: "etsy-hint" }, [
+                    t("Auch auf willhaben erhältlich: "),
+                    el("a", { href: p.willhaben, rel: "noopener", target: "_blank", text: t("zur Anzeige →") })
+                ]));
+            }
 
             const badges = [];
             if (!verfuegbar(p)) badges.push(el("span", { class: "badge", text: t("Verkauft") }));
@@ -1009,8 +1039,11 @@
                     liste.forEach(function (x) {
                         const v = x.produkt.versand;
                         if (v === "anfrage") { anfrage = true; return; }
-                        const eigen = v && typeof v === "object" ? v[zone.name] : undefined;
+                        let eigen = v && typeof v === "object" ? v[zone.name] : undefined;
                         if (eigen === null) { anfrage = true; return; }
+                        if (typeof eigen !== "number" && zone.preise) {
+                            eigen = zone.preise[x.produkt.paket === "gross" ? "gross" : "klein"];
+                        }
                         versand = Math.max(versand, typeof eigen === "number" ? eigen : zone.preis);
                     });
                     if (anfrage) versand = 0;
@@ -1124,7 +1157,15 @@
                 const landWahl = summe.physisch && (shop.versandzonen || []).length ? auswahlFeld(
                     "zone", t("Lieferland"),
                     shop.versandzonen.map(function (z) {
-                        return zoneName(z) + (z.preis === null ? "" : " – " + preis(z.preis, shop.waehrung));
+                        if (z.preis === null) return zoneName(z);
+                        if (z.abholung) return zoneName(z) + " – " + t("kostenlos");
+                        /* Bei Paketgrößen: der Preis, der für diesen Warenkorb gilt */
+                        let wert = z.preis;
+                        if (z.preise) {
+                            const gross = liste.some(function (x) { return x.produkt.paket === "gross"; });
+                            wert = z.preise[gross ? "gross" : "klein"];
+                        }
+                        return zoneName(z) + " – " + preis(wert, shop.waehrung);
                     }),
                     function (e) { formular.zone = Number(e.target.value); zeichnen(); }
                 ) : null;

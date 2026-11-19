@@ -2,8 +2,8 @@
   "email": "l057.design@gmail.com",
   "waehrung": "EUR",
   "preishinweis": "Endpreis zzgl. Versand",
-  "lieferzeit": "3–7 Werktage (AT), 5–10 (EU)",
-  "versandkosten": "ab 6,90 € (AT) · ab 14,90 € (EU)",
+  "lieferzeit": "3–7 Werktage (Österreich)",
+  "versandkosten": "Österreich ab 6,90 € · Abholung in Kapfenberg gratis · andere Länder auf Anfrage",
   "versandfrei_ab": 0,
   "bestellung": "email",
   "kategorien": [
@@ -24,24 +24,23 @@
   "versandzonen": [
     {
       "name": "Österreich",
+      "name_en": "Austria",
       "preis": 6.9,
-      "name_en": "Austria"
-    },
-    {
-      "name": "EU-Land",
-      "preis": 14.9,
-      "name_en": "EU country"
-    },
-    {
-      "name": "Anderes Land (auf Anfrage)",
-      "preis": null,
-      "name_en": "Other country (on request)"
+      "preise": {
+        "klein": 6.9,
+        "gross": 10.9
+      }
     },
     {
       "name": "Abholung in Kapfenberg (nach Absprache)",
+      "name_en": "Pickup in Kapfenberg (by arrangement)",
       "preis": 0,
-      "abholung": true,
-      "name_en": "Pickup in Kapfenberg (by arrangement)"
+      "abholung": true
+    },
+    {
+      "name": "Anderes Land (auf Anfrage)",
+      "name_en": "Other country (on request)",
+      "preis": null
     }
   ],
   "zahlungsarten": [
@@ -55,8 +54,8 @@
     "Engineering": "Engineering"
   },
   "preishinweis_en": "Final price plus shipping",
-  "lieferzeit_en": "3–7 working days (AT), 5–10 (EU)",
-  "versandkosten_en": "from €6.90 (AT) · from €14.90 (EU)",
+  "lieferzeit_en": "3–7 working days (Austria)",
+  "versandkosten_en": "Austria from €6.90 · pickup in Kapfenberg free · other countries on request",
   "steuerhinweis_en": "No VAT is charged under the Austrian small business exemption (§ 6 (1) 27 UStG).",
   "hersteller_en": "Dimitri Wastl (L057), Doktor-Klöpfer-Weg 13, 8605 Kapfenberg, Austria · l057.design@gmail.com",
   "zahlungsarten_en": [

@@ -17,7 +17,7 @@
     };
     const BILD_ORDNER = { werke: "images/werke/", projekte: "images/projekte/" };
     const SPEICHER = "l057-verwaltung";
-    const MAX_BILD = 1600;
+    const MAX_BILD = 2000; /* längste Seite, passt zum Preset (Homepage 1600 × 2000) */
 
     const root = document.getElementById("verwaltung");
     let einstellungen = ladeEinstellungen();
@@ -116,8 +116,13 @@
         return Array.isArray(w.exemplare) && w.exemplare.length > 0;
     }
 
+    function ohneLager(w) {
+        return istOffen(w) && typeof w.bestand !== "number";
+    }
+
     function bestand(w) {
         if (hatExemplare(w)) return w.exemplare.filter(function (x) { return !x.verkauft; }).length;
+        if (ohneLager(w)) return w.pausiert ? 0 : 99;
         return typeof w.bestand === "number" ? w.bestand : (w.verfuegbar ? 1 : 0);
     }
 
@@ -454,7 +459,7 @@
 
         function statusAktualisieren() {
             const n = bestand(w);
-            statusText.textContent = n === 0 ? "Verkauft" : istOffen(w) ? n + " lagernd" : istUnikat(w) ? "Verfügbar" : n + " von " + w.auflage + " verfügbar";
+            statusText.textContent = ohneLager(w) ? (w.pausiert ? "Pausiert" : "Lieferbar") : n === 0 ? "Verkauft" : istOffen(w) ? n + " lagernd" : istUnikat(w) ? "Verfügbar" : n + " von " + w.auflage + " verfügbar";
             statusText.classList.toggle("admin-status-sold", n === 0);
         }
 
@@ -476,6 +481,17 @@
                 });
                 return chip;
             })));
+        } else if (ohneLager(w)) {
+            const pause = el("input", {
+                type: "checkbox",
+                onchange: function (e) {
+                    if (e.target.checked) w.pausiert = true; else delete w.pausiert;
+                    statusAktualisieren();
+                    notiere(titel(w) + ": " + (e.target.checked ? "pausiert" : "lieferbar"));
+                }
+            });
+            pause.checked = !!w.pausiert;
+            steuerung.push(el("label", { class: "check admin-toggle" }, [pause, el("span", { text: "Pausiert (nicht bestellbar)" })]));
         } else if (istUnikat(w)) {
             const schalter = el("input", {
                 type: "checkbox",
@@ -813,13 +829,17 @@
         teile.push(textFeld(w, "pflege", "Pflegehinweis (optional)", { name: n() }));
         teile.push(absatzFeld(w, "hinweise", "Hinweise, z. B. Sicherheit (optional)", { name: n(), einfach: true, zeilen: 2 }));
 
+        teile.push(abschnitt("Varianten"));
+        teile.push(variantenFeld(w, "varianten", "Varianten (optional)", n,
+            "Eine Zeile pro Auswahl, z. B. „Motiv: Hirsch, Katze, Skull“ oder „Farbe: Grün, Pink, Schwarz“. Kunden wählen jede Zeile einzeln."));
+
         teile.push(abschnitt("Auflage & Verfügbarkeit"));
         const unikat = istUnikat(w);
         const offen = istOffen(w);
         teile.push(auswahlFeld("Art", [
             ["unikat", "Unikat"],
             ["serie", "Kleinserie (nummeriert)"],
-            ["offen", "Nicht limitiert (laufend gefertigt, mit Lagerstand)"]
+            ["offen", "Nicht limitiert (laufend gefertigt)"]
         ], offen ? "offen" : unikat ? "unikat" : "serie", function (wert) {
             if (wert === "unikat") {
                 w.auflage = "Unikat";
@@ -828,7 +848,7 @@
             } else if (wert === "offen") {
                 w.auflage = "offen";
                 delete w.exemplare;
-                w.bestand = typeof w.bestand === "number" && w.bestand > 0 ? w.bestand : 5;
+                delete w.bestand;
             } else {
                 w.auflage = Number(w.auflage) > 1 ? Number(w.auflage) : 10;
                 w.bestand = w.auflage;
@@ -838,7 +858,21 @@
         }));
 
         if (offen) {
-            teile.push(zahlFeld(w, "bestand", "Lagernd (Stück, 0 = ausverkauft)", { name: n() }));
+            const mitLager = el("input", {
+                type: "checkbox",
+                onchange: function (e) {
+                    if (e.target.checked) { w.bestand = 10; delete w.pausiert; } else delete w.bestand;
+                    notiere(n() + ": Lagerstand");
+                    zeichnen();
+                }
+            });
+            mitLager.checked = typeof w.bestand === "number";
+            teile.push(el("label", { class: "check" }, [mitLager, el("span", { text: "Lagerstand führen (sonst immer lieferbar)" })]));
+            if (typeof w.bestand === "number") {
+                teile.push(zahlFeld(w, "bestand", "Lagernd (Stück, 0 = ausverkauft)", { name: n() }));
+            } else {
+                teile.push(hakenFeld(w, "pausiert", "Pausiert (vorübergehend nicht bestellbar)", { name: n() }));
+            }
         } else if (unikat) {
             const box = el("input", {
                 type: "checkbox",
@@ -882,6 +916,7 @@
 
         teile.push(abschnitt("Preis & Versand"));
         teile.push(zahlFeld(w, "preis", "Preis (€)", { name: n(), step: "0.01" }));
+        teile.push(staffelFeld(w, n));
 
         const versandArt = w.versand === "anfrage" ? "anfrage" : (w.versand && typeof w.versand === "object" ? "eigen" : (w.paket === "gross" ? "gross" : "klein"));
         const paketPreis = function (groesse) {
@@ -917,6 +952,7 @@
             textFeld(w, "gewicht_en", "Weight", { name: n() }),
             textFeld(w, "signiert_en", "Signature", { name: n() }),
             textFeld(w, "pflege_en", "Care", { name: n() }),
+            variantenFeld(w, "varianten_en", "Variants", n, "Same lines in English, same order, e.g. „Design: Deer, Cat, Skull“."),
             absatzFeld(w, "hinweise_en", "Notes", { name: n(), einfach: true, zeilen: 2 })
         ]));
 
@@ -924,6 +960,52 @@
         teile.push(hakenFeld(w, "hervorgehoben", "Auf der Startseite zeigen", { name: n() }));
         teile.push(hakenFeld(w, "beispiel", "Als „Beispiel“ markieren", { name: n() }));
         return teile;
+    }
+
+    /* Varianten als Text: eine Zeile pro Auswahl, "Name: Wert, Wert, …" */
+    function variantenFeld(w, key, label, n, hilfe) {
+        const text = Object.keys(w[key] || {}).map(function (k) { return k + ": " + w[key][k].join(", "); }).join("\n");
+        const eingabe = el("textarea", {
+            class: "input",
+            rows: 3,
+            value: text,
+            oninput: function (e) {
+                const neu = {};
+                e.target.value.split("\n").forEach(function (zeile) {
+                    const i = zeile.indexOf(":");
+                    if (i < 1) return;
+                    const name = zeile.slice(0, i).trim();
+                    const werte = zeile.slice(i + 1).split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+                    if (name && werte.length) neu[name] = werte;
+                });
+                if (Object.keys(neu).length) w[key] = neu; else delete w[key];
+                notiere(n() + ": Varianten");
+            }
+        });
+        return feld(label, eingabe, hilfe);
+    }
+
+    /* Preisstaffel als Text: eine Zeile pro Stufe, "ab Menge = Stückpreis" */
+    function staffelFeld(w, n) {
+        const text = (w.staffel || []).map(function (s) { return s.ab + " = " + Number(s.preis).toFixed(2).replace(".", ","); }).join("\n");
+        const eingabe = el("textarea", {
+            class: "input",
+            rows: 3,
+            value: text,
+            placeholder: "5 = 3,20\n10 = 2,90",
+            oninput: function (e) {
+                const neu = [];
+                e.target.value.split("\n").forEach(function (zeile) {
+                    const m = zeile.match(/^\s*(\d+)\s*[=:]\s*([\d.,]+)/);
+                    if (m) neu.push({ ab: Number(m[1]), preis: Number(m[2].replace(",", ".")) });
+                });
+                neu.sort(function (a, b) { return a.ab - b.ab; });
+                if (neu.length) w.staffel = neu; else delete w.staffel;
+                notiere(n() + ": Preisstaffel");
+            }
+        });
+        return feld("Preisstaffel (optional)", eingabe,
+            "Eine Zeile pro Stufe: „ab Menge = Stückpreis“. Gilt für die Gesamtmenge im Warenkorb, Varianten zusammengezählt.");
     }
 
     function exemplareAnpassen(w, anzahl) {

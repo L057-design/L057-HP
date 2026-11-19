@@ -105,6 +105,7 @@
         "Staffelpreis": "volume price",
         " Stück im Warenkorb. ": " in the cart. ",
         "Lagernd": "In stock",
+        "Lieferbar": "Available",
         "Abholung gratis": "pickup free",
         "andere Länder auf Anfrage": "other countries on request",
         "Paket klein": "small parcel",
@@ -317,6 +318,8 @@
 
     function bestand(p) {
         if (hatExemplare(p)) return freieExemplare(p).length;
+        /* Nicht limitiert ohne Lagerstand: immer lieferbar, außer pausiert */
+        if (istOffen(p) && typeof p.bestand !== "number") return p.pausiert ? 0 : 99;
         if (typeof p.bestand === "number") return Math.max(0, p.bestand);
         return p.verfuegbar ? 1 : 0;
     }
@@ -359,7 +362,7 @@
     function verfuegbarText(p) {
         const n = bestand(p);
         if (n === 0) return t("Verkauft");
-        if (istOffen(p)) return t("Lagernd");
+        if (istOffen(p)) return typeof p.bestand === "number" ? t("Lagernd") : t("Lieferbar");
         if (istUnikat(p)) return t("Verfügbar");
         return SPRACHE === "en" ? n + " of " + p.auflage + " available" : "Noch " + n + " von " + p.auflage + " verfügbar";
     }

@@ -311,7 +311,7 @@
         }
         root.replaceChildren(el("p", { class: "empty", text: "Lade Daten …" }));
         const schluessel = Object.keys(DATEIEN);
-        Promise.all(schluessel.map(function (k) { return dateiLaden(DATEIEN[k]); }))
+        return Promise.all(schluessel.map(function (k) { return dateiLaden(DATEIEN[k]); }))
             .then(function (antworten) {
                 schluessel.forEach(function (k, i) {
                     dateiSha[k] = antworten[i].sha;
@@ -358,12 +358,13 @@
 
     function zeichnen() {
         leiste = el("div", { class: "admin-bar" });
-        statusZeile = statusZeile || el("p", { class: "buy-hint admin-status-line", "aria-live": "polite" });
+        statusZeile = statusZeile || el("div", { class: "buy-hint admin-status-line", "aria-live": "polite" });
 
         const tabs = el("nav", { class: "filters admin-tabs", "aria-label": "Bereiche" }, [
             ["werke", "Werke (" + daten.werke.length + ")"],
             ["projekte", "Projekte (" + daten.projekte.length + ")"],
-            ["shop", "Einstellungen"]
+            ["shop", "Einstellungen"],
+            ["verlauf", "Verlauf"]
         ].map(function (t) {
             return el("button", {
                 class: "filter",
@@ -382,6 +383,7 @@
         if (ansicht.bearbeiten) inhalt = editor();
         else if (ansicht.tab === "werke") inhalt = werkListe();
         else if (ansicht.tab === "projekte") inhalt = projektListe();
+        else if (ansicht.tab === "verlauf") inhalt = verlaufAnsicht();
         else inhalt = shopEditor();
 
         root.replaceChildren(
@@ -459,8 +461,8 @@
 
         function statusAktualisieren() {
             const n = bestand(w);
-            statusText.textContent = ohneLager(w) ? (w.pausiert ? "Pausiert" : "Lieferbar") : n === 0 ? "Verkauft" : istOffen(w) ? n + " lagernd" : istUnikat(w) ? "Verfügbar" : n + " von " + w.auflage + " verfügbar";
-            statusText.classList.toggle("admin-status-sold", n === 0);
+            statusText.textContent = (w.versteckt ? "Entwurf · " : "") + (ohneLager(w) ? (w.pausiert ? "Pausiert" : "Lieferbar") : n === 0 ? "Verkauft" : istOffen(w) ? n + " lagernd" : istUnikat(w) ? "Verfügbar" : n + " von " + w.auflage + " verfügbar");
+            statusText.classList.toggle("admin-status-sold", n === 0 || !!w.versteckt);
         }
 
         const steuerung = [];
@@ -540,7 +542,8 @@
                         window.scrollTo(0, 0);
                     } }),
                     sortierKnoepfe(daten.werke, index, titel(w)),
-                    el("a", { class: "admin-link", href: "produkt.html?id=" + encodeURIComponent(w.id), target: "_blank", text: "Ansehen ↗" })
+                    el("button", { class: "button admin-edit", type: "button", text: "Duplizieren", onclick: function () { duplizieren(w); } }),
+                    el("a", { class: "admin-link", href: "produkt.html?id=" + encodeURIComponent(w.id) + (w.versteckt ? "&vorschau=1" : ""), target: "_blank", text: "Ansehen ↗" })
                 ])
             ])
         ]);
@@ -569,7 +572,7 @@
                         el("div", { class: "admin-head" }, [
                             el("div", {}, [
                                 el("h2", { text: titel(p) }),
-                                el("span", { class: "admin-meta", text: (p.kategorie || "–") + (p.jahr ? " · " + p.jahr : "") })
+                                el("span", { class: "admin-meta", text: (p.versteckt ? "Entwurf · " : "") + (p.kategorie || "–") + (p.jahr ? " · " + p.jahr : "") })
                             ])
                         ]),
                         el("div", { class: "admin-row" }, [
@@ -704,6 +707,8 @@
                         onclick: function () {
                             if (!window.confirm("Dieses Foto entfernen?")) return;
                             const pfad2 = obj.bilder.splice(i, 1)[0];
+                            ["bildtexte", "bildtexte_en"].forEach(function (k) { if (obj[k]) delete obj[k][pfad2]; });
+                            if (obj.varianten) variantenAufraeumen(obj);
                             if (uploads[pfad2]) {
                                 URL.revokeObjectURL(uploads[pfad2].url);
                                 delete uploads[pfad2];
@@ -711,7 +716,9 @@
                             notiere(name + ": Foto entfernt");
                             zeichnen();
                         } })
-                ])
+                ]),
+                bildtextFeld(obj, "bildtexte", pfad, "Bildtext", name),
+                bildtextFeld(obj, "bildtexte_en", pfad, "Alt text (EN)", name)
             ]);
         }));
 
@@ -725,8 +732,25 @@
                     zeichnen();
                 });
             }),
-            el("span", { class: "admin-hint", text: "Fotos werden vor dem Hochladen automatisch verkleinert. Das erste Foto ist das Titelbild." })
+            el("span", { class: "admin-hint", text: "Fotos werden vor dem Hochladen automatisch verkleinert. Das erste Foto ist das Titelbild. Bildtext: kurz beschreiben, was zu sehen ist (für Google und Screenreader)." })
         ]);
+    }
+
+    /* Kurze Beschreibung eines Fotos (Alt-Text) für Google und Screenreader */
+    function bildtextFeld(obj, key, pfad, platzhalter, name) {
+        return el("input", {
+            class: "input admin-alt",
+            type: "text",
+            placeholder: platzhalter,
+            "aria-label": platzhalter,
+            value: (obj[key] || {})[pfad] || "",
+            oninput: function (e) {
+                obj[key] = obj[key] || {};
+                if (e.target.value.trim()) obj[key][pfad] = e.target.value.trim(); else delete obj[key][pfad];
+                if (!Object.keys(obj[key]).length) delete obj[key];
+                notiere(name + ": Bildtext");
+            }
+        });
     }
 
     function kategorieListe() {
@@ -832,6 +856,7 @@
         teile.push(abschnitt("Varianten"));
         teile.push(variantenFeld(w, "varianten", "Varianten (optional)", n,
             "Eine Zeile pro Auswahl, z. B. „Motiv: Hirsch, Katze, Skull“ oder „Farbe: Grün, Pink, Schwarz“. Kunden wählen jede Zeile einzeln."));
+        if (w.varianten && Object.keys(w.varianten).length) teile.push(variantenPanel(w, n));
 
         teile.push(abschnitt("Auflage & Verfügbarkeit"));
         const unikat = istUnikat(w);
@@ -957,6 +982,7 @@
         ]));
 
         teile.push(abschnitt("Anzeige"));
+        teile.push(hakenFeld(w, "versteckt", "Entwurf: auf der Website noch nicht zeigen", { name: n() }));
         teile.push(hakenFeld(w, "hervorgehoben", "Auf der Startseite zeigen", { name: n() }));
         teile.push(hakenFeld(w, "beispiel", "Als „Beispiel“ markieren", { name: n() }));
         return teile;
@@ -980,9 +1006,196 @@
                 });
                 if (Object.keys(neu).length) w[key] = neu; else delete w[key];
                 notiere(n() + ": Varianten");
+            },
+            onchange: function () {
+                if (key !== "varianten") return;
+                variantenAufraeumen(w);
+                zeichnen();
             }
         });
         return feld(label, eingabe, hilfe);
+    }
+
+    function variantenSchluessel(name, wert) {
+        return name + "|" + wert;
+    }
+
+    function variantenAufraeumen(w) {
+        const gueltig = {};
+        Object.keys(w.varianten || {}).forEach(function (name) {
+            w.varianten[name].forEach(function (wert) { gueltig[variantenSchluessel(name, wert)] = true; });
+        });
+        if (w.variantenGesperrt) {
+            w.variantenGesperrt = w.variantenGesperrt.filter(function (k) { return gueltig[k]; });
+            if (!w.variantenGesperrt.length) delete w.variantenGesperrt;
+        }
+        if (w.variantenBilder) {
+            Object.keys(w.variantenBilder).forEach(function (k) {
+                if (!gueltig[k] || (w.bilder || []).indexOf(w.variantenBilder[k]) === -1) delete w.variantenBilder[k];
+            });
+            if (!Object.keys(w.variantenBilder).length) delete w.variantenBilder;
+        }
+    }
+
+    /* Pro Variantenwert: sperren und ein Foto zuordnen */
+    function variantenPanel(w, n) {
+        const fotos = [["", "– kein Foto –"]].concat((w.bilder || []).map(function (b, i) {
+            return [b, "Foto " + (i + 1) + (i === 0 ? " (Titelbild)" : "")];
+        }));
+        const zeilen = [];
+        Object.keys(w.varianten).forEach(function (name) {
+            zeilen.push(el("p", { class: "admin-label", text: name }));
+            w.varianten[name].forEach(function (wert) {
+                const k = variantenSchluessel(name, wert);
+                const sperre = el("input", {
+                    type: "checkbox",
+                    onchange: function (e) {
+                        const liste = (w.variantenGesperrt || []).filter(function (x) { return x !== k; });
+                        if (e.target.checked) liste.push(k);
+                        if (liste.length) w.variantenGesperrt = liste; else delete w.variantenGesperrt;
+                        notiere(n() + ": " + wert + (e.target.checked ? " gesperrt" : " freigegeben"));
+                    }
+                });
+                sperre.checked = (w.variantenGesperrt || []).indexOf(k) !== -1;
+                const foto = el("select", {
+                    class: "select admin-variant-photo",
+                    "aria-label": "Foto für " + wert,
+                    onchange: function (e) {
+                        w.variantenBilder = w.variantenBilder || {};
+                        if (e.target.value) w.variantenBilder[k] = e.target.value; else delete w.variantenBilder[k];
+                        if (!Object.keys(w.variantenBilder).length) delete w.variantenBilder;
+                        notiere(n() + ": Foto für " + wert);
+                    }
+                }, fotos.map(function (o) { return el("option", { value: o[0], text: o[1] }); }));
+                foto.value = (w.variantenBilder || {})[k] || "";
+                zeilen.push(el("div", { class: "admin-variant-row" }, [
+                    el("span", { class: "admin-variant-name", text: wert }),
+                    foto,
+                    el("label", { class: "check admin-toggle" }, [sperre, el("span", { text: "gesperrt" })])
+                ]));
+            });
+        });
+        return el("details", { class: "admin-en admin-variants", open: ansicht.variantenOffen, ontoggle: function (e) { ansicht.variantenOffen = e.target.open; } }, [
+            el("summary", { text: "Fotos und Sperren pro Variante" }),
+            el("p", { class: "admin-hint", text: "Foto: Wählt der Kunde diesen Wert, springt die Galerie zu diesem Foto (Fotos oben hochladen). Gesperrt: vorübergehend nicht bestellbar." })
+        ].concat(zeilen));
+    }
+
+    function duplizieren(w) {
+        const kopie = JSON.parse(JSON.stringify(w));
+        kopie.name = (w.name || "") + " (Kopie)";
+        if (kopie.name_en) kopie.name_en += " (copy)";
+        kopie.versteckt = true;
+        if (hatExemplare(kopie)) kopie.exemplare.forEach(function (x) { x.verkauft = false; });
+        if (istUnikat(kopie)) kopie.bestand = 1;
+        daten.werke.splice(daten.werke.indexOf(w) + 1, 0, kopie);
+        kopie.id = eindeutigeId(slug(titel(kopie)), daten.werke, kopie);
+        notiere("Werk „" + titel(kopie) + "“ angelegt");
+        ansicht.bearbeiten = { typ: "werke", eintrag: kopie };
+        zeichnen();
+        window.scrollTo(0, 0);
+    }
+
+    /* Was vor dem Speichern noch fehlt (nur bei sichtbaren Einträgen) */
+    function pflichtfelder() {
+        const fehlt = [];
+        daten.werke.forEach(function (w) {
+            if (w.versteckt) return;
+            const f = [];
+            if (!w.kategorie) f.push("Kategorie");
+            if (!(Number(w.preis) > 0)) f.push("Preis");
+            if (!(w.bilder || []).length) f.push("Foto");
+            if (!w.kurz) f.push("Kurzbeschreibung");
+            if (!(w.beschreibung || []).length) f.push("Beschreibung");
+            if (!w.name_en || !w.kurz_en || !(w.beschreibung_en || []).length) f.push("Englisch");
+            if (f.length) fehlt.push({ eintrag: w, text: "Werk „" + titel(w) + "“: " + f.join(", ") });
+        });
+        daten.projekte.forEach(function (p) {
+            if (p.versteckt) return;
+            const f = [];
+            if (!(p.bilder || []).length) f.push("Foto");
+            if (!p.titel_en) f.push("Englisch");
+            if (f.length) fehlt.push({ eintrag: p, text: "Projekt „" + titel(p) + "“: " + f.join(", ") });
+        });
+        if (!daten.shop.email) fehlt.push({ eintrag: null, text: "Einstellungen: E-Mail für Bestellungen" });
+        return fehlt;
+    }
+
+    /* ---------- Verlauf: letzte Speicherungen, auf einen Stand zurücksetzen ---------- */
+
+    function datumText(iso) {
+        return new Date(iso).toLocaleString("de-AT", { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function verlaufAnsicht() {
+        const box = el("div", { class: "admin-editor" }, [el("p", { class: "empty", text: "Lade Verlauf …" })]);
+        api("/commits?sha=" + encodeURIComponent(branch()) + "&path=data&per_page=15")
+            .then(function (liste) {
+                if (!liste.length) {
+                    box.replaceChildren(el("p", { class: "empty", text: "Noch keine Speicherungen." }));
+                    return;
+                }
+                box.replaceChildren(
+                    el("p", { class: "admin-hint", text: "Die letzten Speicherungen von Werken, Projekten, Einstellungen und Fotos. „Zurücksetzen“ stellt den Stand nach dieser Speicherung wieder her; alles danach wird zurückgenommen (als neue Speicherung, also selbst wieder umkehrbar)." }),
+                    el("ol", { class: "admin-history" }, liste.map(function (c, i) {
+                        let text = (c.commit.message || "").split("\n")[0].replace(/^Verwaltung: /, "");
+                        if (text.length > 160) text = text.slice(0, 157) + " …";
+                        return el("li", { class: "admin-history-item" }, [
+                            el("div", {}, [
+                                el("span", { class: "admin-meta", text: datumText(c.commit.author.date) + (i === 0 ? " · aktueller Stand" : "") }),
+                                el("p", { text: text })
+                            ]),
+                            i === 0 ? null : el("button", {
+                                class: "button admin-edit",
+                                type: "button",
+                                text: "Zurücksetzen",
+                                onclick: function () { wiederherstellen(c.sha, datumText(c.commit.author.date)); }
+                            })
+                        ]);
+                    }))
+                );
+            })
+            .catch(function (e) {
+                box.replaceChildren(el("p", { class: "empty", text: "Verlauf konnte nicht geladen werden: " + e.message }));
+            });
+        return box;
+    }
+
+    function wiederherstellen(sha, datum) {
+        if (geaendert()) {
+            window.alert("Es gibt ungespeicherte Änderungen. Bitte zuerst speichern oder „Neu laden“.");
+            return;
+        }
+        if (!window.confirm("Werke, Projekte, Einstellungen und Fotos auf den Stand vom " + datum + " zurücksetzen?")) return;
+        statusZeile.textContent = "Setze zurück …";
+        let kopfSha;
+        Promise.all([api("/git/ref/heads/" + encodeURIComponent(branch())), api("/git/commits/" + sha)])
+            .then(function (r) {
+                kopfSha = r[0].object.sha;
+                return Promise.all([api("/git/commits/" + kopfSha), api("/git/trees/" + r[1].tree.sha)]);
+            })
+            .then(function (r) {
+                const eintraege = r[1].tree.filter(function (e) {
+                    return e.type === "tree" && (e.path === "data" || e.path === "images");
+                }).map(function (e) { return { path: e.path, mode: "040000", type: "tree", sha: e.sha }; });
+                if (!eintraege.length) throw new Error("Stand nicht gefunden");
+                return api("/git/trees", { method: "POST", body: { base_tree: r[0].tree.sha, tree: eintraege } });
+            })
+            .then(function (baum) {
+                return api("/git/commits", { method: "POST", body: { message: "Verwaltung: Zurückgesetzt auf Stand vom " + datum, tree: baum.sha, parents: [kopfSha] } });
+            })
+            .then(function (neu) {
+                return api("/git/refs/heads/" + encodeURIComponent(branch()), { method: "PATCH", body: { sha: neu.sha } });
+            })
+            .then(function () { return start(); })
+            .then(function () {
+                ansicht = { tab: "verlauf", bearbeiten: null };
+                zeichnen();
+                statusZeile.textContent = "Zurückgesetzt auf den Stand vom " + datum + ". Die Website zeigt das in wenigen Minuten.";
+            })
+            .catch(function (e) {
+                statusZeile.textContent = "Zurücksetzen fehlgeschlagen: " + e.message;
+            });
     }
 
     /* Preisstaffel als Text: eine Zeile pro Stufe, "ab Menge = Stückpreis" */
@@ -1071,7 +1284,8 @@
                 p.produkt = wert;
                 notiere(n() + ": Verknüpfung");
             }),
-            hakenFeld(p, "beispiel", "Als „Beispiel“ markieren", { name: n() })
+            hakenFeld(p, "beispiel", "Als „Beispiel“ markieren", { name: n() }),
+            hakenFeld(p, "versteckt", "Entwurf: auf der Website noch nicht zeigen", { name: n() })
         ];
     }
 
@@ -1081,6 +1295,13 @@
         const s = daten.shop;
         const name = "Einstellungen";
         const teile = [];
+
+        teile.push(abschnitt("Hinweis & Urlaubsmodus"));
+        teile.push(textFeld(s, "banner", "Hinweisbanner (leer = keins)", { name: name, placeholder: "z. B. Bestellungen bis 16. 12. kommen vor Weihnachten an." }));
+        teile.push(textFeld(s, "banner_en", "Hinweisbanner Englisch", { name: name }));
+        teile.push(hakenFeld(s, "pause", "Urlaubsmodus: Bestellungen pausieren (Stücke bleiben sichtbar)", { name: name }));
+        teile.push(textFeld(s, "pause_text", "Text im Urlaubsmodus", { name: name, placeholder: "z. B. Bestellungen ab 7. 1. wieder möglich." }));
+        teile.push(textFeld(s, "pause_text_en", "Text im Urlaubsmodus Englisch", { name: name }));
 
         teile.push(abschnitt("Kontakt & Kategorien"));
         teile.push(textFeld(s, "email", "E-Mail für Bestellungen", { name: name }));
@@ -1159,7 +1380,28 @@
         return liste.slice(0, 10).join("; ") + (liste.length > 10 ? " …" : "");
     }
 
-    function speichern() {
+    function speichern(erzwingen) {
+        if (erzwingen !== true) {
+            const fehlt = pflichtfelder();
+            if (fehlt.length) {
+                const entwuerfe = fehlt.filter(function (f) { return f.eintrag; });
+                statusZeile.replaceChildren(
+                    el("p", { text: "Vor dem Speichern fehlt noch etwas:" }),
+                    el("ul", { class: "admin-missing" }, fehlt.map(function (f) { return el("li", { text: f.text }); })),
+                    el("div", { class: "admin-row" }, [
+                        el("button", { class: "button button-primary", type: "button", text: "Trotzdem speichern", onclick: function () { speichern(true); } }),
+                        entwuerfe.length ? el("button", { class: "button", type: "button", text: "Diese als Entwurf speichern", onclick: function () {
+                            entwuerfe.forEach(function (f) { f.eintrag.versteckt = true; });
+                            notiere("Als Entwurf gespeichert: " + entwuerfe.map(function (f) { return titel(f.eintrag); }).join(", "));
+                            speichern(true);
+                        } }) : null,
+                        el("button", { class: "button", type: "button", text: "Zurück", onclick: function () { statusZeile.textContent = ""; } })
+                    ])
+                );
+                window.scrollTo(0, 0);
+                return;
+            }
+        }
         if (ansicht.bearbeiten) {
             const e = ansicht.bearbeiten.eintrag;
             if (!titel(e) || titel(e) === "(ohne Titel)") {

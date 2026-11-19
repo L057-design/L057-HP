@@ -106,6 +106,10 @@
         " Stück im Warenkorb. ": " in the cart. ",
         "Lagernd": "In stock",
         "Lieferbar": "Available",
+        " – derzeit nicht verfügbar": " – currently unavailable",
+        "Diese Auswahl ist derzeit nicht verfügbar.": "This option is currently unavailable.",
+        "Bestellungen sind gerade pausiert.": "Orders are paused at the moment.",
+        "Bestellen ist gerade pausiert. Fragen kannst du mir trotzdem schreiben.": "Ordering is paused at the moment. You can still send me a question.",
         "Abholung gratis": "pickup free",
         "andere Länder auf Anfrage": "other countries on request",
         "Paket klein": "small parcel",
@@ -167,6 +171,7 @@
     function lokal(eintrag) {
         if (SPRACHE !== "en" || !eintrag || typeof eintrag !== "object") return eintrag;
         const kopie = Object.assign({}, eintrag);
+        if (eintrag.varianten) kopie._varianten_de = eintrag.varianten;
         Object.keys(eintrag).forEach(function (k) {
             if (!/_en$/.test(k)) return;
             const wert = eintrag[k];
@@ -210,8 +215,33 @@
             return lokal(shop);
         });
     };
-    const ladeProdukte = function () { return laden(BASIS + "data/produkte.json").then(function (l) { return l.map(lokal); }); };
-    const ladeProjekte = function () { return laden(BASIS + "data/projekte.json").then(function (l) { return l.map(lokal); }); };
+    /* Entwürfe ("versteckt": true) erscheinen nicht auf der Website, nur mit ?vorschau=1 auf der Detailseite */
+    function sichtbar(alle) {
+        return function (l) { return l.filter(function (e) { return alle || !e.versteckt; }).map(lokal); };
+    }
+    const ladeProdukte = function (alle) { return laden(BASIS + "data/produkte.json").then(sichtbar(alle)); };
+    const ladeProjekte = function (alle) { return laden(BASIS + "data/projekte.json").then(sichtbar(alle)); };
+
+    /* Bildtext (Alt-Text) eines Fotos, sonst der Titel */
+    function bildtext(e, src) {
+        return (e.bildtexte && e.bildtexte[src]) || e.name || e.titel || "";
+    }
+
+    /* Varianten-Schlüssel immer mit den deutschen Namen ("Motiv|Katze"), auch auf der englischen Seite */
+    function variantenSchluessel(p, name, wert) {
+        const de = p._varianten_de || p.varianten || {};
+        const namen = Object.keys(p.varianten || {});
+        const deNamen = Object.keys(de);
+        const i = namen.indexOf(name);
+        const deName = deNamen[i] || name;
+        const j = ((p.varianten || {})[name] || []).indexOf(wert);
+        const deWert = (de[deName] || [])[j] || wert;
+        return deName + "|" + deWert;
+    }
+
+    function variantenGesperrt(p, name, wert) {
+        return (p.variantenGesperrt || []).indexOf(variantenSchluessel(p, name, wert)) !== -1;
+    }
 
     /* Kleines Hilfsmittel zum Erzeugen von Elementen */
     function el(tag, attrs, kinder) {
@@ -376,7 +406,7 @@
         if (p.beispiel) badges.push(el("span", { class: "badge badge-muted", text: t("Beispiel") }));
 
         return el("a", { class: "card" + (verfuegbar(p) ? "" : " card-sold"), href: "produkt.html?id=" + encodeURIComponent(p.id) }, [
-            el("div", { class: "card-media" }, [bild(p.bilder && p.bilder[0], p.name)].concat(badges)),
+            el("div", { class: "card-media" }, [bild(p.bilder && p.bilder[0], bildtext(p, p.bilder && p.bilder[0]))].concat(badges)),
             el("div", { class: "card-body" }, [
                 el("span", { class: "card-kicker", text: kat(p.kategorie) + (p.jahr ? " · " + p.jahr : "") }),
                 el("h3", { text: p.name }),
@@ -524,7 +554,8 @@
         optionen = optionen || {};
         const liste = bilder && bilder.length ? bilder : ["/images/project-placeholder.jpg"];
         const mehrere = liste.length > 1;
-        const haupt = el("img", { src: pfad(liste[0]), alt: alt, draggable: "false" });
+        const alts = optionen.alts || {};
+        const haupt = el("img", { src: pfad(liste[0]), alt: alts[liste[0]] || alt, draggable: "false" });
         const markierung = el("span", { class: "exemplar-tag", hidden: true });
         const zaehler = el("span", { class: "gallery-count", "aria-live": "polite" });
         const thumbs = el("div", { class: "thumbs" });
@@ -538,6 +569,7 @@
                 const neu = new Image();
                 neu.onload = neu.onerror = function () {
                     haupt.src = pfad(src);
+                    haupt.alt = alts[src] || alt;
                     requestAnimationFrame(function () { haupt.classList.remove("wechsel"); });
                 };
                 setTimeout(function () { neu.src = pfad(src); }, 120);
@@ -761,7 +793,7 @@
         const ziel = document.getElementById("produkt");
         const id = param("id");
 
-        Promise.all([ladeShop(), ladeProdukte()]).then(function (r) {
+        Promise.all([ladeShop(), ladeProdukte(param("vorschau") === "1")]).then(function (r) {
             const shop = r[0];
             const p = r[1].find(function (e) { return e.id === id; });
             if (!p) {
@@ -776,24 +808,43 @@
             const auswahl = {};
             const felder = [];
 
+            let galerieEl = null;
+            let auswahlGesperrt = false;
+            function variantenPruefen() {
+                auswahlGesperrt = Object.keys(auswahl).some(function (n) {
+                    return p.varianten && p.varianten[n] && variantenGesperrt(p, n, auswahl[n]);
+                });
+            }
             Object.keys(p.varianten || {}).forEach(function (name) {
                 const werte = p.varianten[name];
                 if (!werte || !werte.length) return;
-                auswahl[name] = werte[0];
+                auswahl[name] = werte.find(function (w) { return !variantenGesperrt(p, name, w); }) || werte[0];
                 const feldId = "variante-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-                felder.push(el("div", { class: "field" }, [
-                    el("label", { for: feldId, text: name }),
-                    el("select", {
-                        class: "select",
-                        id: feldId,
-                        onchange: function (e) { auswahl[name] = e.target.value; }
-                    }, werte.map(function (w) { return el("option", { value: w, text: w }); }))
-                ]));
+                const sel = el("select", {
+                    class: "select",
+                    id: feldId,
+                    onchange: function (e) {
+                        auswahl[name] = e.target.value;
+                        variantenPruefen();
+                        hinweis.textContent = auswahlGesperrt ? t("Diese Auswahl ist derzeit nicht verfügbar.") : "";
+                        const foto = (p.variantenBilder || {})[variantenSchluessel(p, name, e.target.value)];
+                        if (foto && galerieEl) galerieEl.zeige(foto);
+                    }
+                }, werte.map(function (w) {
+                    const zu = variantenGesperrt(p, name, w);
+                    return el("option", { value: w, disabled: zu, text: w + (zu ? t(" – derzeit nicht verfügbar") : "") });
+                }));
+                sel.value = auswahl[name];
+                felder.push(el("div", { class: "field" }, [el("label", { for: feldId, text: name }), sel]));
             });
+            variantenPruefen();
 
             /* Exemplar-Auswahl bei nummerierten Kleinserien */
-            let galerieEl = null;
             const bilderAlle = (p.bilder || []).slice();
+            Object.keys(p.variantenBilder || {}).forEach(function (k) {
+                const b = p.variantenBilder[k];
+                if (b && bilderAlle.indexOf(b) === -1) bilderAlle.push(b);
+            });
             const bildZuNr = {};
             const beschriftung = {};
             const markierungen = {};
@@ -857,6 +908,10 @@
                         type: "button",
                         text: t("In den Warenkorb"),
                         onclick: function () {
+                            if (auswahlGesperrt) {
+                                hinweis.textContent = t("Diese Auswahl ist derzeit nicht verfügbar.");
+                                return;
+                            }
                             if (hatExemplare(p) && korbLesen().some(function (e) {
                                 return e.id === p.id && e.varianten && e.varianten.Exemplar === auswahl.Exemplar;
                             })) {
@@ -882,6 +937,12 @@
                             );
                         }
                     }),
+                    el("a", { class: "button button-block", href: anfrageLink, text: t("Frage zum Werk") })
+                );
+            }
+            if (shop.pause) {
+                kaufBereich.replaceChildren(
+                    el("p", { class: "buy-hint", text: shop.pause_text || t("Bestellen ist gerade pausiert. Fragen kannst du mir trotzdem schreiben.") }),
                     el("a", { class: "button button-block", href: anfrageLink, text: t("Frage zum Werk") })
                 );
             }
@@ -919,6 +980,7 @@
                 ]),
                 el("div", { class: "detail" }, [
                     (galerieEl = galerie(bilderAlle, p.name, badges, {
+                        alts: p.bildtexte || {},
                         beschriftung: beschriftung,
                         markierungen: markierungen,
                         beiWechsel: function (src) {
@@ -975,7 +1037,7 @@
         const ziel = document.getElementById("projekt");
         const id = param("id");
 
-        Promise.all([ladeProjekte(), ladeProdukte()]).then(function (r) {
+        Promise.all([ladeProjekte(param("vorschau") === "1"), ladeProdukte()]).then(function (r) {
             const p = r[0].find(function (e) { return e.id === id; });
             if (!p) {
                 ziel.replaceChildren(
@@ -1289,7 +1351,8 @@
                                         t(" gelesen.")
                                     ])
                                 ]),
-                                el("button", { class: "button button-primary button-block", type: "submit", text: t("Bestellung per E-Mail senden") }),
+                                shop.pause ? el("p", { class: "buy-hint", text: shop.pause_text || t("Bestellungen sind gerade pausiert.") }) : null,
+                                el("button", { class: "button button-primary button-block", type: "submit", disabled: !!shop.pause, text: t("Bestellung per E-Mail senden") }),
                                 el("button", { class: "button button-block", type: "button", style: "margin-top:10px", text: t("Bestellung kopieren"), onclick: kopieren })
                             ]),
                             status,
@@ -1425,6 +1488,14 @@
             } catch (e) { /* ohne Speicher gilt die Wahl nur für diesen Besuch */ }
         });
     });
+
+    /* Hinweisbanner und Urlaubsmodus aus data/shop.json, auf allen Seiten unter der Kopfzeile */
+    ladeShop().then(function (shop) {
+        const text = shop.pause ? (shop.pause_text || t("Bestellungen sind gerade pausiert.")) : shop.banner;
+        const kopf = document.querySelector(".site-header");
+        if (!text || !kopf) return;
+        kopf.insertAdjacentElement("afterend", el("div", { class: "site-banner", role: "status" }, [el("p", { text: text })]));
+    }).catch(function () { /* ohne Banner */ });
 
     /* Social-Media-Links aus data/shop.json (leere Einträge werden ausgeblendet) */
     ladeShop().then(function (shop) {

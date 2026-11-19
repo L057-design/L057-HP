@@ -1938,3 +1938,93 @@ p {
     display: inline-flex;
     color: var(--muted);
 }
+
+/* ---------- Hinweisbanner / Urlaubsmodus (aus den Einstellungen) ---------- */
+
+.site-banner {
+    border-bottom: 1px solid var(--line);
+    background: var(--panel-2);
+}
+
+.site-banner p {
+    width: min(calc(100% - 32px), var(--max-width));
+    margin: 0 auto;
+    padding: 10px 0;
+    font-size: 0.86rem;
+    letter-spacing: 0.02em;
+    color: var(--text-soft);
+    text-align: center;
+}
+
+/* ---------- Verwaltung: Bildtexte, Varianten, Verlauf, Pflichtfelder ---------- */
+
+.admin-alt {
+    margin-top: 6px;
+    padding: 6px 8px;
+    font-size: 0.8rem;
+}
+
+.admin-variant-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-variant-name {
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+}
+
+.admin-variant-photo {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+}
+
+.admin-history {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-history-item > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-history-item .button {
+    flex: none;
+}
+
+.admin-history-item p {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+}
+
+.admin-missing {
+    margin: 6px 0 12px;
+    padding-left: 1.2em;
+    text-align: left;
+}
+
+@media (max-width: 520px) {
+    .admin-variant-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .admin-variant-photo {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}

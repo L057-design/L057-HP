@@ -515,7 +515,7 @@ p {
 
 .gallery-main {
     position: relative;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5; /* Preset: Homepage-Fotos 1600 × 2000 */
     border: 1px solid var(--line);
     border-radius: var(--radius);
     overflow: hidden;

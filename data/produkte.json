@@ -51,7 +51,18 @@
         "L057"
       ]
     },
-    "bilder": [],
+    "bilder": [
+      "images/werke/rhizombox-01-cover.jpg",
+      "images/werke/rhizombox-02-pink.jpg",
+      "images/werke/rhizombox-03-designs-gruen.jpg",
+      "images/werke/rhizombox-04-designs-pink.jpg",
+      "images/werke/rhizombox-05-designs-geometrisch.jpg",
+      "images/werke/rhizombox-06-schwarz.jpg",
+      "images/werke/rhizombox-07-stapelbar.jpg",
+      "images/werke/rhizombox-08-detail.jpg",
+      "images/werke/rhizombox-09-im-einsatz.jpg",
+      "images/werke/rhizombox-10-aufbau.jpg"
+    ],
     "hervorgehoben": true,
     "name_en": "Rhizombox",
     "kurz_en": "Propagation box for Alocasia corms",
@@ -83,6 +94,31 @@
         "Ornament",
         "L057"
       ]
-    }
+    },
+    "bildtexte": {
+      "images/werke/rhizombox-01-cover.jpg": "Rhizombox mit grünem Gitter „Alocasia-Blätter“ und Rhizom",
+      "images/werke/rhizombox-02-pink.jpg": "Rhizombox mit pinkem Gitter und Rhizom",
+      "images/werke/rhizombox-03-designs-gruen.jpg": "Drei Rhizomboxen in Grün: Please don't die, Alocasia-Blätter, Hanf",
+      "images/werke/rhizombox-04-designs-pink.jpg": "Vier Rhizomboxen in Pink: Katze, Herzen, Herzen verspielt, Schmetterling",
+      "images/werke/rhizombox-05-designs-geometrisch.jpg": "Drei Rhizomboxen mit geometrischen Motiven: Ornament, Hexagon, L057",
+      "images/werke/rhizombox-06-schwarz.jpg": "Farbvariante Schwarz (Visualisierung): Pentakel, Spinne, Skull, Cthulhu",
+      "images/werke/rhizombox-07-stapelbar.jpg": "Rhizomboxen gestapelt",
+      "images/werke/rhizombox-08-detail.jpg": "Detail: Rhizom mit ersten Wurzeln auf dem Gitter",
+      "images/werke/rhizombox-09-im-einsatz.jpg": "Rhizomboxen im Einsatz in der Vitrine",
+      "images/werke/rhizombox-10-aufbau.jpg": "Aufbau: Deckel, Gitter, Acrylbox mit Wasser"
+    },
+    "bildtexte_en": {
+      "images/werke/rhizombox-01-cover.jpg": "Rhizombox with green grid \"Alocasia leaves\" and a corm",
+      "images/werke/rhizombox-02-pink.jpg": "Rhizombox with pink grid and a corm",
+      "images/werke/rhizombox-03-designs-gruen.jpg": "Three Rhizomboxes in green: Please don't die, Alocasia leaves, Hemp",
+      "images/werke/rhizombox-04-designs-pink.jpg": "Four Rhizomboxes in pink: Cat, Hearts, Playful hearts, Butterfly",
+      "images/werke/rhizombox-05-designs-geometrisch.jpg": "Three Rhizomboxes with geometric designs: Ornament, Hexagon, L057",
+      "images/werke/rhizombox-06-schwarz.jpg": "Black colour variant (visualisation): Pentacle, Spider, Skull, Cthulhu",
+      "images/werke/rhizombox-07-stapelbar.jpg": "Rhizomboxes stacked",
+      "images/werke/rhizombox-08-detail.jpg": "Detail: corm with first roots on the grid",
+      "images/werke/rhizombox-09-im-einsatz.jpg": "Rhizomboxes in use in a plant cabinet",
+      "images/werke/rhizombox-10-aufbau.jpg": "Assembly: lid, grid, acrylic box with water"
+    },
+    "willhaben": "https://www.willhaben.at/iad/kaufen-und-verkaufen/d/rhizombox-alocasia-rhizom-anzucht-box-mit-gitter-corm-riser-1860335037"
   }
 ]

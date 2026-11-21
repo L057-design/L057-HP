@@ -811,6 +811,10 @@
             }
 
             document.title = p.name + " – " + MARKE;
+            [['meta[name="description"]', p.kurz], ['meta[property="og:description"]', p.kurz], ['meta[property="og:title"]', document.title]].forEach(function (x) {
+                const n = document.querySelector(x[0]);
+                if (n && x[1]) n.setAttribute("content", x[1]);
+            });
             const auswahl = {};
             const felder = [];
 
@@ -1015,7 +1019,7 @@
                         hinweis,
                         el("div", { class: "description" }, absaetze(p.beschreibung)),
                         el("ul", { class: "facts facts-details" }, fakten.map(function (f) {
-                            return el("li", {}, [el("span", { text: f[0] }), el("span", { text: String(f[1]).split(" · ").join("\n") })]);
+                            return el("li", {}, [el("span", { text: f[0] }), el("span", { text: String(f[1]).split(" · ").map(function (z) { return z.charAt(0).toUpperCase() + z.slice(1); }).join("\n") })]);
                         })),
                         p.hinweise ? el("div", { class: "notice" }, [
                             el("h2", { text: t("Hinweise") }),
@@ -1116,6 +1120,16 @@
                 return Object.keys(v || {}).map(function (k) { return (k === "Exemplar" ? t("Exemplar ").trim() : k) + ": " + v[k]; }).join(", ");
             }
 
+            /* Bestell-Mail: auf der englischen Seite die deutschen Namen in Klammern dazu (für den Druckplan) */
+            function variantenTextBestellung(p, v) {
+                if (SPRACHE !== "en") return variantenText(v);
+                return Object.keys(v || {}).map(function (k) {
+                    if (k === "Exemplar") return t("Exemplar ").trim() + ": " + v[k];
+                    const de = variantenSchluessel(p, k, v[k]).split("|")[1];
+                    return k + ": " + v[k] + (de && de !== v[k] ? " (" + de + ")" : "");
+                }).join(", ");
+            }
+
             function menge(index, neu) {
                 const korb = korbLesen();
                 if (neu <= 0) {
@@ -1182,7 +1196,7 @@
 
             function bestelltext(liste, summe) {
                 const zeilen = liste.map(function (x) {
-                    const v = variantenText(x.eintrag.varianten);
+                    const v = variantenTextBestellung(x.produkt, x.eintrag.varianten);
                     return "• " + x.eintrag.menge + " × " + x.produkt.name + (v ? " (" + v + ")" : "") +
                         " – " + preis(zeilenpreis(liste, x), shop.waehrung);
                 });
@@ -1503,6 +1517,17 @@
     };
 
     korbAnzeigen();
+
+    /* Detailseiten (?id=…): Canonical, Sprachversionen und og:url auf genau dieses Stück zeigen lassen,
+       sonst hält Google alle Stücke für dieselbe (leere) Seite */
+    if (param("id")) {
+        const suche = "?id=" + encodeURIComponent(param("id"));
+        document.querySelectorAll('link[rel="canonical"], link[rel="alternate"][hreflang], meta[property="og:url"]').forEach(function (n) {
+            const attr = n.tagName === "META" ? "content" : "href";
+            const wert = n.getAttribute(attr);
+            if (wert && wert.indexOf("?") === -1) n.setAttribute(attr, wert + suche);
+        });
+    }
 
     /* Sprachschalter: gleiche Seite in der anderen Sprache, Auswahl merken */
     document.querySelectorAll("[data-lang-switch]").forEach(function (link) {

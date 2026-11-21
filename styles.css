@@ -2057,3 +2057,11 @@ p {
     white-space: pre-line;
     text-align: left;
 }
+
+/* Lange Wörter in Überschriften (z. B. „Geschäftsbedingungen“) am Handy trennen statt überlaufen */
+main h1,
+main h2 {
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+}

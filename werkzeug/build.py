@@ -137,7 +137,7 @@ L057 = {
     "ziel": ROOT,
     "email": "l057.design@gmail.com",
     "texte": L057_TEXTE,
-    "nur_de": {"verwaltung.html"},
+    "nur_de": {"verwaltung.html", "404.html"},
     "sprach_script": L057_SPRACH_SCRIPT,
     "theme": "#0d0d0d",
     "og_bild": "/logo-square-512.png",
@@ -397,7 +397,7 @@ def seite(m, lang, datei):
     kopf = f"""<!DOCTYPE html>
 <html lang="{lang}">
 <head>
-<meta charset="UTF-8">
+{'<base href="' + m["basis"] + '">' + chr(10) if datei == "404.html" else ""}<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{titel}</title>
 <meta name="description" content="{desc}">
@@ -457,21 +457,43 @@ def seite(m, lang, datei):
 
 
 def sitemap():
+    """Sitemap: feste Seiten + jedes sichtbare Stück/Projekt mit ?id=… (leere Detail- und Projektseiten nicht)."""
     zeilen = ['<?xml version="1.0" encoding="UTF-8"?>',
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+
+    def eintrag(m, datei, zusatz=""):
+        for lang in ("de", "en"):
+            zeilen.append("  <url>")
+            zeilen.append(f"    <loc>{url(m, lang, datei)}{zusatz}</loc>")
+            for alt in ("de", "en"):
+                zeilen.append(f'    <xhtml:link rel="alternate" hreflang="{alt}" href="{url(m, alt, datei)}{zusatz}"/>')
+            zeilen.append("  </url>")
+
     for m in MARKEN:
         if not m["sitemap"]:
             continue
+        def sichtbar(datei):
+            pfad = ROOT / m["basis"].strip("/") / "data" / datei
+            try:
+                return [e for e in json.loads(pfad.read_text(encoding="utf-8")) if not e.get("versteckt")]
+            except (OSError, ValueError):
+                return []
+        werke, projekte = sichtbar("produkte.json"), sichtbar("projekte.json")
         for datei in sorted(p.name for p in (m["quellen"] / "de").glob("*.html")):
             meta, _ = lies(m, "de", datei)
             if datei in m["nur_de"] or "noindex" in meta["robots"]:
                 continue
-            for lang in ("de", "en"):
-                zeilen.append("  <url>")
-                zeilen.append(f"    <loc>{url(m, lang, datei)}</loc>")
-                for alt in ("de", "en"):
-                    zeilen.append(f'    <xhtml:link rel="alternate" hreflang="{alt}" href="{url(m, alt, datei)}"/>')
-                zeilen.append("  </url>")
+            if datei == "produkt.html":
+                for w in werke:
+                    eintrag(m, datei, "?id=" + w["id"])
+                continue
+            if datei == "projekt.html":
+                for pr in projekte:
+                    eintrag(m, datei, "?id=" + pr["id"])
+                continue
+            if datei == "projekte.html" and not projekte:
+                continue
+            eintrag(m, datei)
     zeilen.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(zeilen) + "\n", encoding="utf-8")
 

@@ -41,34 +41,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/"/>
   </url>
   <url>
-    <loc>https://l057.at/produkt.html</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/produkt.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/produkt.html"/>
+    <loc>https://l057.at/produkt.html?id=rhizombox</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/produkt.html?id=rhizombox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/produkt.html?id=rhizombox"/>
   </url>
   <url>
-    <loc>https://l057.at/en/produkt.html</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/produkt.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/produkt.html"/>
-  </url>
-  <url>
-    <loc>https://l057.at/projekt.html</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekt.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekt.html"/>
-  </url>
-  <url>
-    <loc>https://l057.at/en/projekt.html</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekt.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekt.html"/>
-  </url>
-  <url>
-    <loc>https://l057.at/projekte.html</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekte.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekte.html"/>
-  </url>
-  <url>
-    <loc>https://l057.at/en/projekte.html</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/projekte.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/projekte.html"/>
+    <loc>https://l057.at/en/produkt.html?id=rhizombox</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://l057.at/produkt.html?id=rhizombox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://l057.at/en/produkt.html?id=rhizombox"/>
   </url>
   <url>
     <loc>https://l057.at/shop.html</loc>

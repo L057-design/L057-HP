@@ -52,13 +52,15 @@
         "Schildkröte"
       ],
       "Farbe": [
-        "Grün metallic",
         "Grün transparent",
+        "Grün metallic",
+        "Limette matt",
+        "Weiß",
         "Rosa",
         "Violett matt",
         "Violett transparent",
-        "Schwarz matt",
-        "Weiß"
+        "Blau",
+        "Schwarz matt"
       ]
     },
     "bilder": [
@@ -106,13 +108,15 @@
         "Tortoise"
       ],
       "Colour": [
-        "Metallic green",
         "Translucent green",
+        "Metallic green",
+        "Matte lime",
+        "White",
         "Pink",
         "Matte violet",
         "Translucent violet",
-        "Matte black",
-        "White"
+        "Blue",
+        "Matte black"
       ]
     },
     "bildtexte": {

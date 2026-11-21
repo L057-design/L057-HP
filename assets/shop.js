@@ -108,6 +108,7 @@
         "Lagernd": "In stock",
         "Lieferbar": "Available",
         " – derzeit nicht verfügbar": " – currently unavailable",
+        "nicht verfügbar": "unavailable",
         "Diese Auswahl ist derzeit nicht verfügbar.": "This option is currently unavailable.",
         "Bestellungen sind gerade pausiert.": "Orders are paused at the moment.",
         "Bestellen ist gerade pausiert. Fragen kannst du mir trotzdem schreiben.": "Ordering is paused at the moment. You can still send me a question.",
@@ -731,14 +732,18 @@
                         schliessen();
                         knopf.focus();
                     }
-                }, [el("span", { text: e.text }), e.zusatz ? el("span", { class: "picker-extra", text: e.zusatz }) : null]);
+                }, [el("span", { class: "picker-text" }, [e.punkt ? el("span", { class: "farbpunkt", style: "background:" + e.punkt, "aria-hidden": "true" }) : null, el("span", { text: e.text })]),
+                    e.zusatz ? el("span", { class: "picker-extra", text: e.zusatz }) : null]);
             }));
         }
 
         function setze(neu, melden) {
             wert = neu;
             const e = eintraege.find(function (x) { return x.wert === neu; });
-            knopfText.textContent = e ? e.text : neu;
+            knopfText.replaceChildren(
+                e && e.punkt ? el("span", { class: "farbpunkt", style: "background:" + e.punkt, "aria-hidden": "true" }) : "",
+                document.createTextNode(e ? e.text : neu)
+            );
             Array.prototype.forEach.call(liste.children, function (li) {
                 li.setAttribute("aria-selected", String(li.dataset.wert === neu));
             });
@@ -819,24 +824,28 @@
             Object.keys(p.varianten || {}).forEach(function (name) {
                 const werte = p.varianten[name];
                 if (!werte || !werte.length) return;
-                auswahl[name] = werte.find(function (w) { return !variantenGesperrt(p, name, w); }) || werte[0];
                 const feldId = "variante-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-                const sel = el("select", {
-                    class: "select",
-                    id: feldId,
-                    onchange: function (e) {
-                        auswahl[name] = e.target.value;
-                        variantenPruefen();
-                        hinweis.textContent = auswahlGesperrt ? t("Diese Auswahl ist derzeit nicht verfügbar.") : "";
-                        const foto = (p.variantenBilder || {})[variantenSchluessel(p, name, e.target.value)];
-                        if (foto && galerieEl) galerieEl.zeige(foto);
-                    }
-                }, werte.map(function (w) {
+                /* Alphabetisch sortiert (nach dem angezeigten Namen), mit Farbpunkt, wenn hinterlegt */
+                const eintraege = werte.map(function (w) {
                     const zu = variantenGesperrt(p, name, w);
-                    return el("option", { value: w, disabled: zu, text: w + (zu ? t(" – derzeit nicht verfügbar") : "") });
-                }));
-                sel.value = auswahl[name];
-                felder.push(el("div", { class: "field" }, [el("label", { for: feldId, text: name }), sel]));
+                    return {
+                        wert: w,
+                        text: w,
+                        zusatz: zu ? t("nicht verfügbar") : "",
+                        gesperrt: zu,
+                        punkt: (p.variantenFarben || {})[variantenSchluessel(p, name, w)] || ""
+                    };
+                }).sort(function (a, b) { return a.text.localeCompare(b.text, SPRACHE, { sensitivity: "base" }); });
+                const startWert = (eintraege.find(function (e) { return !e.gesperrt; }) || eintraege[0]).wert;
+                auswahl[name] = startWert;
+                const sel = auswahlListe(feldId, eintraege, startWert, function (wert) {
+                    auswahl[name] = wert;
+                    variantenPruefen();
+                    hinweis.textContent = auswahlGesperrt ? t("Diese Auswahl ist derzeit nicht verfügbar.") : "";
+                    const foto = (p.variantenBilder || {})[variantenSchluessel(p, name, wert)];
+                    if (foto && galerieEl) galerieEl.zeige(foto);
+                });
+                felder.push(el("div", { class: "field" }, [el("label", { id: feldId + "-label", for: feldId, text: name }), sel.element]));
             });
             variantenPruefen();
 
@@ -1005,8 +1014,8 @@
                         kaufBereich,
                         hinweis,
                         el("div", { class: "description" }, absaetze(p.beschreibung)),
-                        el("ul", { class: "facts" }, fakten.map(function (f) {
-                            return el("li", {}, [el("span", { text: f[0] }), el("span", { text: f[1] })]);
+                        el("ul", { class: "facts facts-details" }, fakten.map(function (f) {
+                            return el("li", {}, [el("span", { text: f[0] }), el("span", { text: String(f[1]).split(" · ").join("\n") })]);
                         })),
                         p.hinweise ? el("div", { class: "notice" }, [
                             el("h2", { text: t("Hinweise") }),

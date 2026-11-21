@@ -1025,6 +1025,10 @@
             });
             if (!Object.keys(w.variantenBilder).length) delete w.variantenBilder;
         }
+        if (w.variantenFarben) {
+            Object.keys(w.variantenFarben).forEach(function (k) { if (!gueltig[k]) delete w.variantenFarben[k]; });
+            if (!Object.keys(w.variantenFarben).length) delete w.variantenFarben;
+        }
     }
 
     /* Pro Variantenwert: sperren und ein Foto zuordnen */
@@ -1058,16 +1062,34 @@
                     }
                 }, fotos.map(function (o) { return el("option", { value: o[0], text: o[1] }); }));
                 foto.value = (w.variantenBilder || {})[k] || "";
+                const farbe = el("input", {
+                    class: "input admin-variant-color",
+                    type: "text",
+                    placeholder: "#Farbe",
+                    "aria-label": "Farbpunkt (Hex) für " + wert,
+                    value: (w.variantenFarben || {})[k] || "",
+                    onchange: function (e) {
+                        let v = e.target.value.trim();
+                        if (v && v[0] !== "#") v = "#" + v;
+                        if (v && !/^#[0-9a-fA-F]{6}$/.test(v)) { e.target.value = (w.variantenFarben || {})[k] || ""; return; }
+                        e.target.value = v.toUpperCase();
+                        w.variantenFarben = w.variantenFarben || {};
+                        if (v) w.variantenFarben[k] = v.toUpperCase(); else delete w.variantenFarben[k];
+                        if (!Object.keys(w.variantenFarben).length) delete w.variantenFarben;
+                        notiere(n() + ": Farbpunkt für " + wert);
+                    }
+                });
                 zeilen.push(el("div", { class: "admin-variant-row" }, [
                     el("span", { class: "admin-variant-name", text: wert }),
                     foto,
+                    farbe,
                     el("label", { class: "check admin-toggle" }, [sperre, el("span", { text: "gesperrt" })])
                 ]));
             });
         });
         return el("details", { class: "admin-en admin-variants", open: ansicht.variantenOffen, ontoggle: function (e) { ansicht.variantenOffen = e.target.open; } }, [
-            el("summary", { text: "Fotos und Sperren pro Variante" }),
-            el("p", { class: "admin-hint", text: "Foto: Wählt der Kunde diesen Wert, springt die Galerie zu diesem Foto (Fotos oben hochladen). Gesperrt: vorübergehend nicht bestellbar." })
+            el("summary", { text: "Fotos, Farbpunkte und Sperren pro Variante" }),
+            el("p", { class: "admin-hint", text: "Foto: Wählt der Kunde diesen Wert, springt die Galerie zu diesem Foto (Fotos oben hochladen). Farbpunkt: Hex-Wert, z. B. #118137 – erscheint als Punkt neben dem Namen (leer = kein Punkt). Gesperrt: vorübergehend nicht bestellbar." })
         ].concat(zeilen));
     }
 

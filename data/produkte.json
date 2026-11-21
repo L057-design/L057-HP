@@ -146,6 +146,17 @@
     "willhaben": "https://www.willhaben.at/iad/kaufen-und-verkaufen/d/rhizombox-alocasia-rhizom-anzucht-box-mit-gitter-corm-riser-1860335037",
     "variantenGesperrt": [
       "Motiv|Schildkröte"
-    ]
+    ],
+    "variantenFarben": {
+      "Farbe|Grün transparent": "#118137",
+      "Farbe|Grün metallic": "#194416",
+      "Farbe|Limette matt": "#C0DF16",
+      "Farbe|Weiß": "#FFFFFF",
+      "Farbe|Rosa": "#DA78AB",
+      "Farbe|Violett matt": "#A7A4E0",
+      "Farbe|Violett transparent": "#D6ABFF",
+      "Farbe|Blau": "#0086D6",
+      "Farbe|Schwarz matt": "#000000"
+    }
   }
 ]

@@ -1949,7 +1949,7 @@ p {
 
 .admin-variant-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) 7.5rem auto;
     gap: 10px;
     align-items: center;
     padding: 6px 0;
@@ -2006,8 +2006,17 @@ p {
         grid-template-columns: minmax(0, 1fr) auto;
     }
 
+    .admin-variant-row {
+        grid-template-columns: minmax(0, 1fr) 7.5rem auto;
+    }
+
     .admin-variant-photo {
-        grid-column: 1 / -1;
+        grid-column: 1 / 2;
+        grid-row: 2;
+    }
+
+    .admin-variant-color {
+        grid-column: 2 / -1;
         grid-row: 2;
     }
 }
@@ -2015,4 +2024,36 @@ p {
 /* Ausgeblendete Elemente (z. B. Projekte, solange es keine gibt) */
 [hidden] {
     display: none !important;
+}
+
+/* Farbpunkt in der Variantenauswahl (variantenFarben, Hex-Werte der Filamente) */
+.picker-text,
+.picker-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.farbpunkt {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.picker-option[aria-selected="true"] .farbpunkt {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* Artikeldetails: Bezeichnung links in fester Spalte, Wert linksbündig, Teile untereinander */
+.facts-details li {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 32%) 1fr;
+    gap: 16px;
+}
+
+.facts-details li span:last-child {
+    white-space: pre-line;
+    text-align: left;
 }

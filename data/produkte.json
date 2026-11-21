@@ -50,6 +50,15 @@
         "Ornament",
         "L057",
         "Schildkröte"
+      ],
+      "Farbe": [
+        "Grün metallic",
+        "Grün transparent",
+        "Rosa",
+        "Violett matt",
+        "Violett transparent",
+        "Schwarz matt",
+        "Weiß"
       ]
     },
     "bilder": [
@@ -95,6 +104,15 @@
         "Ornament",
         "L057",
         "Tortoise"
+      ],
+      "Colour": [
+        "Metallic green",
+        "Translucent green",
+        "Pink",
+        "Matte violet",
+        "Translucent violet",
+        "Matte black",
+        "White"
       ]
     },
     "bildtexte": {
@@ -121,6 +139,9 @@
       "images/werke/rhizombox-09-im-einsatz.jpg": "Rhizomboxes in use in a plant cabinet",
       "images/werke/rhizombox-10-aufbau.jpg": "Assembly: lid, grid, acrylic box with water"
     },
-    "willhaben": "https://www.willhaben.at/iad/kaufen-und-verkaufen/d/rhizombox-alocasia-rhizom-anzucht-box-mit-gitter-corm-riser-1860335037"
+    "willhaben": "https://www.willhaben.at/iad/kaufen-und-verkaufen/d/rhizombox-alocasia-rhizom-anzucht-box-mit-gitter-corm-riser-1860335037",
+    "variantenGesperrt": [
+      "Motiv|Schildkröte"
+    ]
   }
 ]

@@ -62,7 +62,7 @@
         "Werke": "Works",
         "Versand & Zahlung": "Shipping & payment",
         "Hinweise": "Notes",
-        "Künstler: ": "Artist: ",
+        "Hersteller: ": "Manufacturer: ",
         "14 Tage Widerrufsrecht. ": "14-day right of withdrawal. ",
         "Widerrufsbelehrung": "Right of withdrawal",
         "Werk konnte nicht geladen werden.": "Work could not be loaded.",
@@ -1022,7 +1022,7 @@
                             el("p", { text: p.hinweise })
                         ]) : null,
                         el("p", { class: "maker" }, [
-                            el("span", { text: t("Künstler: ") }), shop.hersteller || ""
+                            el("span", { text: t("Hersteller: ") }), shop.hersteller || ""
                         ]),
                         verfuegbar(p) ? el("p", { class: "maker" }, [
                             t("14 Tage Widerrufsrecht. "),

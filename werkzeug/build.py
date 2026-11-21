@@ -248,7 +248,7 @@ NZ_WORTE = {
         "Werke": "Schmuck",
         "Werk konnte nicht geladen werden.": "Stück konnte nicht geladen werden.",
         "Produkte konnten nicht geladen werden.": "Stücke konnten nicht geladen werden.",
-        "Künstler: ": "Handgemacht von: ",
+        "Hersteller: ": "Handgemacht von: ",
     },
     "en": {
         "Dieses Werk gibt es nicht (mehr).": "This piece does not exist (anymore).",
@@ -259,7 +259,7 @@ NZ_WORTE = {
         "Werke": "Jewellery",
         "Werk konnte nicht geladen werden.": "Piece could not be loaded.",
         "Produkte konnten nicht geladen werden.": "Pieces could not be loaded.",
-        "Künstler: ": "Handmade by: ",
+        "Hersteller: ": "Handmade by: ",
     },
 }
 

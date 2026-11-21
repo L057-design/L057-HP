@@ -93,6 +93,7 @@
         "Dein Warenkorb ist leer.": "Your cart is empty.",
         "Zum Shop": "To the shop",
         " / Exemplar": " / copy",
+        "Staffelpreis ab ": "volume price from ",
         "Eins weniger": "One less",
         "Eins mehr": "One more",
         "Entfernen": "Remove",
@@ -1126,6 +1127,21 @@
                 return Math.round(stueckpreis(x.produkt, gesamt) * x.eintrag.menge * 100) / 100;
             }
 
+            /* Stückpreis, der gerade gilt (Staffel über alle Varianten des Stücks) */
+            function zeilenStueckpreis(liste, x) {
+                const p = x.produkt;
+                if (istUnikat(p)) return preis(p.preis, shop.waehrung);
+                const gesamt = liste.reduce(function (s, y) { return s + (y.produkt.id === p.id ? y.eintrag.menge : 0); }, 0);
+                const sp = stueckpreis(p, gesamt);
+                let text = preis(sp, shop.waehrung) + t(" / Exemplar");
+                if (sp < p.preis) {
+                    const stufe = (p.staffel || []).filter(function (st) { return gesamt >= st.ab && st.preis === sp; })
+                        .sort(function (a, b) { return a.ab - b.ab; })[0];
+                    if (stufe) text += " (" + t("Staffelpreis ab ") + stufe.ab + " " + t("Stk") + ")";
+                }
+                return text;
+            }
+
             function berechnen(liste) {
                 const zwischensumme = liste.reduce(function (s, x) { return s + zeilenpreis(liste, x); }, 0);
                 const physisch = liste.some(function (x) { return x.produkt.typ !== "digital"; });
@@ -1224,7 +1240,7 @@
                         el("div", { class: "cart-info" }, [
                             el("a", { class: "cart-name", href: "produkt.html?id=" + encodeURIComponent(x.produkt.id), text: x.produkt.name }),
                             v ? el("span", { class: "cart-variant", text: v }) : null,
-                            el("span", { class: "cart-variant", text: auflageText(x.produkt) + " · " + preis(x.produkt.preis, shop.waehrung) + (istUnikat(x.produkt) ? "" : t(" / Exemplar")) }),
+                            el("span", { class: "cart-variant", text: auflageText(x.produkt) + " · " + zeilenStueckpreis(liste, x) }),
                             el("div", { class: "qty" }, [
                                 el("button", { type: "button", "aria-label": t("Eins weniger"), text: "−", onclick: function () { menge(i, x.eintrag.menge - 1); } }),
                                 el("span", { "aria-live": "polite", text: String(x.eintrag.menge) }),

@@ -261,14 +261,14 @@
     /* ---------- Anmeldung ---------- */
 
     function anmeldung(meldung) {
-        const token = el("input", { class: "input", id: "token", type: "password", autocomplete: "off", placeholder: "github_pat_…" });
+        const token = el("input", { class: "input", id: "token", type: "password", autocomplete: "off" });
         const branchFeld = el("input", { class: "input", id: "branch", value: einstellungen.branch || "main" });
         const status = el("p", { class: "buy-hint", "aria-live": "polite", text: meldung || "" });
 
         root.replaceChildren(
             el("header", { class: "page-head" }, [
                 el("h1", { text: "Verwaltung" }),
-                el("p", { text: "Werke, Projekte und Einstellungen bearbeiten, Fotos hochladen. Änderungen werden auf GitHub gespeichert und sind nach wenigen Minuten online." })
+                el("p", { text: "Bitte anmelden." })
             ]),
             el("form", {
                 class: "withdraw-form admin-login",
@@ -284,20 +284,10 @@
                     start();
                 }
             }, [
-                el("div", { class: "field" }, [el("label", { for: "token", text: "GitHub-Schlüssel (Token)" }), token]),
+                el("div", { class: "field" }, [el("label", { for: "token", text: "Schlüssel" }), token]),
                 el("div", { class: "field" }, [el("label", { for: "branch", text: "Branch" }), branchFeld]),
                 el("button", { class: "button button-primary button-block", type: "submit", text: "Anmelden" }),
                 status
-            ]),
-            el("details", { class: "admin-help" }, [
-                el("summary", { text: "Wie bekomme ich einen Schlüssel?" }),
-                el("ol", {}, [
-                    el("li", { text: "Auf github.com einloggen → Profilbild → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token." }),
-                    el("li", { text: "Name z. B. „L057 Verwaltung“, Ablaufdatum wählen (z. B. 1 Jahr)." }),
-                    el("li", { text: "Repository access: Only select repositories → L057-design/L057-HP." }),
-                    el("li", { text: "Permissions → Repository permissions → Contents: Read and write. Sonst nichts." }),
-                    el("li", { text: "Generate token, den Schlüssel kopieren und hier einfügen. Er wird nur in diesem Browser gespeichert." })
-                ])
             ])
         );
     }
@@ -329,9 +319,9 @@
                 if (e.status === 401 || e.status === 403) {
                     delete einstellungen.token;
                     sichereEinstellungen();
-                    anmeldung("Der Schlüssel wurde nicht akzeptiert. Bitte prüfe ihn und die Berechtigung „Contents: Read and write“.");
+                    anmeldung("Anmeldung fehlgeschlagen.");
                 } else if (e.status === 404) {
-                    anmeldung("Daten oder Branch nicht gefunden. Stimmt der Branch?");
+                    anmeldung("Anmeldung fehlgeschlagen.");
                 } else {
                     anmeldung("Laden fehlgeschlagen: " + e.message);
                 }

@@ -98,8 +98,6 @@ def l057_kopf(m, t, aktiv, schalter):
     <div class="header-inner">
         <div class="brand-duo">
             <a href="index.html" class="brand" aria-label="{t['start']}"><img src="/assets/logo-mark.png" alt="" width="28" height="25"></a>
-            <span class="brand-x" aria-hidden="true"><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4l12 12M16 4L4 16"/></svg></span>
-            <a href="{'/nebelzikade/en/' if t['locale'] == 'en_GB' else '/nebelzikade/'}" class="brand brand-partner" aria-label="Nebelzikade"><img src="/assets/logo-nebelzikade.png" alt="" width="30" height="30"></a>
         </div>
         <nav class="main-nav" aria-label="{t['hauptnav']}">
             <a href="shop.html"{aktiv('shop', 'produkt')}>{t['werke']}</a>

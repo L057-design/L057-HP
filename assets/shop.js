@@ -1526,6 +1526,17 @@
         });
     }).catch(function () { /* Fußzeile bleibt ohne Social Links */ });
 
+    /* Projekte: solange kein sichtbares Projekt existiert, Menüpunkt, Knöpfe und Startseiten-Abschnitt ausblenden */
+    ladeProjekte().then(function (liste) {
+        if (liste.length) return;
+        document.querySelectorAll('a[href="projekte.html"]').forEach(function (a) {
+            const ziel = a.closest("li") || a;
+            ziel.hidden = true;
+        });
+        const abschnitt = document.getElementById("home-projekte");
+        if (abschnitt && abschnitt.closest("section")) abschnitt.closest("section").hidden = true;
+    }).catch(function () { /* bei Fehler bleibt alles sichtbar */ });
+
     document.querySelectorAll("[data-jahr]").forEach(function (n) {
         n.textContent = new Date().getFullYear();
     });

@@ -2028,3 +2028,8 @@ p {
         grid-row: 2;
     }
 }
+
+/* Ausgeblendete Elemente (z. B. Projekte, solange es keine gibt) */
+[hidden] {
+    display: none !important;
+}

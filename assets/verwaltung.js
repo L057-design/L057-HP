@@ -707,6 +707,7 @@
                             zeichnen();
                         } })
                 ]),
+                ersetzenKnopf(obj, typ, pfad, name),
                 bildtextFeld(obj, "bildtexte", pfad, "Bildtext", name),
                 bildtextFeld(obj, "bildtexte_en", pfad, "Alt text (EN)", name)
             ]);
@@ -724,6 +725,36 @@
             }),
             el("span", { class: "admin-hint", text: "Fotos werden vor dem Hochladen automatisch verkleinert. Das erste Foto ist das Titelbild. Bildtext: kurz beschreiben, was zu sehen ist (für Google und Screenreader)." })
         ]);
+    }
+
+    /* Ein Foto austauschen. Platz, Bildtexte und Varianten-Zuordnung bleiben. */
+    function ersetzenKnopf(obj, typ, alt, name) {
+        const knopf = fotoKnopf("Ersetzen", false, function (dateien) {
+            return fotosHinzufuegen(dateien, BILD_ORDNER[typ], obj.id || slug(titel(obj))).then(function (pfade) {
+                const neu = pfade[0];
+                const i = obj.bilder.indexOf(alt);
+                if (i === -1) return; /* inzwischen entfernt */
+                obj.bilder[i] = neu;
+                ["bildtexte", "bildtexte_en"].forEach(function (k) {
+                    if (obj[k] && obj[k][alt] !== undefined) {
+                        obj[k][neu] = obj[k][alt];
+                        delete obj[k][alt];
+                    }
+                });
+                Object.keys(obj.variantenBilder || {}).forEach(function (k) {
+                    if (obj.variantenBilder[k] === alt) obj.variantenBilder[k] = neu;
+                });
+                (obj.exemplare || []).forEach(function (x) { if (x.bild === alt) x.bild = neu; });
+                if (uploads[alt]) {
+                    URL.revokeObjectURL(uploads[alt].url);
+                    delete uploads[alt];
+                }
+                notiere(name + ": Foto ersetzt");
+                zeichnen();
+            });
+        });
+        knopf.classList.add("admin-replace");
+        return knopf;
     }
 
     /* Kurze Beschreibung eines Fotos (Alt-Text) für Google und Screenreader */

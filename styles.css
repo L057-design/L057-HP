@@ -1501,7 +1501,7 @@ p {
 
 .admin-images {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
     gap: 10px;
 }
 
@@ -1539,6 +1539,24 @@ p {
     justify-content: space-between;
     gap: 4px;
     padding: 6px;
+}
+
+/* Die drei Knöpfe teilen sich die Kartenbreite, damit nichts abgeschnitten wird */
+.admin-image-actions .admin-mini {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+}
+
+.admin-image .admin-replace {
+    display: flex;
+    margin: 0 6px;
+    padding: 8px 6px;
+    font-size: 0.72rem;
+}
+
+.admin-image .admin-replace.button {
+    align-self: stretch;
 }
 
 .admin-upload {

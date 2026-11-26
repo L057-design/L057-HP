@@ -1,5 +1,26 @@
 [
   {
+    "id": "waves-id160",
+    "name": "WAVES iD160",
+    "kategorie": "Beton",
+    "jahr": "2026",
+    "kurz": "",
+    "technik": "",
+    "masse": "",
+    "auflage": "offen",
+    "preis": 80,
+    "signiert": "Signiert",
+    "zertifikat": false,
+    "beschreibung": [],
+    "bilder": [],
+    "hervorgehoben": true,
+    "bestand": 2,
+    "versand": {
+      "Österreich": 14.9
+    },
+    "versteckt": true
+  },
+  {
     "id": "rhizombox",
     "name": "Rhizombox",
     "kategorie": "Pflanzen",

@@ -66,5 +66,7 @@
   ],
   "banner": "⚠️ Seite nur zu Testzwecken Online ⚠️",
   "banner_en": "⚠️ Webpage only for testing purposes online ⚠️",
-  "pause": true
+  "pause": true,
+  "pause_text": "⚠️ Seite nur zu Testzwecken Online ⚠️",
+  "pause_text_en": "⚠️ Webpage only for testing purposes online ⚠️"
 }
